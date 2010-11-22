@@ -35,7 +35,7 @@ Ext.setup({
             model: 'Card',
             proxy: {
                 type: 'ajax',
-                url: '/showtime/sikim.json',
+                url: '/showtime/carolpsli.json',
                 reader: {
                     type: 'json',
                     root: 'data.Student.Media'
