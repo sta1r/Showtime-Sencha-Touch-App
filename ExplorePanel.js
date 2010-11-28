@@ -10,30 +10,46 @@ Ext.regModel('Explore', {
 //this panel displays the thumbs on the explore screen
 Showtime.ExplorePanel = Ext.extend(Ext.DataView, {
     cls: 'explore-panel',
-    
+    // landscape mode - use vertical columns
     landscapeTpl: new Ext.XTemplate(
-        '<div class="vbox" style="height: 100%">',
-            '<div class=\'hbox boxCenter\'>',
-            	'<tpl for=".">',
-            		'<div class="thumbnail">',
-            			'<img src="{imgurl}" />',
-        			'</div>',
+        '<div class="explore-container" style="height: 100%">',
+            '<tpl for=".">',
+					'{[ xindex == 1 || xindex % 2 == 1 ? "<div class=column>" : ""]}',
+						'<div class="explore-item item{[xindex]}">',					
+		            	'<div class="thumbnail">',
+								'<div class="box">',
+		            			'<img src="{imgurl}" />',
+								'</div',
+							'</div>',
+							'<div class="caption">',
+								'<span>Student {#} of {[xcount]}</span>',
+								'<span>Course</span>',
+							'</div>',
+						'</div>',
+					'{[ xindex == xcount || xindex % 2 == 0 ? "</div>" : ""]}',
     			'</tpl>',
-            '</div>',
         '</div>'
     ),
-    
+    // portrait mode - use horizontal rows
     portraitTpl: new Ext.XTemplate(
-    	'<div class="vbox" style="height: 100%">',
-            '<div class=\'hbox boxCenter\'>',
-            	'<tpl for=".">',
-            		'<div class="thumbnail">',
-            			'<img src="{imgurl}" />',
-            		'</div>',
-        		'</tpl>',
-            '</div>',
-        '</div>'
-    ),
+			'<div class="explore-container" style="height: 100%">',
+				'<tpl for=".">',
+					'{[ xindex == 1 || xindex % 3 == 1 ? "<div class=row>" : ""]}',
+						'<div class="explore-item item{[xindex]}">',					
+		            	'<div class="thumbnail">',
+		            		'<div class="box">',
+		            			'<img src="{imgurl}" />',
+								'</div',
+							'</div>',
+							'<div class="caption">',
+								'<span>Student {#} of {[xcount]}</span>',
+								'<span>Course</span>',
+							'</div>',
+						'</div>',
+					'{[ xindex == xcount || xindex % 3 == 0 ? "</div>" : ""]}',
+   			'</tpl>',
+			'</div>'    
+	),
     
     initComponent: function() {
         this.addEvents('profileSelected');
@@ -42,12 +58,16 @@ Showtime.ExplorePanel = Ext.extend(Ext.DataView, {
         this.monitorOrientation = true;
         this.scroll = false;
         this.tpl = Ext.getOrientation() == "portrait" ? this.portraitTpl : this.landscapeTpl;
+
         this.store = new Ext.data.Store({
             model: 'Explore',
             data: [
                    {imgurl: 'http://dxcpw8yg8uhxn.cloudfront.net/e3fb5a47873cf5f309f3b1f2c6edd2d4gallery.jpg', profilename: 'thailanddemocrazy'},
                    {imgurl: 'http://dxcpw8yg8uhxn.cloudfront.net/682a2efbd2503413d58e46105cf5f4a6gallery.jpg', profilename: 'juliab'},
                    {imgurl: 'http://dxcpw8yg8uhxn.cloudfront.net/4ac851b2ad2063a7257c4c42f240bfa9gallery.jpg', profilename: 'jangchoi'},
+						 {imgurl: 'http://dxcpw8yg8uhxn.cloudfront.net/e3fb5a47873cf5f309f3b1f2c6edd2d4gallery.jpg', profilename: 'thailanddemocrazy'},
+                   {imgurl: 'http://dxcpw8yg8uhxn.cloudfront.net/682a2efbd2503413d58e46105cf5f4a6gallery.jpg', profilename: 'juliab'},
+                   {imgurl: 'http://dxcpw8yg8uhxn.cloudfront.net/4ac851b2ad2063a7257c4c42f240bfa9gallery.jpg', profilename: 'jangchoi'}
             ],
             autoDestroy: true
         });
