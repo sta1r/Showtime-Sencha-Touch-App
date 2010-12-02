@@ -53,10 +53,7 @@
                 tpl: new Ext.XTemplate(
                 	'<tpl for="media">',
                     '<img src="http://dxcpw8yg8uhxn.cloudfront.net/{imageuri}touch.jpg" />',
-                    '</tpl>',
-                    {
-                    	
-                    }
+                    '</tpl>'
                 )
             });
 
@@ -67,7 +64,7 @@
                 },
                 items: [
                     {
-                        flex: 5,
+                        flex: 1,
                         layout: {
                             type: "hbox",
                             align: "stretch"
@@ -80,7 +77,7 @@
 
             this.landscapeLayout = [{
                 layout: {
-                    type: "hbox",
+                    //type: "hbox",
                     align: "stretch"
                 },
                 items: [
