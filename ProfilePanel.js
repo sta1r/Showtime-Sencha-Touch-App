@@ -2,59 +2,15 @@
     Ext.ns("Showtime");
 
     Showtime.ProfilePanel = Ext.extend(Ext.Panel, {
-
         initComponent: function() {
             this.monitorOrientation = true;
             this.layout = "fit";
-
-            /*this.descriptionPanel = new Ext.Panel({
-                cls: "productdetail-description",
-                scroll: true,
-                tpl: new Ext.XTemplate(
-                    "{description:this.renderDescription}",
-                    {
-                        renderDescription: function(desc) {
-                            if (desc.search(/<.*?>/g) >= 0) {
-                                return desc;
-                            }
-                            else {
-                                return desc.replace(/\r?\n/g, '<br />');
-                            }
-                        }
-                    }
-                )
-            });*/
-
-            /*this.imagePanel = new Ext.Panel({
-                cls: "productdetail-image",
-                flex: 1,
-                tpl: new Ext.XTemplate(
-                    '{images:this.renderImage}',
-                    {
-                        renderImage: function(images, product) {
-                            if (Ext.isArray(images) && images[2]) {
-                                var img = images[5] || images[2];
-                                return String.format('<img src="{0}" />', img.url, product.maxWidth);
-                            } else {
-                                return '';
-                            }
-                        }
-                    }
-                )
-            });*/
             
-            this.summaryPanel = new Ext.Carousel({
+            this.imagePanel = new Ext.Panel({
                 cls: "profile-summary",
                 flex: 1,
-                layout: 'fit',
-                direction: 'horizontal',
-                ui: 'light',
-                activeItem: 1,
-                tpl: new Ext.XTemplate(
-                	'<tpl for="media">',
-                    '<img src="http://dxcpw8yg8uhxn.cloudfront.net/{imageuri}touch.jpg" />',
-                    '</tpl>'
-                )
+                fullscreen: true,
+                layout: 'fit'
             });
 
             this.portraitLayout = [{
@@ -69,19 +25,19 @@
                             type: "hbox",
                             align: "stretch"
                         },
-                        //items: [this.imagePanel, this.descriptionPanel]
+
                     },
-                    this.summaryPanel
+                    this.imagePanel
                 ]
             }];
 
             this.landscapeLayout = [{
                 layout: {
                     //type: "hbox",
-                    align: "stretch"
+                    align: "fit"
                 },
                 items: [
-                    this.summaryPanel,
+                    this.imagePanel,
                     {
                         flex: 1,
                         layout: {
@@ -109,14 +65,40 @@
          * Displays the details of the selected product
          */
         showProfile: function(profile) {
-            this.profile = profile;
-            //var width = this.imagePanel.getWidth();
+
+            var height = this.imagePanel.getHeight();
             //profile.maxWidth = width;
+            var thepanel = this.imagePanel;
+
+        	var makeJSONPRequest = function() {
+                Ext.getBody().mask('Loading...', 'x-mask-loading', false);
+                Ext.util.JSONP.request({
+                    url: '/showtime/'+profile+'.json',
+                    callbackKey: 'callback',
+                    callback: function(result) {
+	                	var items = [];
+	                    Ext.each(result.data.Student.Media, function(media, i){
+	                    	items.push({
+	                    		html: '<div class="image"><img src="'+media.touch+'" height="100%" /></div>',
+	                    		cls: 'card'+i
+	                    	});
+	                     }
+	                    );           
+	                    var carousel = new Ext.Carousel({
+	                    	items: items
+	                    });
+	                    
+	                    thepanel.add(carousel);
+	                    
+	                    thepanel.doLayout();
+	                    //remove the loading indicator
+	                    Ext.getBody().unmask();
+                    }
+                });
+            };
             
-            //this.descriptionPanel.update(profile);
-            //this.imagePanel.update(profile);
-            
-            this.summaryPanel.update(profile);
+            thepanel.removeAll();
+            makeJSONPRequest(profile);
 
         },
 
@@ -127,11 +109,9 @@
             if (newOrientationLayout != this.orientationLayout) {
                 this.orientationLayout = newOrientationLayout;
 
-                //if (this.descriptionPanel.ownerCt) {
-                    //this.descriptionPanel.ownerCt.remove(this.descriptionPanel, false);
-                    //this.imagePanel.ownerCt.remove(this.imagePanel, false);
-                    //this.summaryPanel.ownerCt.remove(this.summaryPanel, false);
-                //}
+                if (this.imagePanel.ownerCt) {
+                    this.imagePanel.ownerCt.remove(this.imagePanel, false);
+                }
 
                 this.removeAll(true);
 

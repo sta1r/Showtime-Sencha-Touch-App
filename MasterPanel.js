@@ -77,8 +77,8 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
                 //cover: true
             }
         this.setActiveItem(profileDetail, animation);
-        //populate the panel with data
-        profileDetail.showProfile(profile);
+        //send the profilename to the profilepanel so it can load the data from there
+        profileDetail.showProfile(profile.profilename);
         
         this.tbar.setTitle(profile.profilename);
         this.tbar.showBackButton();
