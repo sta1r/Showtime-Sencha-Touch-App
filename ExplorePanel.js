@@ -24,7 +24,8 @@ Showtime.ExplorePanel = Ext.extend(Ext.DataView, {
 								'</div',
 							'</div>',
 							'<div class="caption">',
-								'<span>Student {#} of {[xcount]}</span>',
+								//'<span>Student {#} of {[xcount]}</span>',
+								'<span>{fullname}</span>',
 								'<span>{course}</span>',
 							'</div>',
 						'</div>',
@@ -36,7 +37,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.DataView, {
     portraitTpl: new Ext.XTemplate(
 			'<div class="explore-container" style="height: 100%">',
 				'<tpl for=".">',
-					'{[ xindex == 1 || xindex % 3 == 1 ? "<div class=row>" : ""]}',
+					'{[ xindex == 1 || xindex % 2 == 1 ? "<div class=row>" : ""]}',
 						'<div class="explore-item item{[xindex]}">',					
 		            	'<div class="thumbnail">',
 		            		'<div class="box">',
@@ -48,7 +49,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.DataView, {
 								'<span>{course}</span>',
 							'</div>',
 						'</div>',
-					'{[ xindex == xcount || xindex % 3 == 0 ? "</div>" : ""]}',
+					'{[ xindex == xcount || xindex % 2 == 0 ? "</div>" : ""]}',
    			'</tpl>',
 			'</div>'    
 	),

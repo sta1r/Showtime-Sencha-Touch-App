@@ -6,7 +6,7 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
     
     //called when this object is created
     initComponent: function(){        
-		//setup the toolbar, see SearchToolbar.js
+		//setup the toolbar, see Toolbar.js
 	    this.tbar = new Showtime.Toolbar();
 	    
 	    //add the toolbar to the panel's docked items
@@ -55,9 +55,10 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
     	//fade to the home card
         this.setActiveItem('home', anim || 'fade');
         //set the heading in the toolbar
-        this.tbar.setTitle('Showtime');
+        this.tbar.setTitle('MA 2011');
         //call the function to hide the backbutton in toolbar.js
         this.tbar.hideBackButton();
+		this.tbar.showBrowseButton();
     },    
     
     //this event listener has bubbled up from the tap event specified in homepanel.js
@@ -80,8 +81,10 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
         //send the profilename to the profilepanel so it can load the data from there
         profileDetail.showProfile(profile.profilename);
         
-        this.tbar.setTitle(profile.profilename);
+		this.tbar.setTitle(profile.fullname);
         this.tbar.showBackButton();
+        this.tbar.hideBrowseButton();
+
     }
 });    
 

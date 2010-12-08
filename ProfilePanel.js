@@ -5,18 +5,60 @@
         initComponent: function() {
             this.monitorOrientation = true;
             this.layout = "fit";
-            
+			
             this.imagePanel = new Ext.Panel({
                 cls: "profile-summary",
                 flex: 1,
                 fullscreen: true,
-                layout: 'fit'
+                layout: 'fit',
+				listeners: { // listen for a tap on the image - show overlay and toolbar
+					body: {
+						tap: function() { 
+							this.showDescriptionSheet();						
+						},
+						scope: this
+					}
+				}
             });
+
+			this.descriptionPanel = new Ext.Panel({
+				layout: 'card',
+                styleHtmlContent: true,
+                html: '<h4>Description</h4><p>Need the description content to sit in here. Can we set it in the JSON request below?</p>',
+                /*dockedItems: [{
+                    dock: 'top',
+                    xtype: 'toolbar',
+                    title: 'Description'
+                }],*/
+                scroll: 'vertical'
+			});
+			
+			this.descriptionSheet = new Ext.Sheet({
+				cls: "descriptionSheet",
+				layout: 'fit',
+				hidden: true,
+				modal: true,
+				hideOnMaskTap: true,
+				centered: false,
+                height: 250,
+				arrive: 'bottom',
+				depart: 'bottom',
+		        /*listeners: {
+		         hide: function(){
+		           console.log('deactivate')
+		           this.detailPanel.setCard(0); 
+		         },
+		         scope: this
+		        },*/
+		        renderTo: this.body,
+		        stretchX: true,
+		        items: [this.descriptionPanel]
+			});
 
             this.portraitLayout = [{
                 layout: {
-                    type: "vbox",
-                    align: "stretch"
+                    //type: "vbox",
+                    align: "fit"
                 },
                 items: [
                     {
@@ -41,8 +83,8 @@
                     {
                         flex: 1,
                         layout: {
-                            type: "vbox",
-                            align: "stretch"
+                            /*type: "vbox",
+                            align: "stretch"*/
                         },
                         //items: [this.imagePanel, this.descriptionPanel]
                     }
@@ -66,7 +108,6 @@
          */
         showProfile: function(profile) {
 
-            var height = this.imagePanel.getHeight();
             //profile.maxWidth = width;
             var thepanel = this.imagePanel;
 
@@ -78,9 +119,17 @@
                     callback: function(result) {
 	                	var items = [];
 	                    Ext.each(result.data.Student.Media, function(media, i){
+							/*var myImg = media.touch;
+							var size = myImg.width;
+							
+							console.log(size);
+							*/
+							//var height = media.touch.getHeight();
+				            
 	                    	items.push({
-	                    		html: '<div class="image"><img src="'+media.touch+'" height="100%" /></div>',
-	                    		cls: 'card'+i
+	                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
+								html: '<div class="image"><img src="'+media.touch+'" height="100%" /></div>',
+	                    		id: 'card'+i
 	                    	});
 	                     }
 	                    );           
@@ -125,7 +174,11 @@
         
         getTitleText: function() {
             return this.profile.profilename;
-        }
+        },
+
+		showDescriptionSheet: function() {
+			this.descriptionSheet.show();
+		}
 
     });
 

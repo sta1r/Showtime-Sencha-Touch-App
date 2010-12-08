@@ -1,6 +1,7 @@
 //define a custom toolbar by extending the object
 Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
     dock: 'top',
+	//hidden: 'true',
    
     initComponent: function(){
 		//Adds the specified events to the list of events which this Observable may fire.
@@ -136,6 +137,16 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
         Showtime.Toolbar.superclass.initComponent.call(this);       
     },
     
+	showToolbar: function() {
+		this.show();
+		this.doComponentLayout();
+	},
+	
+	hideToolbar: function() {
+		this.hide();
+		this.doComponentLayout();
+	},
+	
     showBackButton: function() {
         this.backButton.show();
         //refresh the layout
@@ -145,6 +156,19 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 	//function called by ShowHome in MasterPanel - hides back button
     hideBackButton: function() {
         this.backButton.hide();
+      //refresh the layout
+        this.doComponentLayout();
+    },
+
+    showBrowseButton: function() {
+        this.browseButton.show();
+        //refresh the layout
+        this.doComponentLayout();
+    },
+    
+	//function called by ShowHome in MasterPanel - hides back button
+    hideBrowseButton: function() {
+        this.browseButton.hide();
       //refresh the layout
         this.doComponentLayout();
     },
