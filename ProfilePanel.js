@@ -24,7 +24,9 @@
 			this.descriptionPanel = new Ext.Panel({
 				layout: 'card',
                 styleHtmlContent: true,
-                html: '<h4>Description</h4><p>Need the description content to sit in here. Can we set it in the JSON request below?</p>',
+                html: '<h4>Description</h4><p>Need the description content to sit in here. Can we set it in the JSON request below?</p>' + 
+				'<h4>Video test</h4>' +
+				'<iframe src="http://www.youtube.com/embed/P4OWWy-1Oyk"></iframe>',
                 /*dockedItems: [{
                     dock: 'top',
                     xtype: 'toolbar',
@@ -40,7 +42,7 @@
 				modal: true,
 				hideOnMaskTap: true,
 				centered: false,
-                height: 250,
+                height: 500,
 				arrive: 'bottom',
 				depart: 'bottom',
 		        /*listeners: {
