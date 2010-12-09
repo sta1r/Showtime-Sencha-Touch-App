@@ -26,7 +26,9 @@
                 styleHtmlContent: true,
                 html: '<h4>Description</h4><p>Need the description content to sit in here. Can we set it in the JSON request below?</p>' + 
 				'<h4>Youtube test</h4>' +
-				'<iframe src="http://www.youtube.com/embed/P4OWWy-1Oyk"></iframe>' + 
+				'<iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/P4OWWy-1Oyk?rel=0" frameborder="0"></iframe>' +
+				'<iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/NtzDtV2Jbk8" frameborder="0"></iframe>' + 
+				'<iframe title="YouTube video player" class="youtube-player" type="text/html" width="480" height="390" src="http://www.youtube.com/embed/lLPbvrbY0to?rel=0" frameborder="0"></iframe>' +
 				'<h4>Vimeo test</h4>' +
 				'<iframe src="http://player.vimeo.com/video/12377177" width="400" height="225" frameborder="0"></iframe>' +
 				'<h4>Issuu test</h4>' +
