@@ -25,8 +25,12 @@
 				layout: 'card',
                 styleHtmlContent: true,
                 html: '<h4>Description</h4><p>Need the description content to sit in here. Can we set it in the JSON request below?</p>' + 
-				'<h4>Video test</h4>' +
-				'<iframe src="http://www.youtube.com/embed/P4OWWy-1Oyk"></iframe>',
+				'<h4>Youtube test</h4>' +
+				'<iframe src="http://www.youtube.com/embed/P4OWWy-1Oyk"></iframe>' + 
+				'<h4>Vimeo test</h4>' +
+				'<iframe src="http://player.vimeo.com/video/12377177" width="400" height="225" frameborder="0"></iframe>' +
+				'<h4>Issuu test</h4>' +
+				'<div><object style="width:420px;height:540px" ><param name="movie" value="http://static.issuu.com/webembed/viewers/style1/v1/IssuuViewer.swf?mode=embed&amp;viewMode=presentation&amp;layout=http%3A%2F%2Fskin.issuu.com%2Fv%2Flight%2Flayout.xml&amp;showFlipBtn=true&amp;documentId=101110194436-b7b2db521e0e4e9c8c7c2319656841df&amp;docName=2011_course_brochure_prelim_webonly&amp;username=MCDpsych&amp;loadingInfoText=2011%20APA%20Course%20Brochure&amp;et=1291911175346&amp;er=39" /><param name="allowfullscreen" value="true"/><param name="menu" value="false"/><embed src="http://static.issuu.com/webembed/viewers/style1/v1/IssuuViewer.swf" type="application/x-shockwave-flash" allowfullscreen="true" menu="false" style="width:420px;height:540px" flashvars="mode=embed&amp;viewMode=presentation&amp;layout=http%3A%2F%2Fskin.issuu.com%2Fv%2Flight%2Flayout.xml&amp;showFlipBtn=true&amp;documentId=101110194436-b7b2db521e0e4e9c8c7c2319656841df&amp;docName=2011_course_brochure_prelim_webonly&amp;username=MCDpsych&amp;loadingInfoText=2011%20APA%20Course%20Brochure&amp;et=1291911175346&amp;er=39" /></object><div style="width:420px;text-align:left;"><a href="http://issuu.com/MCDpsych/docs/2011_course_brochure_prelim_webonly?mode=embed&amp;viewMode=presentation&amp;layout=http%3A%2F%2Fskin.issuu.com%2Fv%2Flight%2Flayout.xml&amp;showFlipBtn=true" target="_blank">Open publication</a> - Free <a href="http://issuu.com" target="_blank">publishing</a> - <a href="http://issuu.com/search?q=psychiatry" target="_blank">More psychiatry</a></div></div>',
                 /*dockedItems: [{
                     dock: 'top',
                     xtype: 'toolbar',
@@ -42,7 +46,7 @@
 				modal: true,
 				hideOnMaskTap: true,
 				centered: false,
-                height: 500,
+                height: 700,
 				arrive: 'bottom',
 				depart: 'bottom',
 		        /*listeners: {
