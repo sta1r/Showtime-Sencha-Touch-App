@@ -17,7 +17,7 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
         //only one can be displayed at a time
         this.items = [{
             xtype: 'showtime-explorepanel',
-            id: 'home'
+            id: 'explore'
         },{
             xtype: 'showtime-profilepanel',
             id: 'profile'
@@ -34,6 +34,7 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
     afterRender: function() {
     	Showtime.MasterPanel.superclass.afterRender.apply(this, arguments);
         this.showHome();
+        //this.showProfiles('test');
     },
     
     onBack: function() {
@@ -53,7 +54,7 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
 	//show the homepage
     showHome: function(anim) {
     	//fade to the home card
-        this.setActiveItem('home', anim || 'fade');
+        this.setActiveItem('explore', anim || 'fade');
         //set the heading in the toolbar
         this.tbar.setTitle('MA 2011');
         //call the function to hide the backbutton in toolbar.js
@@ -65,6 +66,18 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
     onProfileSelected: function(t, profile) {
     	//alert('You tapped: '+profile);
         this.showProfile(profile);
+    },
+
+    showProfiles: function(categoryData) {
+        var profileList = Ext.getCmp('explore');
+        this.setActiveItem(profileList);
+        //if (categoryData) {
+            //this.currentCategoryData = categoryData;
+            profileList.showProfiles('test');
+        //}
+        profileList.doLayout();
+        this.tbar.setTitle(profileList.getTitleText());
+        this.tbar.showBackButton();
     },
     
     showProfile: function(profile) {
@@ -85,7 +98,8 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
         this.tbar.showBackButton();
         this.tbar.hideBrowseButton();
 
-    }
+    },
+
 });    
 
 //register xtype
