@@ -131,11 +131,23 @@
                     callback: function(result) {
 	                	var items = [];
 	                    Ext.each(result.data.Student.Media, function(media, i){
-	                    	items.push({
-	                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
-								html: '<div class="profileimage"><img src="'+media.touch+'" /></div>',
-	                    		id: 'card'+i
-	                    	});
+	                    	if (media.video) {
+	                    		
+	                    		items.push({
+		                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
+									html: '<div class="video"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>',
+		                    		id: 'card'+i
+		                    	});
+	                    		
+	                    	} else {	
+	                    	
+		                    	items.push({
+		                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
+									html: '<div class="profileimage"><img src="'+media.touch+'" /></div>',
+		                    		id: 'card'+i
+		                    	});
+	                    	
+	                    	}
 	                     }
 	                    );           
 	                    var carousel = new Ext.Carousel({

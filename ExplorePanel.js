@@ -4,7 +4,7 @@ Ext.regModel('Explore', {
         'profilename',
         'fullname',
         'course',
-        'hero'
+        'thumb'
     ],
     idProperty: 'id'
 });
@@ -20,7 +20,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 						'<div class="explore-item item{[xindex]}">',					
 		            	'<div class="thumbnail">',
 								'<div class="box">',
-		            			'<img src="{hero}" />',
+		            			'<img src="{thumb}" />',
 								'</div',
 							'</div>',
 							'<div class="caption">',
@@ -41,7 +41,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 						'<div class="explore-item item{[xindex]}">',					
 		            	'<div class="thumbnail">',
 		            		'<div class="box">',
-		            			'<img src="{hero}" />',
+		            			'<img src="{thumb}" />',
 								'</div',
 							'</div>',
 							'<div class="caption">',
