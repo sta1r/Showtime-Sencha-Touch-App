@@ -133,11 +133,18 @@
 	                    Ext.each(result.data.Student.Media, function(media, i){
 	                    	if (media.video) {
 	                    		
-	                    		items.push({
-		                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
-									html: '<div class="video"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>',
-		                    		id: 'card'+i
-		                    	});
+	                    		if (media.video_host == 'vimeo') {
+		                    		items.push({
+										html: '<div class="video"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0" frameborder="0"></iframe></div>',
+			                    		id: 'card'+i
+			                    	});
+	                    		}
+	                    		else {
+		                    		items.push({
+										html: '<div class="video"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>',
+			                    		id: 'card'+i
+			                    	});
+	                    		}
 	                    		
 	                    	} else {	
 	                    	
