@@ -149,8 +149,8 @@
 	                    	} else {	
 	                    	
 		                    	items.push({
-		                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
-									html: '<div class="profileimage"><img src="'+media.touch+'" /></div>',
+		                    		html: '<div class="profile-image" style="background: url('+media.touch+') center center no-repeat;"></div>',
+									//html: '<div class="profile-image"><img src="'+media.touch+'" /></div>',
 		                    		id: 'card'+i
 		                    	});
 	                    	
@@ -158,6 +158,7 @@
 	                     }
 	                    );           
 	                    var carousel = new Ext.Carousel({
+							ui: 'light',
 	                    	items: items
 	                    });
 	                    
