@@ -14,7 +14,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     cls: 'explore-panel',
     // landscape mode - use vertical columns
     landscapeTpl: new Ext.XTemplate(
-        '<div class="explore-container" style="height: 100%">',
+        '<div class="explore-container">',
             '<tpl for=".">',
 					'{[ xindex == 1 || xindex % 2 == 1 ? "<div class=column>" : ""]}',
 						'<div class="explore-item item{[xindex]}">',					
@@ -35,7 +35,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     ),
     // portrait mode - use horizontal rows
     portraitTpl: new Ext.XTemplate(
-			'<div class="explore-container" style="height: 100%">',
+			'<div class="explore-container">',
 				'<tpl for=".">',
 					'{[ xindex == 1 || xindex % 2 == 1 ? "<div class=row>" : ""]}',
 						'<div class="explore-item item{[xindex]}">',					
@@ -55,6 +55,16 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 	),
     
     initComponent: function() {
+		//setup the toolbar, see Toolbar.js
+		this.tbar = new Showtime.Toolbar();	
+		//add the toolbar to the panel's docked items
+		this.dockedItems = [this.tbar];	
+        //set the heading in the toolbar
+        this.tbar.setTitle('MA 2011');
+        //call the function to hide the backbutton in toolbar.js
+        this.tbar.hideBackButton();
+		this.tbar.showBrowseButton();
+		
         this.addEvents('profileSelected');
         this.enableBubble('profileSelected');
         
@@ -166,31 +176,6 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         //this is important - the dataview will not work if the selector is invalid - here it is set to each thumb div
         //this.itemSelector = '.thumbnail';
         
-        /*var makeJSONPRequest = function() {
-            Ext.getBody().mask('Loading...', 'x-mask-loading', false);
-            Ext.util.JSONP.request({
-                url: '/showtime/explore.json',
-                callbackKey: 'callback',
-                params: {                    
-                    page: 1
-                },
-                callback: function(result) {
-                    /*var weather = result.data.weather;
-                    if (weather) {
-                        var html = tpl.applyTemplate(weather);
-                        Ext.getCmp('content').update(html);                        
-                    }
-                    else {
-                        alert('There was an error retrieving the weather.');
-                    }
-                    Ext.getCmp('status').setTitle('Palo Alto, CA Weather');
-                    Ext.getBody().unmask();
-                }
-            });
-        };	
-        
-        makeJSONPRequest();*/
-        
         Showtime.ExplorePanel.superclass.initComponent.call(this);
         
         this.mon(this, "itemtap", this.onItemTap, this);
@@ -204,25 +189,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     onOrientation: function(target, orientation) {
         this.tpl = orientation == "portrait" ? this.portraitTpl : this.landscapeTpl;
         this.refresh();
-    },
-    
-    //fired when profile is tapped
-    /*handleItemTap: function(dv, idx, el, e){
-        var record = this.store.getAt(idx),
-            //profile = record.get('profilename');
-        	profile = record.data;
-        //alert(record);
-        //this.fireEvent('profileSelected', this, profile);
-        console.log('tapped');
-        console.log(this.store.currentPage);
-    },
-    //fired when explore panel swiped
-    handlePanelSwipe: function(e) {
-    	console.log('swiped');
-    	console.log(this.store.currentPage);
-    	this.store.nextPage();
-    	console.log(this.store.currentPage);
-    }	*/
+    }
 });
 //add this panel to the component registry
 Ext.reg('showtime-explorepanel', Showtime.ExplorePanel);

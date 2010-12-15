@@ -1,12 +1,13 @@
 //define a custom toolbar by extending the object
 Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
+	//overlay: true,
     dock: 'top',
 	//hidden: 'true',
    
     initComponent: function(){
 		//Adds the specified events to the list of events which this Observable may fire.
         this.addEvents('back');
-        
+
         //grab the toolbar object into the variable 'self' so it can be referenced within other objects
         var self = this;
         

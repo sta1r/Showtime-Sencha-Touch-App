@@ -3,9 +3,18 @@
 
     Showtime.ProfilePanel = Ext.extend(Ext.Panel, {
         initComponent: function() {
+			this.tbar = new Showtime.Toolbar();	//setup the toolbar, see Toolbar.js
+			this.tbar.overlay = true; //set the toolbar to appear overlaid on the image			
+			this.dockedItems = [this.tbar];	//add the toolbar to the panel's docked items        
+	        this.tbar.setTitle('MA 2011'); //set the heading in the toolbar
+	        this.tbar.showBackButton();
+			this.tbar.hideBrowseButton();
+			//this.tbar.addEvents('back');
+	        this.tbar.enableBubble('back');
+			
             this.monitorOrientation = true;
             this.layout = "fit";
-			
+            
             this.imagePanel = new Ext.Panel({
                 cls: "profile-summary",
                 flex: 1,
@@ -14,7 +23,12 @@
 				listeners: { // listen for a tap on the image - show overlay and toolbar
 					body: {
 						tap: function() { 
-							this.showDescriptionSheet();						
+							//this.showDescriptionSheet();
+			            	if (this.tbar.isVisible()){
+			            		this.tbar.hideToolbar();
+			                 } else {
+			                	this.tbar.showToolbar();
+			                 }
 						},
 						scope: this
 					}
@@ -115,7 +129,6 @@
          * Displays the details of the selected product
          */
         showProfile: function(profile) {
-
             //profile.maxWidth = width;
             var thepanel = this.imagePanel;
 
@@ -127,16 +140,9 @@
                     callback: function(result) {
 	                	var items = [];
 	                    Ext.each(result.data.Student.Media, function(media, i){
-							/*var myImg = media.touch;
-							var size = myImg.width;
-							
-							console.log(size);
-							*/
-							//var height = media.touch.getHeight();
-				            
 	                    	items.push({
 	                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
-								html: '<div class="image"><img src="'+media.touch+'" height="100%" /></div>',
+								html: '<div class="image"><img src="'+media.touch+'" /></div>',
 	                    		id: 'card'+i
 	                    	});
 	                     }
@@ -145,8 +151,7 @@
 	                    	items: items
 	                    });
 	                    
-	                    thepanel.add(carousel);
-	                    
+	                    thepanel.add(carousel);                    
 	                    thepanel.doLayout();
 	                    //remove the loading indicator
 	                    Ext.getBody().unmask();
