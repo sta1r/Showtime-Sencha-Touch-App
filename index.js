@@ -1,8 +1,8 @@
 Ext.setup({
     tabletStartupScreen: 'tablet_startup.png',
     phoneStartupScreen: 'phone_startup.png',
-    icon: 'icon.png',
-    glossOnIcon: false,
+    icon: 'img/touch/icon.png',
+    glossOnIcon: true,
     onReady: function() {
 		Showtime.MasterPanel = new Showtime.MasterPanel();
     }
