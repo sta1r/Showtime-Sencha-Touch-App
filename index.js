@@ -1,5 +1,5 @@
 Ext.setup({
-    tabletStartupScreen: 'tablet_startup.png',
+    tabletStartupScreen: 'img/touch/tablet_startup.png',
     phoneStartupScreen: 'phone_startup.png',
     icon: 'img/touch/icon.png',
     glossOnIcon: true,

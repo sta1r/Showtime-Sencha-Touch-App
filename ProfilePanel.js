@@ -57,8 +57,8 @@
 
 			this.descriptionPanel = new Ext.Panel({
 				layout: 'card',
-                styleHtmlContent: true,
-                scroll: 'vertical'
+                styleHtmlContent: true/*,
+                scroll: 'vertical'*/
 			});
 			
 	        this.descriptionSheet = new Ext.Sheet({
@@ -71,10 +71,10 @@
 	            height: 300,
 				arrive: 'bottom',
 				depart: 'bottom',
-		        renderTo: this.body,
+		        //renderTo: this.body,
 		        stretchX: true,
-		        scroll: true,
-		        items: [this.descriptionPanel]
+		        scroll: true//,
+		        //items: [this.descriptionPanel]
 			});
 			
 

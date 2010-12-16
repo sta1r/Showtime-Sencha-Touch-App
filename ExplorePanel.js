@@ -45,12 +45,12 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 								'</div',
 							'</div>',
 							'<div class="caption">',
-								'<span>Student {#} of {[xcount]}</span>',
+								'<span>{fullname}</span>',
 								'<span>{course}</span>',
 							'</div>',
 						'</div>',
 					'{[ xindex == xcount || xindex % 2 == 0 ? "</div>" : ""]}',
-   			'</tpl>',
+   				'</tpl>',
 			'</div>'    
 	),
     
