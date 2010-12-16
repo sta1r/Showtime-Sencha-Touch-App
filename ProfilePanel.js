@@ -135,7 +135,7 @@
 	                    		
 	                    		if (media.video_host == 'vimeo') {
 		                    		items.push({
-										html: '<div class="video"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0" frameborder="0"></iframe></div>',
+										html: '<div class="video"><iframe class="vimeo-player" type="text/html" width="640" height="385" color="ffffff" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0" frameborder="0"></iframe></div>',
 			                    		id: 'card'+i
 			                    	});
 	                    		}
@@ -149,8 +149,8 @@
 	                    	} else {	
 	                    	
 		                    	items.push({
-		                    		html: '<div class="profile-image" style="background: url('+media.touch+') center center no-repeat;"></div>',
-									//html: '<div class="profile-image"><img src="'+media.touch+'" /></div>',
+		                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
+									html: '<div class="profileimage" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
 		                    		id: 'card'+i
 		                    	});
 	                    	
@@ -158,7 +158,6 @@
 	                     }
 	                    );           
 	                    var carousel = new Ext.Carousel({
-							ui: 'light',
 	                    	items: items
 	                    });
 	                    

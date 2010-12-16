@@ -69,11 +69,30 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         this.enableBubble('profileSelected');
         
         this.monitorOrientation = true;
+        
         this.scroll = false;
         this.tpl = Ext.getOrientation() == "portrait" ? this.portraitTpl : this.landscapeTpl;
-        //this.fullscreen = true;
         
-        var store = new Ext.data.Store({
+        Showtime.ExplorePanel.superclass.initComponent.call(this);
+        
+        this.mon(this, "itemtap", this.onItemTap, this);
+        this.mon(this, "orientationChange", this.onOrientationChange, this);
+    },
+    
+    afterRender: function() {
+    	Showtime.ExplorePanel.superclass.afterRender.apply(this, arguments);
+    	this.setOrientation(Ext.getOrientation());
+    },
+    
+    showProfiles: function() {
+    	this.removeAll(true);
+        this.doLayout();
+        
+        thepanel = this;
+        
+        var tpl = Ext.getOrientation() == "portrait" ? this.portraitTpl : this.landscapeTpl;
+        
+    	var store = new Ext.data.Store({
             model: 'Explore',
             proxy: {
                 type: 'ajax',
@@ -90,15 +109,8 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                     var items = [];
                     
                     store.each(function(rec){
-                        items.push(
-                    		//{
-                    		//	html: '<div class="chris">'+rec.data.fullname+'</div>'
-                    		//}
-                        	rec.data
-                        );
+                        items.push(rec.data);
                     });
-                    
-                    thepanel = Ext.getCmp('explore');
                     
                     var carditems = [];
                     
@@ -126,6 +138,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                                                 data = component.profileData[index];
                                             
                                             if (Ext.isObject(data)) {
+                                            	this.enableBubble('profileSelected');
                                             	thepanel.fireEvent('profileSelected', this, component.profileData[index]);
                                             }
                                         }
@@ -133,10 +146,11 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                                 },
                                 scope: thepanel
                             }
-                        });
-                        
+                        });                   	
+                    	
                         var renderData = function() {
-                        	thepanel.tpl.overwrite(component.el, cardData);
+                        	var tpl = Ext.getOrientation() == "portrait" ? this.portraitTpl : this.landscapeTpl;
+                        	tpl.overwrite(component.el, cardData);
                             component.el.repaint();
                             component.items = new Ext.CompositeElementLite();
                             component.items.fill(Ext.query('.explore-item', component.el.dom));
@@ -159,7 +173,6 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                     	layout: 'fit',
                     	flex: 1,
                     	//tpl: thepanel.tpl,
-                        //items: items,
                     	items: cards,
                         itemId: 'carousel'
                     });
@@ -172,23 +185,43 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
             autoLoad: true
         });
         store.read();
-        
-        //this is important - the dataview will not work if the selector is invalid - here it is set to each thumb div
-        //this.itemSelector = '.thumbnail';
-        
-        Showtime.ExplorePanel.superclass.initComponent.call(this);
-        
-        this.mon(this, "itemtap", this.onItemTap, this);
-        this.mon(this, "orientationChange", this.onOrientation, this);
+
     },
     
-    afterRender: function() {
-    	Showtime.ExplorePanel.superclass.afterRender.apply(this, arguments);
+    resetLayout: function() {
+    	var thepanel = Ext.getCmp('explore');
+        var portrait = Ext.getOrientation() == "portrait",
+            newOrientationLayout = portrait ? thepanel.portraitTpl : thepanel.landscapeTpl;
+
+        if (newOrientationLayout != thepanel.orientationLayout) {
+        	thepanel.orientationLayout = newOrientationLayout;
+
+            //if (this.imagePanel.ownerCt) {
+            //    this.imagePanel.ownerCt.remove(this.imagePanel, false);
+            //}
+            
+        	thepanel.removeAll(true);
+
+            //this.descriptionPanel.flex = portrait ? 4 : 1;
+
+        	thepanel.add.apply(thepanel, newOrientationLayout);
+        	thepanel.layout.activeItem = thepanel.items.first();            
+        	thepanel.doLayout();
+        }
     },
     
-    onOrientation: function(target, orientation) {
+    onOrientationChange: function(target, orientation) {
         this.tpl = orientation == "portrait" ? this.portraitTpl : this.landscapeTpl;
-        this.refresh();
+        //this.showProfiles();
+        var thepanel = Ext.getCmp('explore');
+        test = thepanel.items.get(0);
+        //console.log(test);
+        //carousel = this.items.items[0];
+        if (test) {
+        	//this.showProfiles();
+        	this.doLayout();
+        	test.doLayout(); 
+        }
     }
 });
 //add this panel to the component registry

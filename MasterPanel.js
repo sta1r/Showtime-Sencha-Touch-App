@@ -43,6 +43,8 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
 
 	//show the homepage
     showHome: function(anim) {
+    	var profileList = Ext.getCmp('explore');
+    	profileList.showProfiles();
     	//fade to the home card
         this.setActiveItem('explore', anim || 'fade');
     },    
@@ -51,15 +53,6 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
     onProfileSelected: function(t, profile) {
     	//alert('You tapped: '+profile);
         this.showProfile(profile);
-    },
-
-    showProfiles: function(categoryData) {
-        var profileList = Ext.getCmp('explore');
-        this.setActiveItem(profileList);
-
-        profileList.showProfiles('test');
-
-        profileList.doLayout();
     },
     
     showProfile: function(profile) {
