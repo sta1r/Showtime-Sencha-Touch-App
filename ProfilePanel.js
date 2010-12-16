@@ -12,6 +12,7 @@
 			this.tbar.hideBrowseButton();
 			//this.tbar.addEvents('back');
 	        this.tbar.enableBubble('back');
+	        this.mon(this, 'back', this.onBack, this);
 	        
             this.monitorOrientation = true;
             
@@ -38,11 +39,15 @@
 				listeners: { // listen for a tap on the image - show overlay and toolbar
 					body: {
 						tap: function() { 
-							//this.showDescriptionSheet();
+							
 			            	if (this.tbar.isVisible()){
 			            		this.tbar.hideToolbar();
+			            		this.descriptionSheet.hide();
+			            		this.doLayout();
 			                 } else {
 			                	this.tbar.showToolbar();
+			                	this.descriptionSheet.show();
+			                	this.doLayout();
 			                 }
 						},
 						scope: this
@@ -53,41 +58,25 @@
 			this.descriptionPanel = new Ext.Panel({
 				layout: 'card',
                 styleHtmlContent: true,
-                html: '<h4>Description</h4><p>Need the description content to sit in here. Can we set it in the JSON request below?</p>' + 
-				'<h4>Youtube test</h4>' +
-				'<iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/P4OWWy-1Oyk?rel=0" frameborder="0"></iframe>' +
-				'<iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/NtzDtV2Jbk8" frameborder="0"></iframe>' + 
-				'<iframe title="YouTube video player" class="youtube-player" type="text/html" width="480" height="390" src="http://www.youtube.com/embed/lLPbvrbY0to?rel=0" frameborder="0"></iframe>' +
-				'<h4>Vimeo test</h4>' +
-				'<iframe src="http://player.vimeo.com/video/12377177" width="400" height="225" frameborder="0"></iframe>' +
-				'<h4>Scribd test</h4>' +
-				'<a title="View Scribd in HTML5 on Scribd" href="http://www.scribd.com/doc/30964170/Scribd-in-HTML5" style="margin: 12px auto 6px auto; font-family: Helvetica,Arial,Sans-serif; font-style: normal; font-variant: normal; font-weight: normal; font-size: 14px; line-height: normal; font-size-adjust: none; font-stretch: normal; -x-system-font: none; display: block; text-decoration: underline;">Scribd in HTML5</a> <object id="doc_836040420025661" name="doc_836040420025661" height="600" width="100%" type="application/x-shockwave-flash" data="http://d1.scribdassets.com/ScribdViewer.swf" style="outline:none;" >		<param name="movie" value="http://d1.scribdassets.com/ScribdViewer.swf">		<param name="wmode" value="opaque"> 		<param name="bgcolor" value="#ffffff"> 		<param name="allowFullScreen" value="true"> 		<param name="allowScriptAccess" value="always"> 		<param name="FlashVars" value="document_id=30964170&access_key=key-1ar9e5ms2364hpdfeixn&page=1&viewMode=list&custom_logo_image_url=http%3A%2F%2Fi5.scribdassets.com%2Fpublic%2Fimages%2Fuploaded%2F72595926%2Fy4t0wM2gXND9YfLmd74O.jpeg&custom_logo_click_url=www.scribd.com"> 		<embed id="doc_836040420025661" name="doc_836040420025661" src="http://d1.scribdassets.com/ScribdViewer.swf?document_id=30964170&access_key=key-1ar9e5ms2364hpdfeixn&page=1&viewMode=list&custom_logo_image_url=http%3A%2F%2Fi5.scribdassets.com%2Fpublic%2Fimages%2Fuploaded%2F72595926%2Fy4t0wM2gXND9YfLmd74O.jpeg" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="600" width="100%" wmode="opaque" bgcolor="#ffffff"></embed> 	</object>	' +
-				'<h4>Issuu test</h4>' +
-				'<div><object style="width:420px;height:540px" ><param name="movie" value="http://static.issuu.com/webembed/viewers/style1/v1/IssuuViewer.swf?mode=embed&amp;viewMode=presentation&amp;layout=http%3A%2F%2Fskin.issuu.com%2Fv%2Flight%2Flayout.xml&amp;showFlipBtn=true&amp;documentId=101110194436-b7b2db521e0e4e9c8c7c2319656841df&amp;docName=2011_course_brochure_prelim_webonly&amp;username=MCDpsych&amp;loadingInfoText=2011%20APA%20Course%20Brochure&amp;et=1291911175346&amp;er=39" /><param name="allowfullscreen" value="true"/><param name="menu" value="false"/><embed src="http://static.issuu.com/webembed/viewers/style1/v1/IssuuViewer.swf" type="application/x-shockwave-flash" allowfullscreen="true" menu="false" style="width:420px;height:540px" flashvars="mode=embed&amp;viewMode=presentation&amp;layout=http%3A%2F%2Fskin.issuu.com%2Fv%2Flight%2Flayout.xml&amp;showFlipBtn=true&amp;documentId=101110194436-b7b2db521e0e4e9c8c7c2319656841df&amp;docName=2011_course_brochure_prelim_webonly&amp;username=MCDpsych&amp;loadingInfoText=2011%20APA%20Course%20Brochure&amp;et=1291911175346&amp;er=39" /></object><div style="width:420px;text-align:left;"><a href="http://issuu.com/MCDpsych/docs/2011_course_brochure_prelim_webonly?mode=embed&amp;viewMode=presentation&amp;layout=http%3A%2F%2Fskin.issuu.com%2Fv%2Flight%2Flayout.xml&amp;showFlipBtn=true" target="_blank">Open publication</a> - Free <a href="http://issuu.com" target="_blank">publishing</a> - <a href="http://issuu.com/search?q=psychiatry" target="_blank">More psychiatry</a></div></div>',
                 scroll: 'vertical'
 			});
 			
-			this.descriptionSheet = new Ext.Sheet({
+	        this.descriptionSheet = new Ext.Sheet({
 				cls: "descriptionSheet",
 				layout: 'fit',
-				hidden: true,
-				modal: true,
-				hideOnMaskTap: true,
+				hidden: false,
+				modal: false,
+				//hideOnMaskTap: true,
 				centered: false,
-                height: 700,
+	            height: 300,
 				arrive: 'bottom',
 				depart: 'bottom',
-		        /*listeners: {
-		         hide: function(){
-		           console.log('deactivate')
-		           this.detailPanel.setCard(0); 
-		         },
-		         scope: this
-		        },*/
 		        renderTo: this.body,
 		        stretchX: true,
+		        scroll: true,
 		        items: [this.descriptionPanel]
 			});
+			
 
             this.portraitLayout = [{
                 layout: {
@@ -121,7 +110,8 @@
          */
         showProfile: function(profile) {
             //profile.maxWidth = width;
-            var thepanel = this.imagePanel;
+            var imagepanel = this.imagePanel;
+            var profilepanel = this;
 
         	var makeJSONPRequest = function() {
                 Ext.getBody().mask('Loading...', 'x-mask-loading', false);
@@ -146,10 +136,8 @@
 			                    	});
 	                    		}
 	                    		
-	                    	} else {	
-	                    	
+	                    	} else {                    	
 		                    	items.push({
-		                    		//html: '<div class="image" style="background-image: url('+media.touch+');"></div>',
 									html: '<div class="profileimage" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
 		                    		id: 'card'+i
 		                    	});
@@ -161,15 +149,21 @@
 	                    	items: items
 	                    });
 	                    
-	                    thepanel.add(carousel);                    
-	                    thepanel.doLayout();
+	                    imagepanel.add(carousel);
+	                    
+	                    profilepanel.descriptionSheet.html = '<div id="description">'+result.data.Student.Student.description+'</div>';
+
+	                    profilepanel.descriptionSheet.show();
+	                    profilepanel.doLayout();
+	                    
+	                    imagepanel.doLayout();
 	                    //remove the loading indicator
 	                    Ext.getBody().unmask();
                     }
                 });
             };
             
-            thepanel.removeAll();
+            imagepanel.removeAll();
             makeJSONPRequest(profile);
 
         },
@@ -201,11 +195,10 @@
         getTitleText: function() {
             return this.profile.profilename;
         },
-
-		showDescriptionSheet: function() {
-			this.descriptionSheet.show();
+		
+		onBack: function() {
+			this.descriptionSheet.hide();
 		}
-
     });
 
     Ext.reg("showtime-profilepanel", Showtime.ProfilePanel);

@@ -44,7 +44,9 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
 	//show the homepage
     showHome: function(anim) {
     	var profileList = Ext.getCmp('explore');
-    	profileList.showProfiles();
+    	
+    	//profileList.showProfiles();
+    	
     	//fade to the home card
         this.setActiveItem('explore', anim || 'fade');
     },    

@@ -75,6 +75,8 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         
         Showtime.ExplorePanel.superclass.initComponent.call(this);
         
+        this.showProfiles();
+        
         this.mon(this, "itemtap", this.onItemTap, this);
         this.mon(this, "orientationChange", this.onOrientationChange, this);
     },
