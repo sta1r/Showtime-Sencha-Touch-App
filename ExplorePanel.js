@@ -1,8 +1,10 @@
 //model that describes the profiles structure
 Ext.regModel('Explore', {
     fields: [
-        'profilename',
-        'fullname',
+        'profileName',
+        'firstName',
+        'lastName',
+        'fullName',
         'course',
         'thumb'
     ],
@@ -25,7 +27,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 							'</div>',
 							'<div class="caption">',
 								//'<span>Student {#} of {[xcount]}</span>',
-								'<span>{fullname}{#}</span>',
+								'<span>{fullName}{#}</span>',
 								'<span>{course}</span>',
 							'</div>',
 						'</div>',
@@ -45,7 +47,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 								'</div',
 							'</div>',
 							'<div class="caption">',
-								'<span>{fullname}</span>',
+								'<span>{fullName}</span>',
 								'<span>{course}</span>',
 							'</div>',
 						'</div>',
@@ -184,7 +186,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                 }
             },
             pageSize: 50,
-            autoLoad: true
+            //autoLoad: true
         });
         store.read();
 

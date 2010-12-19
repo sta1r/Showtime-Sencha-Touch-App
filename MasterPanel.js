@@ -23,6 +23,7 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
         //add managed event handlers to the panel to listen for bubbled up events
         this.mon(this, 'back', this.onBack, this);
         this.mon(this, 'profileSelected', this.onProfileSelected, this);
+        this.mon(this, 'courseSelected', this.onCourseSelected, this);
     },
 
     afterRender: function() {
@@ -69,8 +70,8 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
             }
         this.setActiveItem(profileDetail, animation);
         //send the profilename to the profilepanel so it can load the data from there
-        profileDetail.showProfile(profile.profilename);
-        profileDetail.tbar.setTitle(profile.fullname);
+        profileDetail.showProfile(profile.profileName);
+        profileDetail.tbar.setTitle(profile.fullName);
     },
 
 });    

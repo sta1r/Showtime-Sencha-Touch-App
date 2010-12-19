@@ -201,7 +201,7 @@
         },
         
         getTitleText: function() {
-            return this.profile.profilename;
+            return this.profile.profileName;
         },
 
 		onInfo: function() {

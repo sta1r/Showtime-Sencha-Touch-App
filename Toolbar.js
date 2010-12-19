@@ -7,13 +7,23 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
     initComponent: function(){
 		//Adds the specified events to the list of events which this Observable may fire.
         this.addEvents('back');
+        this.addEvents('profileSelected');
+        this.enableBubble('profileSelected');
 
         //grab the toolbar object into the variable 'self' so it can be referenced within other objects
         var self = this;
 
 		// begin student list
 		Ext.regModel('Student', {
-		    fields: ['firstName', 'lastName']
+		    fields: ['firstName', 'lastName', 'fullName', 'profileName'],
+		    proxy: {
+		    	type: 'ajax',
+		    	url: '/showtime/lcf/ma/2011/index.json',
+		    	reader: {
+		    		type: 'json',
+		    		root: 'data.Profiles'
+		    	}
+		    }
 		});
 		
 		Showtime.StudentStore = new Ext.data.Store({
@@ -22,87 +32,30 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 		    getGroupString : function(record) {
 		        return record.get('firstName')[0];
 		    },
-		    data: [
-		        {firstName: 'Julio', lastName: 'Benesh'},
-		        {firstName: 'Julio', lastName: 'Minich'},
-		        {firstName: 'Tania', lastName: 'Ricco'},
-		        {firstName: 'Odessa', lastName: 'Steuck'},
-		        {firstName: 'Nelson', lastName: 'Raber'},
-		        {firstName: 'Tyrone', lastName: 'Scannell'},
-		        {firstName: 'Allan', lastName: 'Disbrow'},
-		        {firstName: 'Cody', lastName: 'Herrell'},
-		        {firstName: 'Julio', lastName: 'Burgoyne'},
-		        {firstName: 'Jessie', lastName: 'Boedeker'},
-		        {firstName: 'Allan', lastName: 'Leyendecker'},
-		        {firstName: 'Javier', lastName: 'Lockley'},
-		        {firstName: 'Guy', lastName: 'Reasor'},
-		        {firstName: 'Jamie', lastName: 'Brummer'},
-		        {firstName: 'Jessie', lastName: 'Casa'},
-		        {firstName: 'Marcie', lastName: 'Ricca'},
-		        {firstName: 'Gay', lastName: 'Lamoureaux'},
-		        {firstName: 'Althea', lastName: 'Sturtz'},
-		        {firstName: 'Kenya', lastName: 'Morocco'},
-		        {firstName: 'Rae', lastName: 'Pasquariello'},
-		        {firstName: 'Ted', lastName: 'Abundis'},
-		        {firstName: 'Jessie', lastName: 'Schacherer'},
-		        {firstName: 'Jamie', lastName: 'Gleaves'},
-		        {firstName: 'Hillary', lastName: 'Spiva'},
-		        {firstName: 'Elinor', lastName: 'Rockefeller'},
-		        {firstName: 'Dona', lastName: 'Clauss'},
-		        {firstName: 'Ashlee', lastName: 'Kennerly'},
-		        {firstName: 'Alana', lastName: 'Wiersma'},
-		        {firstName: 'Kelly', lastName: 'Holdman'},
-		        {firstName: 'Mathew', lastName: 'Lofthouse'},
-		        {firstName: 'Dona', lastName: 'Tatman'},
-		        {firstName: 'Clayton', lastName: 'Clear'},
-		        {firstName: 'Rosalinda', lastName: 'Urman'},
-		        {firstName: 'Cody', lastName: 'Sayler'},
-		        {firstName: 'Odessa', lastName: 'Averitt'},
-		        {firstName: 'Ted', lastName: 'Poage'},
-		        {firstName: 'Penelope', lastName: 'Gayer'},
-		        {firstName: 'Katy', lastName: 'Bluford'},
-		        {firstName: 'Kelly', lastName: 'Mchargue'},
-		        {firstName: 'Kathrine', lastName: 'Gustavson'},
-		        {firstName: 'Kelly', lastName: 'Hartson'},
-		        {firstName: 'Carlene', lastName: 'Summitt'},
-		        {firstName: 'Kathrine', lastName: 'Vrabel'},
-		        {firstName: 'Roxie', lastName: 'Mcconn'},
-		        {firstName: 'Margery', lastName: 'Pullman'},
-		        {firstName: 'Avis', lastName: 'Bueche'},
-		        {firstName: 'Esmeralda', lastName: 'Katzer'},
-		        {firstName: 'Tania', lastName: 'Belmonte'},
-		        {firstName: 'Malinda', lastName: 'Kwak'},
-		        {firstName: 'Tanisha', lastName: 'Jobin'},
-		        {firstName: 'Kelly', lastName: 'Dziedzic'},
-		        {firstName: 'Darren', lastName: 'Devalle'},
-		        {firstName: 'Julio', lastName: 'Buchannon'},
-		        {firstName: 'Darren', lastName: 'Schreier'},
-		        {firstName: 'Jamie', lastName: 'Pollman'},
-		        {firstName: 'Karina', lastName: 'Pompey'},
-		        {firstName: 'Hugh', lastName: 'Snover'},
-		        {firstName: 'Zebra', lastName: 'Evilias'}
-		    ]
+		    autoLoad: true
 		});
 		// end student list
 		
 		// begin course list
-		Ext.regModel('Course', {
-			fields: ['courseTitle']
+		Ext.regModel('Courses', {
+			fields: [
+			    'name', 'slug'
+			],
+			
+		    proxy: {
+		    	type: 'ajax',
+		    	url: '/showtime/lcf/ma/courses.json',
+		    	reader: {
+		    		type: 'json',
+		    		root: 'data.Courses'
+		    	}
+		    }		
 		});
 		
 		Showtime.CourseStore = new Ext.data.Store({
-		    model: 'Course',
-		    sorters: 'courseTitle',
-		    getGroupString : function(record) {
-		        return record.get('courseTitle')[0];
-		    },
-		    data: [
-		        {courseTitle: 'MA Fashion Design Technology'},
-		        {courseTitle: 'MA Fashion Artefact'},
-		        {courseTitle: 'MA Fashion Journalism'},
-		        {courseTitle: 'MA Fashion Footwear'},
-		        {courseTitle: 'MA Fashion Photography'}
-		    ]
+		    model: 'Courses',
+		    sorters: 'name',
+		    autoLoad: true
 		});
 		// end course list
 		
@@ -220,7 +173,17 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			            store: Showtime.StudentStore,
 			            itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
 			            grouped: true,
-			            indexBar: true
+			            indexBar: true,
+			            listeners: {
+							itemTap: function(obj, index, item, e) {
+								this.fireEvent('profileSelected', obj, obj.store.data.items[index].data);
+								obj.ownerCt.ownerCt.hide();
+								obj.ownerCt.ownerCt.deselect();
+								//obj.ownerCt.ownerCt.doComponentLayout();
+								console.log(obj.ownerCt.ownerCt);
+							},
+							scope: this
+						}
 					}]
 				},{
 					title: 'Course',
@@ -229,7 +192,12 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 						height: 600,
 			            xtype: 'list',
 			            store: Showtime.CourseStore,
-			            itemTpl: '<div class="course"><strong>{courseTitle}</strong> {lastName}</div>'
+			            itemTpl: '<div class="course"><strong>{name}</strong></div>',
+			            listeners: {
+							itemTap: function(obj, index, item, e) {
+								console.log(obj.store.data.items[index].data.slug);
+							}
+						}
 					}]
 				}]
 				
