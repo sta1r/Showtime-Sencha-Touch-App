@@ -7,9 +7,10 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
     initComponent: function(){
 		//Adds the specified events to the list of events which this Observable may fire.
         this.addEvents('back');
-        this.addEvents('info');
         this.addEvents('profileSelected');
         this.enableBubble('profileSelected');
+        this.addEvents('courseSelected');
+        this.enableBubble('courseSelected');
 
         //grab the toolbar object into the variable 'self' so it can be referenced within other objects
         var self = this;
@@ -178,10 +179,10 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			            listeners: {
 							itemTap: function(obj, index, item, e) {
 								this.fireEvent('profileSelected', obj, obj.store.data.items[index].data);
+								//hide the browse list
 								obj.ownerCt.ownerCt.hide();
-								obj.ownerCt.ownerCt.deselect();
-								//obj.ownerCt.ownerCt.doComponentLayout();
-								console.log(obj.ownerCt.ownerCt);
+								//deselect the item so it won't show as selected when the list is displayed again
+								//obj.ownerCt.ownerCt.deselect();
 							},
 							scope: this
 						}
@@ -196,8 +197,10 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			            itemTpl: '<div class="course"><strong>{name}</strong></div>',
 			            listeners: {
 							itemTap: function(obj, index, item, e) {
-								console.log(obj.store.data.items[index].data.slug);
-							}
+								this.fireEvent('courseSelected', obj, obj.store.data.items[index].data);
+								//console.log(obj.store.data.items[index].data.slug);
+							},
+							scope: this
 						}
 					}]
 				}]

@@ -88,7 +88,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     	this.setOrientation(Ext.getOrientation());
     },
     
-    showProfiles: function() {
+    showProfiles: function(course) {
     	this.removeAll(true);
         this.doLayout();
         
@@ -96,11 +96,21 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         
         var tpl = Ext.getOrientation() == "portrait" ? this.portraitTpl : this.landscapeTpl;
         
+        var filter = '';
+        if (course) {
+        	this.tbar.showBackButton();
+        	this.tbar.enableBubble('back');
+	        this.mon(this, 'back', this.onBack, this);
+        	url = '/showtime/lcf/'+course.slug+'/2011/explore.json';
+        } else {
+        	url = '/showtime/explore.json';
+        }	
+        
     	var store = new Ext.data.Store({
             model: 'Explore',
             proxy: {
                 type: 'ajax',
-                url: '/showtime/explore.json',
+                url: url,
                 reader: {
                     type: 'json',
                     root: 'data.Profiles'
@@ -226,7 +236,11 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         	this.doLayout();
         	test.doLayout(); 
         }
-    }
+    },
+    
+    onBack: function() {
+		//this.descriptionSheet.hide();
+	}
 });
 //add this panel to the component registry
 Ext.reg('showtime-explorepanel', Showtime.ExplorePanel);

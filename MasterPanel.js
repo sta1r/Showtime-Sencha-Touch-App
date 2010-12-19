@@ -58,6 +58,11 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
         this.showProfile(profile);
     },
     
+    onCourseSelected: function(t, course) {
+    	var profileList = Ext.getCmp('explore');
+    	profileList.showProfiles(course);
+    },
+    
     showProfile: function(profile) {
     	//Ext.getCmp will get the registered component (xtype) using the reference id specified in initComponent above
         var profileDetail = Ext.getCmp('profile');
