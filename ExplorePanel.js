@@ -27,7 +27,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 							'</div>',
 							'<div class="caption">',
 								//'<span>Student {#} of {[xcount]}</span>',
-								'<span>{fullName}{#}</span>',
+								'<span>{fullName}</span>',
 								'<span>{course}</span>',
 							'</div>',
 						'</div>',
@@ -62,7 +62,8 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];	
         //set the heading in the toolbar
-        this.tbar.setTitle('MA 2011');
+        //this.tbar.setTitle('<img src="/showtime/img/touch/ma_11.png"/>');
+        this.tbar.setTitle('MA_11');
         //call the function to hide the backbutton in toolbar.js
         this.tbar.hideBackButton();
 		this.tbar.showBrowseButton();

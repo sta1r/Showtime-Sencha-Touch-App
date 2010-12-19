@@ -143,12 +143,19 @@
 			                    	});
 	                    		}
 	                    		
-	                    	} else {                    	
-		                    	items.push({
-									//html: '<div class="profileimage"><iframe src="http://www.fashion.arts.ac.uk/docs/The_Hub_Issue_3(1).pdf" width="768" height="20000" frameborder="0" scrolling="yes"></iframe></div>',
-									html: '<div class="profileimage" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
-		                    		id: 'card'+i
-		                    	});
+	                    	} else {    
+		                		
+								if (media.touch) {								
+		                    		items.push({
+										html: '<div class="profileimage size-touch" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
+			                    		id: 'card'+i
+			                    	});
+								} else {
+									items.push({
+										html: '<div class="profileimage size-profile" style="background-image:url('+media.profile+');background-repeat:no-repeat;"></div>',
+			                    		id: 'card'+i
+			                    	});
+								}
 	                    	
 	                    	}
 	
