@@ -50,6 +50,7 @@
 							
 			            	if (this.tbar.isVisible()){
 			            		this.tbar.hideToolbar();
+			            		this.descriptionSheet.hide();
 			            		this.doLayout();
 			                 } else {
 			                	this.tbar.showToolbar();
@@ -70,7 +71,7 @@
 	        this.descriptionSheet = new Ext.Sheet({
 				cls: "descriptionSheet",
 				layout: 'fit',
-				hidden: false,
+				hidden: true,
 				modal: false,
 				//hideOnMaskTap: true,
 				centered: false,

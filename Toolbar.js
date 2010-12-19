@@ -7,6 +7,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
     initComponent: function(){
 		//Adds the specified events to the list of events which this Observable may fire.
         this.addEvents('back');
+        this.addEvents('info');
         this.addEvents('profileSelected');
         this.enableBubble('profileSelected');
 
