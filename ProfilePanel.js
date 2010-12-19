@@ -10,9 +10,17 @@
 	        //this.tbar.setTitle(); //set the heading in the toolbar
 	        this.tbar.showBackButton();
 			this.tbar.hideBrowseButton();
+			this.tbar.showActionButton();
+			this.tbar.showInfoButton();
+			
 			//this.tbar.addEvents('back');
 	        this.tbar.enableBubble('back');
 	        this.mon(this, 'back', this.onBack, this);
+			
+			this.tbar.enableBubble('info');
+			this.mon(this, 'info', this.onInfo, this);
+	        
+			//this.showDescriptionSheet();
 	        
             this.monitorOrientation = true;
             
@@ -42,11 +50,9 @@
 							
 			            	if (this.tbar.isVisible()){
 			            		this.tbar.hideToolbar();
-			            		this.descriptionSheet.hide();
 			            		this.doLayout();
 			                 } else {
 			                	this.tbar.showToolbar();
-			                	this.descriptionSheet.show();
 			                	this.doLayout();
 			                 }
 						},
@@ -68,7 +74,7 @@
 				modal: false,
 				//hideOnMaskTap: true,
 				centered: false,
-	            height: 300,
+	            height: 200,
 				arrive: 'bottom',
 				depart: 'bottom',
 		        //renderTo: this.body,
@@ -125,24 +131,26 @@
 	                    		
 	                    		if (media.video_host == 'vimeo') {
 		                    		items.push({
-										html: '<div class="video"><iframe class="vimeo-player" type="text/html" width="640" height="385" color="ffffff" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0" frameborder="0"></iframe></div>',
+										html: '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" color="ffffff" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0" frameborder="0"></iframe></div>',
 			                    		id: 'card'+i
 			                    	});
 	                    		}
 	                    		else {
 		                    		items.push({
-										html: '<div class="video"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>',
+										html: '<div class="video youtube"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>',
 			                    		id: 'card'+i
 			                    	});
 	                    		}
 	                    		
 	                    	} else {                    	
 		                    	items.push({
+									//html: '<div class="profileimage"><iframe src="http://www.fashion.arts.ac.uk/docs/The_Hub_Issue_3(1).pdf" width="768" height="20000" frameborder="0" scrolling="yes"></iframe></div>',
 									html: '<div class="profileimage" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
 		                    		id: 'card'+i
 		                    	});
 	                    	
 	                    	}
+	
 	                     }
 	                    );           
 	                    var carousel = new Ext.Carousel({
@@ -153,7 +161,7 @@
 	                    
 	                    profilepanel.descriptionSheet.html = '<div id="description">'+result.data.Student.Student.description+'</div>';
 
-	                    profilepanel.descriptionSheet.show();
+	                    //profilepanel.descriptionSheet.show();
 	                    profilepanel.doLayout();
 	                    
 	                    imagepanel.doLayout();
@@ -195,6 +203,14 @@
         getTitleText: function() {
             return this.profile.profilename;
         },
+
+		onInfo: function() {
+			if (this.descriptionSheet.isVisible()) {
+				this.descriptionSheet.hide();
+	        } else {
+				this.descriptionSheet.show();
+	        }
+		},
 		
 		onBack: function() {
 			this.descriptionSheet.hide();

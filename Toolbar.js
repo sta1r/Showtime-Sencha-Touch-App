@@ -10,20 +10,6 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 
         //grab the toolbar object into the variable 'self' so it can be referenced within other objects
         var self = this;
-        
-        //define the back button object
-        this.backButton = new Ext.Button({
-        	//button will appear styled as a back button
-            ui: 'back',
-            text: 'Back',
-            //starts hidden
-            hidden: true,
-            //function called when the button is clicked
-            handler: function() {
-        		//fire the back event on the toolbar
-                self.fireEvent('back', this);
-            }
-        });
 
 		// begin student list
 		Ext.regModel('Student', {
@@ -120,19 +106,53 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 		});
 		// end course list
 		
-		// define the menu button object
+		//define some button objects
+        this.backButton = new Ext.Button({
+        	//button will appear styled as a back button
+            ui: 'back',
+            text: 'Back',
+            hidden: true,
+            //function called when the button is clicked
+            handler: function() {
+        		//fire the back event on the toolbar
+                self.fireEvent('back', this);
+            }
+        });
+		
 		this.browseButton = new Ext.Button({
 			ui: 'action',
 			text: 'Browse',
 			handler: this.onBrowseButtonTap,
 			scope: this
 		});
+		
+		this.actionButton = new Ext.Button({
+			iconMask: true,
+			ui: 'plain',
+			iconCls: 'action',
+			hidden: true,
+			handler: this.onActionButtonTap,
+			scope: this
+		});
+		
+		this.infoButton = new Ext.Button({
+			iconMask: true,
+			ui: 'plain',
+			iconCls: 'info',
+			hidden: true,
+			handler: function() {
+				self.fireEvent('info', this);
+				//console.log('Firing info event');
+			}
+		});
         
         //specify what appears on the toolbar: back button, spacer (see Ext.Spacer)
         this.items = [
             this.backButton,
 			this.browseButton,
-            {xtype: 'spacer'}
+            {xtype: 'spacer'},
+			this.actionButton,
+			this.infoButton
         ];
         //call parent initComponent: because this class is an extended toolbar, the toolbar init needs to be called also:
         Showtime.Toolbar.superclass.initComponent.call(this);       
@@ -166,13 +186,23 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
         //refresh the layout
         this.doComponentLayout();
     },
-    
+
 	//function called by ShowHome in MasterPanel - hides back button
     hideBrowseButton: function() {
         this.browseButton.hide();
       //refresh the layout
         this.doComponentLayout();
     },
+
+	showActionButton: function() {
+		this.actionButton.show();
+		this.doComponentLayout();
+	},
+	
+	showInfoButton: function() {
+		this.infoButton.show();
+		this.doComponentLayout();
+	},
 
 	onBrowseButtonTap: function() {
 		if (!this.popup) {
@@ -206,7 +236,28 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			});
 		}
 		this.popup.showBy(this.browseButton, 'fade');	
-       }
+    },
+	
+	onActionButtonTap: function() {
+		if (!this.popup) {
+			this.popup = new Ext.Panel({
+                floating: true,
+                modal: true,
+                centered: true,
+                width: 200,
+                styleHtmlContent: true,
+                html: '<p>This is a modal, centered and floating panel. hideOnMaskTap is true by default so ' +
+                      'we can tap anywhere outside the overlay to hide it.</p>',
+                dockedItems: [{
+                    dock: 'top',
+                    xtype: 'toolbar',
+                    title: 'Overlay Title'
+                }],
+                scroll: 'vertical'
+            });
+		}
+		this.popup.showBy(this.actionButton, 'fade');
+	}
     
 });
 //add the toolbar to the component registry
