@@ -33,12 +33,17 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
     
     onBack: function() {
         var current = this.getLayout().activeItem;
-        animation = {
-            type: 'slide',
-            direction: 'right',
-            //need to fix css:
-            //reveal: true
-        }
+        
+        if (current.id == 'profile') {
+	        animation = {
+	            type: 'slide',
+	            direction: 'right'
+	        }
+        } else {
+        	animation = {
+	            type: 'fade',
+	        }
+        }	
         this.showHome(animation);
     },    
 

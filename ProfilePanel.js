@@ -118,6 +118,7 @@
         showProfile: function(profile) {
             //profile.maxWidth = width;
             var imagepanel = this.imagePanel;
+            imagepanel.removeAll(true);
             var profilepanel = this;
 
         	var makeJSONPRequest = function() {
@@ -150,7 +151,7 @@
 										html: '<div class="profileimage size-touch" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
 			                    		id: 'card'+i
 			                    	});
-								} else {
+								} else if (media.profile) {
 									items.push({
 										html: '<div class="profileimage size-profile" style="background-image:url('+media.profile+');background-repeat:no-repeat;"></div>',
 			                    		id: 'card'+i
@@ -222,6 +223,7 @@
 		
 		onBack: function() {
 			this.descriptionSheet.hide();
+			this.imagePanel.removeAll(true)
 		}
     });
 

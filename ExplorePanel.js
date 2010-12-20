@@ -99,7 +99,9 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         
         var filter = '';
         if (course) {
+        	this.tbar.setTitle(course.name);
         	this.tbar.showBackButton();
+        	this.tbar.hideBrowseButton();
         	this.tbar.enableBubble('back');
 	        this.mon(this, 'back', this.onBack, this);
         	url = '/showtime/lcf/'+course.slug+'/2011/explore.json';
@@ -144,6 +146,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                     Ext.each(carditems, function(cardData){
                     	var component = new Ext.Component({
                         	profileData: cardData,
+                        	//showAnimation: 'fade',
                         	listeners: {
                                 afterrender: function() {
                     				thepanel.mon(component.el, 'tap', function(e) {
@@ -220,7 +223,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
             //this.descriptionPanel.flex = portrait ? 4 : 1;
 
         	thepanel.add.apply(thepanel, newOrientationLayout);
-        	thepanel.layout.activeItem = thepanel.items.first();            
+        	thepanel.layout.activeItem = thepanel.items.first();         
         	thepanel.doLayout();
         }
     },
@@ -240,7 +243,10 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     },
     
     onBack: function() {
-		//this.descriptionSheet.hide();
+    	this.showProfiles();
+    	this.tbar.setTitle('MA_11');
+    	this.tbar.hideBackButton();
+		this.tbar.showBrowseButton();
 	}
 });
 //add this panel to the component registry

@@ -198,8 +198,8 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			            store: Showtime.CourseStore,
 			            itemTpl: '<div class="course"><strong>{name}</strong></div>',
 			            listeners: {
-							itemTap: function(obj, index, item, e) {
-								this.fireEvent('courseSelected', obj, obj.store.data.items[index].data);
+							itemTap: function(selected, index, item, e) {
+								this.fireEvent('courseSelected', selected, selected.store.data.items[index].data);
 								//hide the browse list
 								this.popup.hide();
 							},
@@ -226,14 +226,6 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			});
 		}
 		this.popup.showBy(this.browseButton, 'fade');
-		
-		//console.log(this.popup);
-		//var item = Ext.get('.x-list-item', this.popup.el);
-		
-		/*var aList = Ext.getCmp(list);
-		var selArray = aList.getSelectedRecords();
-		for (i=0;i<selArray.length;i++) 
-		aList.deselect(selArray[i]);*/
     },
 	
 	onActionButtonTap: function() {
