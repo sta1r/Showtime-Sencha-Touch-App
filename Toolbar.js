@@ -176,13 +176,15 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			            itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
 			            grouped: true,
 			            indexBar: true,
+			            multiSelect: false,
+			            singleSelect: true,
+			            allowDeselect: true,
+			            itemSelector: 'div.x-list-item',
 			            listeners: {
-							itemTap: function(obj, index, item, e) {
-								this.fireEvent('profileSelected', obj, obj.store.data.items[index].data);
+							itemTap: function(selected, index, item, e) {
+								this.fireEvent('profileSelected', selected, selected.store.data.items[index].data);
 								//hide the browse list
-								obj.ownerCt.ownerCt.hide();
-								//deselect the item so it won't show as selected when the list is displayed again
-								//obj.ownerCt.ownerCt.deselect();
+								this.popup.hide();
 							},
 							scope: this
 						}
@@ -198,16 +200,40 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			            listeners: {
 							itemTap: function(obj, index, item, e) {
 								this.fireEvent('courseSelected', obj, obj.store.data.items[index].data);
-								//console.log(obj.store.data.items[index].data.slug);
+								//hide the browse list
+								this.popup.hide();
 							},
 							scope: this
 						}
 					}]
-				}]
+				}],
+				listeners: {
+					beforeshow: function(comp) {
+						//deselecting any selected items - workaround for bug in Sencha Touch:
+						//using fix from: http://www.sencha.com/forum/showthread.php?114896-OPEN-534-List-items-can-no-longer-be-deselected-in-0.99
+						studentlist = comp.items.items[0].items.items[0];					
+						var selArray = studentlist.getSelectedRecords();
+						for (i=0;i<selArray.length;i++) {
+						studentlist.deselect(selArray[i]); }
+						
+						courselist = comp.items.items[1].items.items[0];						
+						var selArray = courselist.getSelectedRecords();
+						for (i=0;i<selArray.length;i++) {
+						courselist.deselect(selArray[i]); }
+					}
+				}
 				
 			});
 		}
-		this.popup.showBy(this.browseButton, 'fade');	
+		this.popup.showBy(this.browseButton, 'fade');
+		
+		//console.log(this.popup);
+		//var item = Ext.get('.x-list-item', this.popup.el);
+		
+		/*var aList = Ext.getCmp(list);
+		var selArray = aList.getSelectedRecords();
+		for (i=0;i<selArray.length;i++) 
+		aList.deselect(selArray[i]);*/
     },
 	
 	onActionButtonTap: function() {
