@@ -86,7 +86,11 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			ui: 'plain',
 			iconCls: 'action',
 			hidden: true,
-			handler: this.onActionButtonTap,
+			//handler: this.onActionButtonTap,
+			handler: function() {
+				self.fireEvent('action', this);
+				//console.log('Firing info event');
+			},
 			scope: this
 		});
 		
@@ -234,14 +238,15 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
                 floating: true,
                 modal: true,
                 centered: true,
-                width: 200,
+                width: 300,
+				height: 200,
                 styleHtmlContent: true,
-                html: '<p>This is a modal, centered and floating panel. hideOnMaskTap is true by default so ' +
-                      'we can tap anywhere outside the overlay to hide it.</p>',
+                html: '<p>Email yourself a link to this profile:</p>' +
+				'<input type="text">',
                 dockedItems: [{
                     dock: 'top',
                     xtype: 'toolbar',
-                    title: 'Overlay Title'
+                    title: 'Bookmark'
                 }],
                 scroll: 'vertical'
             });

@@ -19,6 +19,9 @@
 			
 			this.tbar.enableBubble('info');
 			this.mon(this, 'info', this.onInfo, this);
+			
+			this.tbar.enableBubble('action');
+			this.mon(this, 'action', this.onAction, this);
 	        
 			//this.showDescriptionSheet();
 	        
@@ -50,7 +53,7 @@
 							
 			            	if (this.tbar.isVisible()){
 			            		this.tbar.hideToolbar();
-			            		this.descriptionSheet.hide();
+			            		this.descriptionPanel.hide();
 			            		this.doLayout();
 			                 } else {
 			                	this.tbar.showToolbar();
@@ -63,27 +66,94 @@
             });
 
 			this.descriptionPanel = new Ext.Panel({
-				layout: 'card',
-                styleHtmlContent: true/*,
-                scroll: 'vertical'*/
+				floating: true,
+				centered: true,
+				modal: true,
+				hidden: false,
+				height: 400,
+				width: 380,
+				dockedItems: [{
+					dock: 'top',
+					xtype: 'toolbar', 
+					title: 'About'
+				}],
+				styleHtmlContent: true,
+                scroll: 'vertical'
 			});
 			
-	        this.descriptionSheet = new Ext.Sheet({
-				cls: "descriptionSheet",
-				layout: 'fit',
-				hidden: true,
-				modal: false,
-				//hideOnMaskTap: true,
-				centered: false,
-	            height: 200,
-				arrive: 'bottom',
-				depart: 'bottom',
-		        //renderTo: this.body,
-		        stretchX: true,
-		        scroll: true//,
-		        //items: [this.descriptionPanel]
-			});
-			
+	        var formBase = {
+	            scroll: 'vertical',
+	            url   : 'postUser.php',
+	            standardSubmit : false,
+	            items: [
+	                {
+	                    xtype: 'fieldset',
+	                    title: 'Bookmark this profile',
+	                    defaults: {
+	                        required: true,
+	                        labelAlign: 'left'
+	                    },
+	                    items: [
+	                    {
+	                        xtype: 'emailfield',
+	                        name : 'email',
+	                        label: 'Email',
+	                        placeHolder: 'you@domain.com',
+	                        useClearIcon: true
+	                    }, {
+	                        xtype: 'hiddenfield',
+	                        name : 'secret',
+	                        value: false
+	                    }]
+	                }
+	            ],
+	            listeners : {
+	                submit : function(form, result){
+	                    console.log('success', Ext.toArray(arguments));
+	                },
+	                exception : function(form, result){
+	                    console.log('failure', Ext.toArray(arguments));
+	                }
+	            },
+
+	            dockedItems: [
+	                {
+	                    xtype: 'toolbar',
+	                    dock: 'bottom',
+	                    items: [
+	                        {xtype: 'spacer'},
+	                        {
+	                            text: 'Reset',
+	                            handler: function() {
+	                                form.reset();
+	                            }
+	                        },
+	                        {
+	                            text: 'Send',
+	                            ui: 'confirm',
+	                            handler: function() {
+	                                if(formBase.user){
+	                                    form.updateRecord(formBase.user, true);
+	                                }
+	                                form.submit({
+	                                    waitMsg : {message:'Submitting', cls : 'demos-loading'}
+	                                });
+	                            }
+	                        }
+	                    ]
+	                }
+	            ]
+	        };
+
+		    Ext.apply(formBase, {
+                autoRender: true,
+                floating: true,
+                modal: true,
+                centered: true,
+                height: 200,
+                width: 350
+            });
+	        this.form = new Ext.form.FormPanel(formBase);
 
             this.portraitLayout = [{
                 layout: {
@@ -168,7 +238,7 @@
 	                    
 	                    imagepanel.add(carousel);
 	                    
-	                    profilepanel.descriptionSheet.html = '<div id="description">'+result.data.Student.Student.description+'</div>';
+	                    profilepanel.descriptionPanel.html = '<div id="description">'+result.data.Student.Student.description+'</div>';
 
 	                    //profilepanel.descriptionSheet.show();
 	                    profilepanel.doLayout();
@@ -214,15 +284,22 @@
         },
 
 		onInfo: function() {
-			if (this.descriptionSheet.isVisible()) {
-				this.descriptionSheet.hide();
+			this.descriptionPanel.show();
+			// user can tap anywhere to dismiss descriptionPanel
+			
+			/*if (this.descriptionPanel.isVisible()) {
+				this.descriptionPanel.hide();
 	        } else {
-				this.descriptionSheet.show();
-	        }
+				this.descriptionPanel.show();
+	        }*/
+		},
+		
+		onAction: function() {
+			this.form.show();		
 		},
 		
 		onBack: function() {
-			this.descriptionSheet.hide();
+			this.descriptionPanel.hide();
 			this.imagePanel.removeAll(true)
 		}
     });
