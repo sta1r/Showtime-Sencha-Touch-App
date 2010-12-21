@@ -101,7 +101,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         if (course) {
         	this.tbar.setTitle(course.name);
         	this.tbar.showBackButton();
-        	this.tbar.hideBrowseButton();
+        	//this.tbar.hideBrowseButton();
         	this.tbar.enableBubble('back');
 	        this.mon(this, 'back', this.onBack, this);
         	url = '/showtime/lcf/'+course.slug+'/2011/explore.json';

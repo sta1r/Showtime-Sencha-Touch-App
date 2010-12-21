@@ -10,7 +10,7 @@
 			this.dockedItems = [this.tbar];	//add the toolbar to the panel's docked items        
 	        //this.tbar.setTitle(); //set the heading in the toolbar
 	        this.tbar.showBackButton();
-			this.tbar.hideBrowseButton();
+			//this.tbar.hideBrowseButton();
 			this.tbar.showActionButton();
 			this.tbar.showInfoButton();
 			
@@ -18,6 +18,9 @@
 	        this.tbar.enableBubble('back');
 	        this.mon(this, 'back', this.onBack, this);
 			
+	        //this.tbar.enableBubble('courseSelected');
+	        //this.mon(this, 'back', this.onBack, this);
+	        
 			this.tbar.enableBubble('info');
 			this.mon(this, 'info', this.onInfo, this);
 			

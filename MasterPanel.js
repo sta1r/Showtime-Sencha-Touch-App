@@ -66,6 +66,11 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
     onCourseSelected: function(t, course) {
     	var profileList = Ext.getCmp('explore');
     	profileList.showProfiles(course);
+    	animation = {
+	            type: 'slide',
+	            direction: 'right'
+	        }
+    	this.setActiveItem('explore', animation);
     },
     
     showProfile: function(profile) {
