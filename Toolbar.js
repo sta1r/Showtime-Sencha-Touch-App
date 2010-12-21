@@ -46,7 +46,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			
 		    proxy: {
 		    	type: 'ajax',
-		    	url: '/showtime/lcf/ma/courses.json',
+		    	url: '/showtime/lcf/ma/2011/courses.json',
 		    	reader: {
 		    		type: 'json',
 		    		root: 'data.Courses'
