@@ -71,13 +71,13 @@
 				centered: true,
 				modal: true,
 				hidden: false,
-				height: 400,
-				width: 380,
-				dockedItems: [{
+				height: 450,
+				width: 420,
+				/*dockedItems: [{
 					dock: 'top',
-					xtype: 'toolbar', 
+					xtype: 'container', 
 					title: 'About'
-				}],
+				}],*/
 				styleHtmlContent: true,
                 scroll: 'vertical'
 			});
@@ -86,10 +86,12 @@
 	            scroll: 'vertical',
 	            url   : 'postUser.php',
 	            standardSubmit : false,
+				cls: 'emailForm',
 	            items: [
 	                {
 	                    xtype: 'fieldset',
 	                    title: 'Bookmark this profile',
+						instructions: 'Please enter your email address. You will receive an email with a link to this profile on the Showtime website.',
 	                    defaults: {
 	                        required: true,
 	                        labelAlign: 'left'
@@ -151,8 +153,8 @@
                 floating: true,
                 modal: true,
                 centered: true,
-                height: 200,
-                width: 350
+                height: 270,
+                width: 480
             });
 	        this.form = new Ext.form.FormPanel(formBase);
 
@@ -238,7 +240,7 @@
 	                    
 	                    imagepanel.add(carousel);
 	                    
-	                    profilepanel.descriptionPanel.html = '<div id="description">'+result.data.Student.Student.description+'</div>';
+	                    profilepanel.descriptionPanel.html = '<div id="description"><h4>About this profile</h4>'+result.data.Student.Student.description+'</div>';
 
 	                    //profilepanel.descriptionSheet.show();
 	                    profilepanel.doLayout();
