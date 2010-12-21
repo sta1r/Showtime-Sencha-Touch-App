@@ -2,6 +2,7 @@
     Ext.ns("Showtime");
 
     Showtime.ProfilePanel = Ext.extend(Ext.Panel, {
+    	scroll: false,
         initComponent: function() {
 			this.tbar = new Showtime.Toolbar();	//setup the toolbar, see Toolbar.js
 			this.tbar.overlay = true; //set the toolbar to appear overlaid on the image
@@ -199,11 +200,10 @@
                     callback: function(result) {
 	                	var items = [];
 	                    Ext.each(result.data.Student.Media, function(media, i){
-	                    	if (media.video) {
-	                    		
+	                    	if (media.video) {	                    		
 	                    		if (media.video_host == 'vimeo') {
 		                    		items.push({
-										html: '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" color="ffffff" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0" frameborder="0"></iframe></div>',
+										html: '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe></div>',
 			                    		id: 'card'+i
 			                    	});
 	                    		}
@@ -214,24 +214,24 @@
 			                    	});
 	                    		}
 	                    		
-	                    	} else {    
-		                		
-								if (media.touch) {								
-		                    		items.push({
-										html: '<div class="profileimage size-touch" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
-			                    		id: 'card'+i
-			                    	});
-								} else if (media.profile) {
-									items.push({
-										html: '<div class="profileimage size-profile" style="background-image:url('+media.profile+');background-repeat:no-repeat;"></div>',
-			                    		id: 'card'+i
-			                    	});
-								}
-	                    	
-	                    	}
-	
+	                    	} 
 	                     }
-	                    );           
+	                    );
+	                    Ext.each(result.data.Student.Media, function(media, i){
+	                    	if (media.touch) {								
+	                    		items.push({
+									html: '<div class="profileimage size-touch" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
+		                    		id: 'card'+i
+		                    	});
+							} else if (media.profile) {
+								items.push({
+									html: '<div class="profileimage size-profile" style="background-image:url('+media.profile+');background-repeat:no-repeat;"></div>',
+		                    		id: 'card'+i
+		                    	});
+							}
+	                     }
+	                    );
+						
 	                    var carousel = new Ext.Carousel({
 	                    	items: items
 	                    });
