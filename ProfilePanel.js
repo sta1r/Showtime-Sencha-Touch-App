@@ -66,7 +66,18 @@
 						},
 						scope: this
 					}
-				}
+				},
+				dockedItems: [{
+				    xtype: 'toolbar',
+					dock: 'bottom',
+					overlay: true,
+			        items: [{
+						xtype: 'spacer'
+						},{
+			            text: 'Like',
+						badgeText: '3'
+			        }]
+			    }]
             });
 
 			this.descriptionPanel = new Ext.Panel({
@@ -180,7 +191,6 @@
 
             this.landscapeLayout = [{
                 layout: {
-                    //type: "hbox",
                     align: "fit"
                 },
                 items: this.imagePanel

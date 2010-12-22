@@ -230,7 +230,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			});
 		}
 		this.popup.showBy(this.browseButton, 'fade');
-    },
+    }/*,
 	
 	onActionButtonTap: function() {
 		if (!this.popup) {
@@ -252,7 +252,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
             });
 		}
 		this.popup.showBy(this.actionButton, 'fade');
-	}
+	}*/
     
 });
 //add the toolbar to the component registry
