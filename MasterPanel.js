@@ -26,6 +26,34 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
         this.mon(this, 'courseSelected', this.onCourseSelected, this);
     },
 
+    layoutOrientation: function() {
+    	//console.log(this);
+    	//console.log(this.orientation);
+    	if (this.orientation == 'portrait') {
+    		//this.neworient = this.orientation;
+    		//this.tpl = this.portraitTpl;
+    		//this.tpl.apply(this, this.portraitTpl);
+    		this.doLayout();
+    		//console.log(this.tpl);
+    	} else {
+    		//this.tpl = this.landscapeTpl;
+    		//this.tpl.apply(this, this.landscapeTpl);
+    		this.doLayout();
+    		//console.log(this.tpl);
+    	}
+    	//console.log(this.orientationTpl.html);
+    	//console.log(this.tpl.html);
+    	//this.removeAll(true);
+    	//this.initComponent();
+    	
+    	/*var ex = Ext.getCmp('explore');
+    	ex.showProfiles();
+    	var pp = Ext.getCmp('profile');
+    	pp.hide();
+    	this.doLayout();
+    	ex.doLayout();*/
+    },    
+    
     afterRender: function() {
     	Showtime.MasterPanel.superclass.afterRender.apply(this, arguments);
         this.showHome();
@@ -45,14 +73,14 @@ Showtime.MasterPanel = Ext.extend(Ext.Panel, {
 	        }
         }	
         this.showHome(animation);
+        
+        //make sure the profile panel is hidden so it won't interfere with orientation switching
+        var profilePanel = Ext.getCmp('profile');
+        profilePanel.hide();
     },    
 
 	//show the homepage
     showHome: function(anim) {
-    	var profileList = Ext.getCmp('explore');
-    	
-    	//profileList.showProfiles();
-    	
     	//fade to the home card
         this.setActiveItem('explore', anim || 'fade');
     },    

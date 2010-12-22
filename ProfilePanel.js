@@ -6,7 +6,7 @@
         initComponent: function() {
 			this.tbar = new Showtime.Toolbar();	//setup the toolbar, see Toolbar.js
 			this.tbar.overlay = true; //set the toolbar to appear overlaid on the image
-			//this.tbar.hidden = true; //start hidden
+			//this.hidden = true; //start hidden (when loaded before viewing profile)
 			this.dockedItems = [this.tbar];	//add the toolbar to the panel's docked items        
 	        //this.tbar.setTitle(); //set the heading in the toolbar
 	        this.tbar.showBackButton();
@@ -36,6 +36,7 @@
             this.imagePanel = new Ext.Panel({
                 cls: "profile-summary",
                 flex: 1,
+                hidden: true,
                 fullscreen: true,
                 layout: 'fit',
                 /*tpl: new Ext.XTemplate(
@@ -67,17 +68,7 @@
 						scope: this
 					}
 				},
-				dockedItems: [{
-				    xtype: 'toolbar',
-					dock: 'bottom',
-					overlay: true,
-			        items: [{
-						xtype: 'spacer'
-						},{
-			            text: 'Like',
-						badgeText: '3'
-			        }]
-			    }]
+
             });
 
 			this.descriptionPanel = new Ext.Panel({

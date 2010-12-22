@@ -16,7 +16,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     cls: 'explore-panel',
     // landscape mode - use vertical columns
     landscapeTpl: new Ext.XTemplate(
-        '<div class="explore-container">',
+        '<div class="land explore-container">',
             '<tpl for=".">',
 					'{[ xindex == 1 || xindex % 2 == 1 ? "<div class=column>" : ""]}',
 						'<div class="explore-item item{[xindex]}">',					
@@ -26,7 +26,6 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 								'</div',
 							'</div>',
 							'<div class="caption">',
-								//'<span>Student {#} of {[xcount]}</span>',
 								'<span class="fullname">{fullName}</span>',
 								'<span class="course">{course}</span>',
 							'</div>',
@@ -37,7 +36,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     ),
     // portrait mode - use horizontal rows
     portraitTpl: new Ext.XTemplate(
-			'<div class="explore-container">',
+			'<div class="vert explore-container">',
 				'<tpl for=".">',
 					'{[ xindex == 1 || xindex % 2 == 1 ? "<div class=row>" : ""]}',
 						'<div class="explore-item item{[xindex]}">',					
@@ -67,26 +66,27 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         //call the function to hide the backbutton in toolbar.js
         this.tbar.hideBackButton();
 		this.tbar.showBrowseButton();
-		
-        this.addEvents('profileSelected');
-        this.enableBubble('profileSelected');
-        
-        this.monitorOrientation = true;
         
         this.scroll = false;
+        
         this.tpl = Ext.getOrientation() == "portrait" ? this.portraitTpl : this.landscapeTpl;
+        this.monitorOrientation = true;
+        
+        this.layout = "card";
         
         Showtime.ExplorePanel.superclass.initComponent.call(this);
         
-        this.showProfiles();
-        
+        this.addEvents('profileSelected');
+        this.enableBubble('profileSelected');
         this.mon(this, "itemtap", this.onItemTap, this);
-        this.mon(this, "orientationChange", this.onOrientationChange, this);
+        //this.mon(this, "orientationChange", this.resetLayout, this);
+        
+        this.showProfiles();
     },
     
     afterRender: function() {
     	Showtime.ExplorePanel.superclass.afterRender.apply(this, arguments);
-    	this.setOrientation(Ext.getOrientation());
+    	//this.onOrientationChange();
     },
     
     showProfiles: function(course) {
@@ -107,7 +107,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         	url = '/showtime/lcf/'+course.slug+'/2011/explore.json';
         } else {
         	url = '/showtime/explore.json';
-        }	
+        }
         
     	var store = new Ext.data.Store({
             model: 'Explore',
@@ -122,6 +122,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
             listeners: {
                 single: true,
                 datachanged: function(){
+            	
                     Ext.getBody().unmask();
                     var items = [];
                     
@@ -184,17 +185,19 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                         cards.push(component);
                     });
                                     
-                    
-                    
-                    var carousel = new Ext.Carousel({
-                    	fullscreen: true,
-                    	layout: 'fit',
-                    	flex: 1,
-                    	//tpl: thepanel.tpl,
-                    	items: cards,
-                        itemId: 'carousel'
-                    });
-                    
+                    thepanel.removeAll(true);
+                    carousel = undefined;
+                    if (!carousel) {
+	                    var carousel = new Ext.Carousel({
+	                    	fullscreen: true,
+	                    	layout: 'fit',
+	                    	flex: 1,
+	                    	//tpl: thepanel.tpl,
+	                    	items: cards,
+	                    	id: 'car',
+	                        itemId: 'carousel'
+	                    });
+                    }
                     thepanel.add(carousel);
                     thepanel.doLayout();
                 }
@@ -205,41 +208,61 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         store.read();
 
     },
-    
-    resetLayout: function() {
-    	var thepanel = Ext.getCmp('explore');
-        var portrait = Ext.getOrientation() == "portrait",
-            newOrientationLayout = portrait ? thepanel.portraitTpl : thepanel.landscapeTpl;
 
-        if (newOrientationLayout != thepanel.orientationLayout) {
-        	thepanel.orientationLayout = newOrientationLayout;
+    onOrientationChange: function() {
+    	orientation = Ext.getOrientation();
+    	var portrait = Ext.getOrientation() == "portrait",
+    	explorepanel = this;
+        newOrientationTpl = portrait ? this.portraitTpl : this.landscapeTpl;
+    	
+        console.log(explorepanel.tpl);
+        
+    	if (newOrientationTpl != this.orientationTpl) {
+    		
+            this.orientationTpl = newOrientationTpl;
 
-            //if (this.imagePanel.ownerCt) {
-            //    this.imagePanel.ownerCt.remove(this.imagePanel, false);
-            //}
-            
-        	thepanel.removeAll(true);
-
-            //this.descriptionPanel.flex = portrait ? 4 : 1;
-
-        	thepanel.add.apply(thepanel, newOrientationLayout);
-        	thepanel.layout.activeItem = thepanel.items.first();         
-        	thepanel.doLayout();
-        }
-    },
-    
-    onOrientationChange: function(target, orientation) {
-        this.tpl = orientation == "portrait" ? this.portraitTpl : this.landscapeTpl;
-        //this.showProfiles();
-        var thepanel = Ext.getCmp('explore');
-        test = thepanel.items.get(0);
-        //console.log(test);
-        //carousel = this.items.items[0];
-        if (test) {
-        	//this.showProfiles();
-        	this.doLayout();
-        	test.doLayout(); 
-        }
+    		//this.tpl = this.landscapeTpl;
+    		self = this;
+    		c = Ext.getCmp('car');
+    		
+    		if (orientation == "portrait") {
+    			explorepanel.tpl = explorepanel.portraitTpl;
+    			//explorepanel.tpl.overwrite(component.el, cardData);
+                //component.el.repaint();
+    			//c.setWidth(768);c.setHeight(1024);
+    		}
+    		else {
+    			explorepanel.tpl = explorepanel.landscapeTpl;
+    			//tpl.overwrite(component.el, cardData);
+                //component.el.repaint();
+    			//c.setWidth(1024);c.setHeight(768);
+    		}
+    		explorepanel.doLayout();
+    		c.doComponentLayout();
+    		
+    		console.log(explorepanel.tpl);
+    		
+    		Ext.each(c.items.items, function(component){
+    			cardData = component.profileData;
+    			var renderData = function() {
+                	var tpl = newOrientationTpl;
+                	tpl.overwrite(component.el, cardData);
+                    component.el.repaint();
+                    component.items = new Ext.CompositeElementLite();
+                    component.items.fill(Ext.query('.explore-item', component.el.dom));
+                };
+                component.clearListeners();
+                if (component.rendered) {
+                    renderData();
+                }
+                else {
+                    component.mon('render', renderData, self, {single: true});
+                }
+    		}, this);
+    		
+			c.doComponentLayout();
+			explorepanel.doComponentLayout();
+    	}	
     },
     
     onBack: function() {
