@@ -70,6 +70,8 @@
             });
 
 			this.descriptionPanel = new Ext.Panel({
+				id: 'description',
+				tpl: new Ext.XTemplate('<div id="description"><h4>About this profile</h4>{description}</div>'),
 				floating: true,
 				centered: true,
 				modal: true,
@@ -82,7 +84,15 @@
 					title: 'About'
 				}],*/
 				styleHtmlContent: true,
-                scroll: 'vertical'
+                scroll: 'vertical',
+                listeners: {
+					body: {
+						click: function(e) {
+							e.stopEvent(true);
+						},
+						delegate: 'a'
+					}
+				}
 			});
 			
 	        var formBase = {
@@ -195,7 +205,9 @@
             //profile.maxWidth = width;
             var imagepanel = this.imagePanel;
             imagepanel.removeAll(true);
+            
             var profilepanel = this;
+            
 
         	var makeJSONPRequest = function() {
                 Ext.getBody().mask('Loading...', 'x-mask-loading', false);
@@ -243,12 +255,11 @@
 	                    
 	                    imagepanel.add(carousel);
 	                    
-	                    profilepanel.descriptionPanel.html = '<div id="description"><h4>About this profile</h4>'+result.data.Student.Student.description+'</div>';
-
-	                    //profilepanel.descriptionSheet.show();
-	                    profilepanel.doLayout();
+	                    profilepanel.descriptionPanel.update(result.data.Student.Student);
 	                    
+	                    profilepanel.doLayout();                  
 	                    imagepanel.doLayout();
+	                    
 	                    //remove the loading indicator
 	                    Ext.getBody().unmask();
                     }
@@ -256,6 +267,7 @@
             };
             
             imagepanel.removeAll();
+            
             makeJSONPRequest(profile);
 
         },
