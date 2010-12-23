@@ -215,7 +215,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     	explorepanel = this;
         newOrientationTpl = portrait ? this.portraitTpl : this.landscapeTpl;
     	
-        console.log(explorepanel.tpl);
+        //console.log(explorepanel.tpl);
         
     	if (newOrientationTpl != this.orientationTpl) {
     		
@@ -240,7 +240,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     		explorepanel.doLayout();
     		c.doComponentLayout();
     		
-    		console.log(explorepanel.tpl);
+    		//console.log(explorepanel.tpl);
     		
     		Ext.each(c.items.items, function(component){
     			cardData = component.profileData;

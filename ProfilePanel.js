@@ -7,7 +7,7 @@
 			this.tbar = new Showtime.Toolbar();	//setup the toolbar, see Toolbar.js
 			this.tbar.overlay = true; //set the toolbar to appear overlaid on the image
 			//this.hidden = true; //start hidden (when loaded before viewing profile)
-			this.dockedItems = [this.tbar];	//add the toolbar to the panel's docked items        
+			this.dockedItems = [this.tbar];	//add the toolbar to the panel's docked items
 	        //this.tbar.setTitle(); //set the heading in the toolbar
 	        this.tbar.showBackButton();
 			//this.tbar.hideBrowseButton();
@@ -45,10 +45,12 @@
 							
 			            	if (this.tbar.isVisible()){
 			            		this.tbar.hideToolbar();
+			            		this.bottomSheet.hide();
 			            		this.descriptionPanel.hide();
 			            		this.doLayout();
 			                 } else {
 			                	this.tbar.showToolbar();
+			                	this.bottomSheet.show();
 			                	this.doLayout();
 			                 }
 						},
@@ -83,6 +85,22 @@
 					}
 				}
 			});
+			
+			//create sheet for title/like button - this is reusable by each image
+			this.bottomSheet = new Ext.Sheet({
+				dock: 'bottom',
+				overlay: true,
+				modal: false,
+				layout: {
+					type: 'fit',
+					align: 'stretch'
+				},
+				tpl: new Ext.XTemplate('<div class="title">{title}</div>'),
+				//place the like button in the items/docked items property here?
+    			//listener for click to fire ajax on like button
+    		});		
+			//add the toolbar to the panel's docked items
+			this.dockedItems.push(this.bottomSheet);
 			
 	        var formBase = {
 	            scroll: 'vertical',
@@ -239,64 +257,14 @@
 		                						}
 		                					}
 		                			),
-		                			data: media
+		                			data: media,
 		                		});
-		                		
-		                		//create sheet for title/like button
-	                			var bottomSheet = new Ext.Sheet({
-	                				dock: 'bottom',
-	                				overlay: true,
-	                				hidden: false,
-	                				//layout: 'fit',
-	                				tpl: new Ext.XTemplate('<div class="title">{title}</div>'),
-	                				data: media,
-	                				//place the like button in items here?
-		                			//listener for click to fire ajax on like button
-		                		});
-	                			bottomSheet.show();
-	                			
+		                			
 		                		//the carousel card the holds the media/sheet
 		                		var card = new Ext.Panel({
 		                			mediaData: media,
-		                			//items: [mediaCmp, bottomSheet]
 		                			items: mediaCmp,
-		                			layout: 'fit',
-		                			dockedItems: [bottomSheet]
-		                			//fullscreen: true,
-		                			/*initComponent: function() {
-			                			this.bbar = new Ext.Toolbar({
-			                				id: 'bottombar',
-			            					xtype: 'toolbar',
-			            					dock: 'bottom',
-			            					overlay: true,
-			            					items: [
-			            					{
-			            						text: 'Caption'
-			            					},{
-			            						xtype: 'spacer'
-			            					},{
-			            						text: 'Like',
-			            						badgeText: '3'
-			            					}]
-			            				});*
-			                			this.dockedItems = [bottomSheet];
-		                				Showtime.ProfilePanel.superclass.initComponent.apply(this, arguments);
-		                			},*/
-		                			
-		            				/*listeners: { // listen for a tap on the image - show overlay and toolbar
-		            					body: {
-		            						tap: function() { 	            							
-		            			            	if (this.bbar.isVisible()){
-		            			            		this.tbar.hide();
-		            			            		this.doComponentLayout();
-		            			                 } else {
-		            			                	this.bbar.show();
-		            			                	this.doComponentLayout();
-		            			                 }
-		            						},
-		            						scope: this
-		            					}
-		            				}*/
+		                			layout: 'fit'
 		                		});
 		                		
 		                		//re-order cards so video comes first - seems to prevent crashing
@@ -312,8 +280,27 @@
 	                	media_cards = video_cards.concat(image_cards);
 						
 	                    var carousel = new Ext.Carousel({
-	                    	items: media_cards
+	                    	listeners: {
+	                    		beforeadd: function(container, card, index) {
+	                    			if (index == 0) {
+	                    				profilepanel.bottomSheet.update(card.mediaData);
+	                    				if (profilepanel.tbar.isVisible()) {
+		                    				profilepanel.bottomSheet.show();
+		                    			}
+	                    			}
+	                    		},
+	                    		beforecardswitch: function(container, newCard, oldCard, index){
+	                    			profilepanel.bottomSheet.update(newCard.mediaData);
+	                    			if (profilepanel.tbar.isVisible()) {
+	                    				profilepanel.bottomSheet.show();
+	                    			}
+	                    		}
+	                    	}
 	                    });
+	                    
+	                    //using add rather than setting items so we can fire event for each card
+	                    carousel.add(media_cards);
+	                    carousel.doLayout();
 	                    
 	                    imagepanel.add(carousel);
 	                    
