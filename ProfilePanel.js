@@ -112,7 +112,7 @@
 			
 	        var formBase = {
 	            scroll: 'vertical',
-	            url   : 'postUser.php',
+	            url   : 'http://localhost:8888/showtime/emailProfile.php',
 	            standardSubmit : false,
 				cls: 'emailForm',
 	            items: [
@@ -163,12 +163,13 @@
 	                            text: 'Send',
 	                            ui: 'confirm',
 	                            handler: function() {
-	                                if(formBase.user){
+	                                /*if(formBase.user){
 	                                    form.updateRecord(formBase.user, true);
-	                                }
+	                                }*/
 	                                form.submit({
-	                                    waitMsg : {message:'Submitting', cls : 'demos-loading'}
+	                                    waitMsg : {message:'Submitting', cls : 'loading'}
 	                                });
+									console.log('form submitted');
 	                            }
 	                        }
 	                    ]
@@ -184,7 +185,7 @@
                 height: 270,
                 width: 480
             });
-	        this.form = new Ext.form.FormPanel(formBase);
+	        form = new Ext.form.FormPanel(formBase);
 
             this.portraitLayout = [{
                 layout: {
@@ -326,7 +327,7 @@
 		},
 		
 		onAction: function() {
-			this.form.show();		
+			form.show();		
 		},
 		
 		onBack: function() {
