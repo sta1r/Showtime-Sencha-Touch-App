@@ -39,49 +39,26 @@
                 //hidden: true,
                 fullscreen: true,
                 layout: 'fit',
-                /*tpl: new Ext.XTemplate(
-                        '<div class="img">{images:this.renderImage}</div>',
-                        {
-                            renderImage: function(images, product) {
-                                if (Ext.isArray(images) && images[2]) {
-                                    var img = images[5] || images[2];
-                                    return String.format('<img src="{0}" />', img.url, product.maxWidth);
-                                } else {
-                                    return '';
-                                }
-                            }
-                        }
-                ),*/
 				listeners: { // listen for a tap on the image - show overlay and toolbar
 					body: {
 						tap: function() { 
 							
 			            	if (this.tbar.isVisible()){
 			            		this.tbar.hideToolbar();
+			            		bb = Ext.getCmp('bottombar');
+			            		bb.hide();bb.doComponentLayout();
 			            		this.descriptionPanel.hide();
 			            		this.doLayout();
 			                 } else {
 			                	this.tbar.showToolbar();
+			                	bb = Ext.getCmp('bottombar');
+			                	bb.show();bb.doComponentLayout();
 			                	this.doLayout();
 			                 }
 						},
 						scope: this
 					}
-				},
-				dockedItems: [{
-					xtype: 'toolbar',
-					dock: 'bottom',
-					overlay: true,
-					items: [
-					{
-						text: 'Caption'
-					},{
-						xtype: 'spacer'
-					},{
-						text: 'Like',
-						badgeText: '3'
-					}]
-				}]
+				}
             });
 
 			this.descriptionPanel = new Ext.Panel({
@@ -103,6 +80,7 @@
                 listeners: {
 					body: {
 						click: function(e) {
+							//prevent links in the profile description opening safari
 							e.stopEvent(true);
 						},
 						delegate: 'a'
@@ -230,42 +208,109 @@
                     url: '/showtime/'+profile+'.json',
                     callbackKey: 'callback',
                     callback: function(result) {
-	                	var items = [];
-	                    Ext.each(result.data.Student.Media, function(media, i){
-	                    	if (media.video) {	                    		
-	                    		if (media.video_host == 'vimeo') {
-		                    		items.push({
-										html: '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe></div>',
-			                    		id: 'card'+i
-			                    	});
-	                    		}
-	                    		else {
-		                    		items.push({
-										html: '<div class="video youtube"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>',
-			                    		id: 'card'+i
-			                    	});
-	                    		}
-	                    		
-	                    	} 
-	                     }
-	                    );
-	                    Ext.each(result.data.Student.Media, function(media, i){
-	                    	if (media.touch) {								
-	                    		items.push({
-									html: '<div class="profileimage size-touch" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>',
-		                    		id: 'card'+i
-		                    	});
-							} else if (media.profile) {
-								items.push({
-									html: '<div class="profileimage size-profile" style="background-image:url('+media.profile+');background-repeat:no-repeat;"></div>',
-		                    		id: 'card'+i
-		                    	});
-							}
-	                     }
-	                    );
+	                	var video_cards = [];
+	                	var image_cards = [];
+	                	var media_cards = [];
+	                	
+	                	//create a component containing the media item and panel sheet for the title/like button
+	                	//each component is a 'card' in the carousel
+	                	//the collection of components is added to the carousel's item property
+	                	Ext.each(result.data.Student.Media, function(media, i){
+	                		
+	                		//only process video and images (publications ignored)
+	                		if (media.video || media.touch || media.profile ) {
+	                			
+		                		//create component to hold media
+		                		var mediaCmp = new Ext.Component({
+		                			tpl: new Ext.XTemplate(
+		                					'{[this.renderMedia(values)]}',
+		                					{
+		                						renderMedia: function(media){
+			                						if (media.video) {	                    		
+			            	                    		if (media.video_host == 'vimeo') {
+			            		                    		return '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe></div>';
+			            		                    	}
+			            	                    		else {
+			            	                    			return '<div class="video youtube"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>';
+			            	                    		}    		
+			            	                    	}  else {
+			            	                    		if (media.touch) {								
+			            	                    			return '<div class="profileimage size-touch" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>';
+			            								} else if (media.profile) {
+			            									return '<div class="profileimage size-profile" style="background-image:url('+media.profile+');background-repeat:no-repeat;"></div>';
+			            								}
+			            	                    	}
+		                						}
+		                					}
+		                			),
+		                			data: media
+		                		});
+		                		
+		                		//create sheet for title/like button
+	                			var bottomSheet = new Ext.Sheet({
+	                				//xtemplate for media title
+	                				tpl: new Ext.XTemplate('<div class="title">{title}</div>'),
+	                				data: media
+	                				//may need to contain button in items
+		                			//listener for click to fire ajax on like button
+		                		});
+		                		
+		                		//the carousel card the holds the media/sheet
+		                		var card = new Ext.Panel({
+		                			mediaData: media,
+		                			//items: [mediaCmp, bottomSheet]
+		                			items: mediaCmp,
+		                			//layout:
+		                			/*initComponent: function() {
+			                			this.bbar = new Ext.Toolbar({
+			                				id: 'bottombar',
+			            					xtype: 'toolbar',
+			            					dock: 'bottom',
+			            					overlay: true,
+			            					items: [
+			            					{
+			            						text: 'Caption'
+			            					},{
+			            						xtype: 'spacer'
+			            					},{
+			            						text: 'Like',
+			            						badgeText: '3'
+			            					}]
+			            				});*
+			                			this.dockedItems = [bottomSheet];
+		                				Showtime.ProfilePanel.superclass.initComponent.apply(this, arguments);
+		                			},*/
+		                			dockedItems: [bottomSheet]
+		            				/*listeners: { // listen for a tap on the image - show overlay and toolbar
+		            					body: {
+		            						tap: function() { 	            							
+		            			            	if (this.bbar.isVisible()){
+		            			            		this.tbar.hide();
+		            			            		this.doComponentLayout();
+		            			                 } else {
+		            			                	this.bbar.show();
+		            			                	this.doComponentLayout();
+		            			                 }
+		            						},
+		            						scope: this
+		            					}
+		            				}*/
+		                		});
+		                		
+		                		//re-order cards so video comes first - seems to prevent crashing
+		                		if (media.video) {
+		                			video_cards.push(card);
+		                		} else {
+		                			image_cards.push(card);
+		                		}
+		                		
+	                		}
+	                	});
+	                	
+	                	media_cards = video_cards.concat(image_cards);
 						
 	                    var carousel = new Ext.Carousel({
-	                    	items: items
+	                    	items: media_cards
 	                    });
 	                    
 	                    imagepanel.add(carousel);
