@@ -254,7 +254,10 @@
 			            	                    	}  else {
 			            	                    		if (media.touch) {								
 			            	                    			return '<div class="profileimage size-touch" style="background-image:url('+media.touch+');background-repeat:no-repeat;"></div>';
-			            								} else if (media.profile) {
+			            								} else if (media.screen) {
+			            									return '<div class="profileimage size-touch" style="background-image:url('+media.screen+');background-repeat:no-repeat;"></div>';
+			            								}
+			            	                    		else if (media.profile) {
 			            									return '<div class="profileimage size-profile" style="background-image:url('+media.profile+');background-repeat:no-repeat;"></div>';
 			            								}
 			            	                    	}
