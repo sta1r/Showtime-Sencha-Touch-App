@@ -36,7 +36,7 @@
             this.imagePanel = new Ext.Panel({
                 cls: "profile-summary",
                 flex: 1,
-                hidden: true,
+                //hidden: true,
                 fullscreen: true,
                 layout: 'fit',
                 /*tpl: new Ext.XTemplate(
