@@ -68,7 +68,20 @@
 						scope: this
 					}
 				},
-
+				dockedItems: [{
+					xtype: 'toolbar',
+					dock: 'bottom',
+					overlay: true,
+					items: [
+					{
+						text: 'Caption'
+					},{
+						xtype: 'spacer'
+					},{
+						text: 'Like',
+						badgeText: '3'
+					}]
+				}]
             });
 
 			this.descriptionPanel = new Ext.Panel({
