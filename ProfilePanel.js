@@ -89,16 +89,20 @@
 			//create sheet for title/like button - this is reusable by each image
 			this.bottomSheet = new Ext.Sheet({
 				dock: 'bottom',
+				cls: 'bottom',
 				overlay: true,
 				modal: false,
+				centered: false,
 				layout: {
-					type: 'fit',
-					align: 'stretch'
+					type: 'fit'
 				},
+				height: 30,
+				stretchX: true,
 				tpl: new Ext.XTemplate('<div class="title">{title}</div>'),
+				//add custom animation?
 				//place the like button in the items/docked items property here?
     			//listener for click to fire ajax on like button
-    		});		
+    		});
 			//add the toolbar to the panel's docked items
 			this.dockedItems.push(this.bottomSheet);
 			
