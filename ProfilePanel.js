@@ -45,14 +45,10 @@
 							
 			            	if (this.tbar.isVisible()){
 			            		this.tbar.hideToolbar();
-			            		bb = Ext.getCmp('bottombar');
-			            		bb.hide();bb.doComponentLayout();
 			            		this.descriptionPanel.hide();
 			            		this.doLayout();
 			                 } else {
 			                	this.tbar.showToolbar();
-			                	bb = Ext.getCmp('bottombar');
-			                	bb.show();bb.doComponentLayout();
 			                	this.doLayout();
 			                 }
 						},
@@ -248,19 +244,25 @@
 		                		
 		                		//create sheet for title/like button
 	                			var bottomSheet = new Ext.Sheet({
-	                				//xtemplate for media title
+	                				dock: 'bottom',
+	                				overlay: true,
+	                				hidden: false,
+	                				//layout: 'fit',
 	                				tpl: new Ext.XTemplate('<div class="title">{title}</div>'),
-	                				data: media
-	                				//may need to contain button in items
+	                				data: media,
+	                				//place the like button in items here?
 		                			//listener for click to fire ajax on like button
 		                		});
-		                		
+	                			bottomSheet.show();
+	                			
 		                		//the carousel card the holds the media/sheet
 		                		var card = new Ext.Panel({
 		                			mediaData: media,
 		                			//items: [mediaCmp, bottomSheet]
 		                			items: mediaCmp,
-		                			//layout:
+		                			layout: 'fit',
+		                			dockedItems: [bottomSheet]
+		                			//fullscreen: true,
 		                			/*initComponent: function() {
 			                			this.bbar = new Ext.Toolbar({
 			                				id: 'bottombar',
@@ -280,7 +282,7 @@
 			                			this.dockedItems = [bottomSheet];
 		                				Showtime.ProfilePanel.superclass.initComponent.apply(this, arguments);
 		                			},*/
-		                			dockedItems: [bottomSheet]
+		                			
 		            				/*listeners: { // listen for a tap on the image - show overlay and toolbar
 		            					body: {
 		            						tap: function() { 	            							
