@@ -120,7 +120,7 @@
 			/*Form:*/
 	        this.formBase = {
 	            scroll: 'vertical',
-	            url   : 'http://localhost/showtime/lcf/sendprofile/',
+	            url   : 'http://showtime.arts.ac.uk/lcf/sendprofile/',
 	            standardSubmit : false,
 				cls: 'emailForm',
 	            items: [
