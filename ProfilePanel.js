@@ -106,9 +106,21 @@
 			//add the toolbar to the panel's docked items
 			this.dockedItems.push(this.bottomSheet);
 			
-	        var formBase = {
+			/*Model for the form*/
+			Ext.regModel('Student', {
+	            fields: [
+	                {name: 'firstname', type: 'string'},
+	                {name: 'lastname',  type: 'string'},
+	                {name: 'profileurl',type: 'string'},
+	                {name: 'shorturl',  type: 'string'},
+	            ]
+	        });
+					
+			
+			/*Form:*/
+	        this.formBase = {
 	            scroll: 'vertical',
-	            url   : 'http://localhost:8888/showtime/emailProfile.php',
+	            url   : 'http://localhost/showtime/lcf/sendprofile/',
 	            standardSubmit : false,
 				cls: 'emailForm',
 	            items: [
@@ -127,19 +139,32 @@
 	                        label: 'Email',
 	                        placeHolder: 'you@domain.com',
 	                        useClearIcon: true
-	                    }, {
+	                    },{
 	                        xtype: 'hiddenfield',
-	                        name : 'secret',
-	                        value: false
-	                    }]
+	                        name : 'profileurl',
+	                        value: ''
+	                    },{
+	                        xtype: 'hiddenfield',
+	                        name : 'shorturl',
+	                        value: ''
+	                    },{
+	                        xtype: 'hiddenfield',
+	                        name : 'firstname',
+	                        value: ''
+	                    },{
+	                        xtype: 'hiddenfield',
+	                        name : 'lastname',
+	                        value: ''
+	                    }
+	                    ]
 	                }
 	            ],
 	            listeners : {
 	                submit : function(form, result){
-	                    console.log('success', Ext.toArray(arguments));
+	                    console.log('success', Ext.toArray(arguments), result);
 	                },
 	                exception : function(form, result){
-	                    console.log('failure', Ext.toArray(arguments));
+	                    console.log('failure', Ext.toArray(arguments), result);
 	                }
 	            },
 
@@ -159,9 +184,6 @@
 	                            text: 'Send',
 	                            ui: 'confirm',
 	                            handler: function() {
-	                                /*if(formBase.user){
-	                                    form.updateRecord(formBase.user, true);
-	                                }*/
 	                                form.submit({
 	                                    waitMsg : {message:'Submitting', cls : 'loading'}
 	                                });
@@ -173,7 +195,7 @@
 	            ]
 	        };
 
-		    Ext.apply(formBase, {
+		    Ext.apply(this.formBase, {
                 autoRender: true,
                 floating: true,
                 modal: true,
@@ -181,7 +203,7 @@
                 height: 270,
                 width: 480
             });
-	        form = new Ext.form.FormPanel(formBase);
+	        form = new Ext.form.FormPanel(this.formBase);
 
             this.portraitLayout = [{
                 layout: {
@@ -311,6 +333,52 @@
 	                    
 	                    imagepanel.add(carousel);
 	                    
+	                    //add link to profile in email as hidden field
+	                    //thanks to ext.componentquery this is not necessary
+	                    	//form.items.items[0].items.items[1].value = 'myurl';
+	                    //the hidden element can be found by querying for components with name=profileurl:
+	                    
+	                    /*form.remove(form.query('[name="profileurl"]'));
+	                    form.add({
+	                        xtype: 'hiddenfield',
+	                        name : 'profileurl',
+	                        value: ''
+	                    });
+	                    {
+	                        xtype: 'hiddenfield',
+	                        name : 'profileurl',
+	                        value: ''
+	                    }, {
+	                        xtype: 'hiddenfield',
+	                        name : 'shorturl',
+	                        value: ''
+	                    }, {
+	                        xtype: 'hiddenfield',
+	                        name : 'fullname',
+	                        value: ''
+	                    }
+	                    
+	                    profilefield = form.query('[name="profileurl"]');
+	                    profilefield[0].update(result.data.Student.Student.profileurl);*/
+	                    //profilefield[0].value = result.data.Student.Student.profileurl;
+	                    /*shorturlfield = form.query('[name="shorturl"]');
+	                    shorturlfield[0].value = result.data.Student.Student.shorturl;
+	                    fullnamefield = form.query('[name="fullname"]');
+	                    fullnamefield[0].value = result.data.Student.Student.firstName + ' ' + result.data.Student.Student.lastName;*/                    
+	                    
+	                    //update the form values
+	                    profilepanel.formBase.student = Ext.ModelMgr.create({
+                            'firstname' : result.data.Student.Student.firstName,
+                            'lastname'  : result.data.Student.Student.lastName,
+                            'profileurl': result.data.Student.Student.profileurl,
+                            'shorturl'  : result.data.Student.Student.shorturl,
+                        }, 'Student');
+
+                        form.loadModel(profilepanel.formBase.student);
+	                    
+                        form.updateRecord(profilepanel.formBase.student, true);
+                        
+                        
 	                    profilepanel.descriptionPanel.update(result.data.Student.Student);
 	                    
 	                    profilepanel.doLayout();                  
