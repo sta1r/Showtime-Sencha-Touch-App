@@ -85,20 +85,48 @@
 					}
 				}
 			});
-			
+	
 			//create sheet for title/like button - this is reusable by each image
 			this.bottomSheet = new Ext.Sheet({
-				dock: 'bottom',
+				//dock: 'bottom',
 				cls: 'bottom',
 				overlay: true,
 				modal: false,
-				centered: false,
 				layout: {
-					type: 'fit'
+					type: 'hbox',
+					align: 'right'
 				},
-				height: 30,
+				height: 50,
 				stretchX: true,
-				tpl: new Ext.XTemplate('<div class="title">{title}</div>'),
+				tpl: new Ext.XTemplate(
+					'<div class="title">{title}</div>'
+					
+				),
+				dockedItems: [{
+					xtype: 'toolbar',
+					dock: 'bottom',
+					flex: 1,
+					items: [
+					{ xtype: 'spacer'},
+					{
+						xtype: 'button',
+						ui: 'confirm-round',
+						text: 'Like',
+						handler: function() {
+				            Ext.getBody().mask('Loading...', 'x-mask-loading', false);
+							var media_id = 4;
+				            Ext.Ajax.request({
+				                url: '/showtime/media/like/'+media_id,
+				                success: function(response, opts) {
+									console.log('You liked media id=' + media_id);
+									//Ext.getCmp('content').update(response.responseText);
+				                    //Ext.getCmp('status').setTitle('Static test.json file loaded');
+				                    Ext.getBody().unmask();
+				                }
+				            });
+				        }
+					}]
+				}]
 				//add custom animation?
 				//place the like button in the items/docked items property here?
     			//listener for click to fire ajax on like button
@@ -106,7 +134,7 @@
 			//add the toolbar to the panel's docked items
 			this.dockedItems.push(this.bottomSheet);
 			
-			/*Model for the form*/
+			/*Model for the bookmark form*/
 			Ext.regModel('Student', {
 	            fields: [
 	                {name: 'firstname', type: 'string'},
@@ -116,8 +144,7 @@
 	            ]
 	        });
 					
-			
-			/*Form:*/
+			/*Bookmark Form:*/
 	        this.formBase = {
 	            scroll: 'vertical',
 	            url   : 'http://showtime.arts.ac.uk/lcf/sendprofile/',
@@ -289,7 +316,7 @@
 		                			data: media,
 		                		});
 		                			
-		                		//the carousel card the holds the media/sheet
+		                		//the carousel card that holds the media/sheet
 		                		var card = new Ext.Panel({
 		                			mediaData: media,
 		                			items: mediaCmp,
@@ -443,6 +470,7 @@
 			this.descriptionPanel.hide();
 			this.imagePanel.removeAll(true)
 		}
+		
     });
 
     Ext.reg("showtime-profilepanel", Showtime.ProfilePanel);
