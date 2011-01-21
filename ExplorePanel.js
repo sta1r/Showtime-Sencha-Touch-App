@@ -66,6 +66,10 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         //call the function to hide the backbutton in toolbar.js
         this.tbar.hideBackButton();
 		this.tbar.showBrowseButton();
+		this.tbar.showInfoButton();
+		//bubble up the info button tap
+		this.tbar.enableBubble('info');
+		this.mon(this, 'info', this.onInfo, this);
         
         this.scroll = false;
         
@@ -82,6 +86,29 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         //this.mon(this, "orientationChange", this.resetLayout, this);
         
         this.showProfiles();
+
+		//panel to display generic about message & credit
+		this.infoPanel = new Ext.Panel({
+			id: 'info',
+			html: '<div id="description"><h4>About this app</h4><p>Description</p></div>',
+			floating: true,
+			centered: true,
+			modal: true,
+			hidden: false,
+			height: 450,
+			width: 420,
+			styleHtmlContent: true,
+            scroll: 'vertical',
+            listeners: {
+				body: {
+					click: function(e) {
+						//prevent links in the profile description opening safari
+						e.stopEvent(true);
+					},
+					delegate: 'a'
+				}
+			}
+		});
     },
     
     afterRender: function() {
@@ -270,6 +297,10 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     	this.tbar.setTitle('MA_11');
     	this.tbar.hideBackButton();
 		this.tbar.showBrowseButton();
+	},
+	
+	onInfo: function() {
+		this.infoPanel.show();
 	}
 });
 //add this panel to the component registry

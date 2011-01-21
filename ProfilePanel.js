@@ -12,7 +12,7 @@
 	        this.tbar.showBackButton();
 			//this.tbar.hideBrowseButton();
 			this.tbar.showActionButton();
-			this.tbar.showInfoButton();
+			this.tbar.showFaveButton();
 			
 			//this.tbar.addEvents('back');
 	        this.tbar.enableBubble('back');
@@ -26,6 +26,9 @@
 			
 			this.tbar.enableBubble('action');
 			this.mon(this, 'action', this.onAction, this);
+			
+			//this.tbar.enableBubble('like');
+			//this.mon(this, 'like', this.onAction, this);
 	        
 			//this.showDescriptionSheet();
 	        
@@ -60,7 +63,7 @@
             
 			this.descriptionPanel = new Ext.Panel({
 				id: 'description',
-				tpl: new Ext.XTemplate('<div id="description"><h4>About this profile</h4>{description}</div>'),
+				tpl: new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5></h5>{description}</div>'),
 				floating: true,
 				centered: true,
 				modal: true,
@@ -214,6 +217,7 @@
 	                                    waitMsg : {message:'Submitting', cls : 'loading'}
 	                                });
 									console.log('form submitted');
+									form.hide();
 	                            }
 	                        }
 	                    ]
