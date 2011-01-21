@@ -91,6 +91,7 @@
 			//create sheet for title/like button - this is reusable by each image
 			this.bottomSheet = new Ext.Sheet({
 				//dock: 'bottom',
+				id: 'bottomSheet',
 				cls: 'bottom',
 				overlay: true,
 				modal: false,
@@ -116,14 +117,19 @@
 						text: 'Like',
 						handler: function() {
 				            Ext.getBody().mask('Loading...', 'x-mask-loading', false);
-							var media_id = 4;
+				            bottomSheet = Ext.getCmp('bottomSheet');
 				            Ext.Ajax.request({
-				                url: '/showtime/media/like/'+media_id,
+				                url: '/showtime/media/like/'+bottomSheet.data.id,
 				                success: function(response, opts) {
-									console.log('You liked media id=' + media_id);
-									//Ext.getCmp('content').update(response.responseText);
-				                    //Ext.getCmp('status').setTitle('Static test.json file loaded');
-				                    Ext.getBody().unmask();
+									console.log('You liked media id=' + bottomSheet.data.id);
+									var obj = Ext.decode(response.responseText);
+									console.log(obj);
+									if (obj.success == true) {
+										//like saved successfully
+									} else {
+										//failed to like
+									}									
+									Ext.getBody().unmask();
 				                }
 				            });
 				        }
