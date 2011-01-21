@@ -36,13 +36,12 @@
             this.imagePanel = new Ext.Panel({
                 cls: "profile-summary",
                 flex: 1,
-                //hidden: true,
+                hidden: true,
                 fullscreen: true,
                 layout: 'fit',
 				listeners: { // listen for a tap on the image - show overlay and toolbar
 					body: {
-						tap: function() { 
-							
+						tap: function() { 							
 			            	if (this.tbar.isVisible()){
 			            		this.tbar.hideToolbar();
 			            		this.bottomSheet.hide();
@@ -58,7 +57,7 @@
 					}
 				}
             });
-
+            
 			this.descriptionPanel = new Ext.Panel({
 				id: 'description',
 				tpl: new Ext.XTemplate('<div id="description"><h4>About this profile</h4>{description}</div>'),
@@ -259,12 +258,13 @@
         },
 
         /**
-         * Displays the details of the selected product
+         * Displays the details of the selected profile
          */
         showProfile: function(profile) {
             //profile.maxWidth = width;
             var imagepanel = this.imagePanel;
             imagepanel.removeAll(true);
+            imagepanel.show();
             
             var profilepanel = this;
             
@@ -359,40 +359,7 @@
 	                    carousel.doLayout();
 	                    
 	                    imagepanel.add(carousel);
-	                    
-	                    //add link to profile in email as hidden field
-	                    //thanks to ext.componentquery this is not necessary
-	                    	//form.items.items[0].items.items[1].value = 'myurl';
-	                    //the hidden element can be found by querying for components with name=profileurl:
-	                    
-	                    /*form.remove(form.query('[name="profileurl"]'));
-	                    form.add({
-	                        xtype: 'hiddenfield',
-	                        name : 'profileurl',
-	                        value: ''
-	                    });
-	                    {
-	                        xtype: 'hiddenfield',
-	                        name : 'profileurl',
-	                        value: ''
-	                    }, {
-	                        xtype: 'hiddenfield',
-	                        name : 'shorturl',
-	                        value: ''
-	                    }, {
-	                        xtype: 'hiddenfield',
-	                        name : 'fullname',
-	                        value: ''
-	                    }
-	                    
-	                    profilefield = form.query('[name="profileurl"]');
-	                    profilefield[0].update(result.data.Student.Student.profileurl);*/
-	                    //profilefield[0].value = result.data.Student.Student.profileurl;
-	                    /*shorturlfield = form.query('[name="shorturl"]');
-	                    shorturlfield[0].value = result.data.Student.Student.shorturl;
-	                    fullnamefield = form.query('[name="fullname"]');
-	                    fullnamefield[0].value = result.data.Student.Student.firstName + ' ' + result.data.Student.Student.lastName;*/                    
-	                    
+	                    	                    
 	                    //update the form values
 	                    profilepanel.formBase.student = Ext.ModelMgr.create({
                             'firstname' : result.data.Student.Student.firstName,
@@ -434,14 +401,10 @@
                     this.imagePanel.ownerCt.remove(this.imagePanel, false);
                 }
                 
-                this.removeAll(true);
-
                 //this.descriptionPanel.flex = portrait ? 4 : 1;
-
+                
                 this.add.apply(this, newOrientationLayout);
                 this.layout.activeItem = this.items.first();
-                
-                //this.imagePanel
                 
                 this.doLayout();
             }
