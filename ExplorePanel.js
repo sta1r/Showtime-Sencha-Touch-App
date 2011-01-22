@@ -133,7 +133,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
 	        this.mon(this, 'back', this.onBack, this);
         	url = '/showtime/lcf/'+course.slug+'/2011/explore.json';
         } else {
-        	url = '/showtime/explore.json';
+        	url = '/showtime/lcf/ma/2011/explore.json';
         }
         
     	var store = new Ext.data.Store({
