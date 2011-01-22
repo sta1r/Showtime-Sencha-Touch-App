@@ -56,6 +56,14 @@
 			                	this.doLayout();
 			                 }
 						},
+						swipe: function() {
+							if (this.tbar.isVisible()){
+			            		this.tbar.hideToolbar();
+			            		this.bottomSheet.hide();
+			            		this.descriptionPanel.hide();
+			            		this.doLayout();
+			                }
+						},
 						scope: this
 					}
 				}
