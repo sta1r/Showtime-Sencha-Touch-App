@@ -133,6 +133,7 @@
 									var obj = Ext.decode(response.responseText);
 									console.log(obj);
 									if (obj.success == true) {
+										console.log('likes='+obj.likes);
 										//like saved successfully
 									} else {
 										//failed to like
