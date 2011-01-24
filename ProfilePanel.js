@@ -12,7 +12,7 @@
 	        this.tbar.showBackButton();
 			//this.tbar.hideBrowseButton();
 			this.tbar.showActionButton();
-			this.tbar.showFaveButton();
+			this.tbar.showUserButton();
 			
 			//this.tbar.addEvents('back');
 	        this.tbar.enableBubble('back');
@@ -21,8 +21,8 @@
 	        //this.tbar.enableBubble('courseSelected');
 	        //this.mon(this, 'back', this.onBack, this);
 	        
-			this.tbar.enableBubble('info');
-			this.mon(this, 'info', this.onInfo, this);
+			this.tbar.enableBubble('user');
+			this.mon(this, 'user', this.onUser, this);
 			
 			this.tbar.enableBubble('action');
 			this.mon(this, 'action', this.onAction, this);
@@ -121,8 +121,10 @@
 					{ xtype: 'spacer'},
 					{
 						xtype: 'button',
-						ui: 'confirm-round',
-						text: 'Like',
+						iconMask: true,
+						ui: 'plain',
+						iconCls: 'heart',
+						cls: 'like',
 						handler: function() {
 				            Ext.getBody().mask('Loading...', 'x-mask-loading', false);
 				            bottomSheet = Ext.getCmp('bottomSheet');
@@ -433,7 +435,7 @@
             return this.profile.profileName;
         },
 
-		onInfo: function() {
+		onUser: function() {
 			this.descriptionPanel.show();
 			// user can tap anywhere to dismiss descriptionPanel
 			

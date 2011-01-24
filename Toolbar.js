@@ -105,10 +105,21 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			}
 		});
 		
+		this.userButton = new Ext.Button({
+			iconMask: true,
+			ui: 'plain',
+			iconCls: 'user_list',
+			hidden: true,
+			handler: function() {
+				self.fireEvent('user', this);
+				//console.log('Firing user event');
+			}
+		});
+		
 		this.faveButton = new Ext.Button({
 			iconMask: true,
 			ui: 'plain',
-			iconCls: 'favorites',
+			iconCls: 'search',
 			hidden: true,
 			handler: function() {
 				self.fireEvent('like', this);
@@ -123,7 +134,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
             {xtype: 'spacer'},
 			this.actionButton,
 			this.infoButton,
-			this.faveButton
+			this.userButton
         ];
         //call parent initComponent: because this class is an extended toolbar, the toolbar init needs to be called also:
         Showtime.Toolbar.superclass.initComponent.call(this);       
@@ -179,7 +190,12 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 		this.infoButton.show();
 		this.doComponentLayout();
 	},
-
+	
+	showUserButton: function() {
+		this.userButton.show();
+		this.doComponentLayout();
+	},
+	
 	onBrowseButtonTap: function() {
 		if (!this.popup) {
 			this.popup = new Ext.TabPanel({
