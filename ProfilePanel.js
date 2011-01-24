@@ -26,11 +26,6 @@
 			
 			this.tbar.enableBubble('action');
 			this.mon(this, 'action', this.onAction, this);
-			
-			//this.tbar.enableBubble('like');
-			//this.mon(this, 'like', this.onAction, this);
-	        
-			//this.showDescriptionSheet();
 	        
             this.monitorOrientation = true;
             
@@ -95,7 +90,7 @@
 					}
 				}
 			});
-	
+			
 			//create sheet for title/like button - this is reusable by each image
 			this.bottomSheet = new Ext.Sheet({
 				//dock: 'bottom',
@@ -107,11 +102,10 @@
 					type: 'hbox',
 					align: 'right'
 				},
-				height: 50,
+				height: 45,
 				stretchX: true,
 				tpl: new Ext.XTemplate(
-					'<div class="title">{title}</div>'
-					
+					'<div class="title">{title}</div>'	
 				),
 				dockedItems: [{
 					xtype: 'toolbar',
@@ -119,6 +113,7 @@
 					flex: 1,
 					items: [
 					{ xtype: 'spacer'},
+				
 					{
 						xtype: 'button',
 						iconMask: true,
@@ -126,7 +121,7 @@
 						iconCls: 'heart',
 						cls: 'like',
 						handler: function() {
-				            Ext.getBody().mask('Loading...', 'x-mask-loading', false);
+				            Ext.getBody().mask('Liking...', 'x-mask-loading', false);
 				            bottomSheet = Ext.getCmp('bottomSheet');
 				            Ext.Ajax.request({
 				                url: '/showtime/media/like/'+bottomSheet.data.id,
@@ -137,6 +132,22 @@
 									if (obj.success == true) {
 										console.log('likes='+obj.likes);
 										//like saved successfully
+										// modal to display like count to user
+										this.likeModal = new Ext.Panel({
+											id: 'likeModal',
+											floating: true,
+											centered: true,
+											hidden: true,
+											modal: true,
+											height: 100,
+											width: 200,
+											html: '120 likes!'
+										});
+										likeModal = this.likeModal;
+										likeModal.on('hide', function() {
+											likeModal.destroy();
+										});
+										likeModal.show('pop');
 									} else {
 										//failed to like
 									}									
@@ -234,7 +245,7 @@
 	                                    waitMsg : {message:'Submitting', cls : 'loading'}
 	                                });
 									console.log('form submitted');
-									form.hide();
+									form.hide('fade');
 	                            }
 	                        }
 	                    ]
@@ -438,13 +449,11 @@
 		onUser: function() {
 			this.descriptionPanel.show();
 			// user can tap anywhere to dismiss descriptionPanel
-			
-			/*if (this.descriptionPanel.isVisible()) {
-				this.descriptionPanel.hide();
-	        } else {
-				this.descriptionPanel.show();
-	        }*/
 		},
+		
+		/*onLike: function() {
+			this.likeModal.show();
+		},*/
 		
 		onAction: function() {
 			form.show();		

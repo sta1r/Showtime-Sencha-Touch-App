@@ -115,17 +115,6 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 				//console.log('Firing user event');
 			}
 		});
-		
-		this.faveButton = new Ext.Button({
-			iconMask: true,
-			ui: 'plain',
-			iconCls: 'search',
-			hidden: true,
-			handler: function() {
-				self.fireEvent('like', this);
-				//console.log('Firing like event');
-			}
-		});
         
         //specify what appears on the toolbar: back button, spacer (see Ext.Spacer)
         this.items = [
@@ -181,11 +170,6 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 		this.doComponentLayout();
 	},
 	
-	showFaveButton: function() {
-		this.faveButton.show();
-		this.doComponentLayout();
-	},
-	
 	showInfoButton: function() {
 		this.infoButton.show();
 		this.doComponentLayout();
@@ -202,7 +186,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 				cls: 'explore-menu',
 				floating: true,
 				width: 300,
-				height: 620,
+				height: 660,
 				items: [{
 					title: 'Student',
 					items: [{
