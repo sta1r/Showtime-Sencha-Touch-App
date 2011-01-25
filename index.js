@@ -1,7 +1,7 @@
 var basedir = (location.hostname == 'localhost' ? '/showtime' : ''); 
 
 Ext.setup({
-    tabletStartupScreen: 'http://showtime.arts.ac.uk/img/touch/tablet_startup.png',
+    tabletStartupScreen: 'tablet_startup.png',
     phoneStartupScreen: 'phone_startup.png',
     icon: 'http://showtime.arts.ac.uk/img/touch/icon.png',
     glossOnIcon: true,

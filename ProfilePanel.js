@@ -126,11 +126,11 @@
 				            Ext.Ajax.request({
 				                url: '/showtime/media/like/'+bottomSheet.data.id,
 				                success: function(response, opts) {
-									console.log('You liked media id=' + bottomSheet.data.id);
+									//console.log('You liked media id=' + bottomSheet.data.id);
 									var obj = Ext.decode(response.responseText);
-									console.log(obj);
+									//console.log(obj);
 									if (obj.success == true) {
-										console.log('likes='+obj.likes);
+										//console.log('likes='+obj.likes);
 										//like saved successfully
 										// modal to display like count to user
 										this.likeModal = new Ext.Panel({
@@ -139,9 +139,9 @@
 											centered: true,
 											hidden: true,
 											modal: true,
-											height: 100,
-											width: 200,
-											html: '120 likes!'
+											height: 80,
+											width: 180,
+											html: obj.likes + ' likes!'
 										});
 										likeModal = this.likeModal;
 										likeModal.on('hide', function() {
@@ -432,6 +432,9 @@
                 if (this.imagePanel.ownerCt) {
                     this.imagePanel.ownerCt.remove(this.imagePanel, false);
                 }
+
+				//this.bottomSheet.destroy();
+				console.log('orientationchange');
                 
                 //this.descriptionPanel.flex = portrait ? 4 : 1;
                 
