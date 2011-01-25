@@ -93,6 +93,7 @@
 			
 			//create sheet for title/like button - this is reusable by each image
 			this.bottomSheet = new Ext.Sheet({
+				id: 'bottomSheet',
 				cls: 'bottom',
 				overlay: true,
 				modal: false,
@@ -131,6 +132,7 @@
 										//console.log('likes='+obj.likes);
 										//like saved successfully
 										// modal to display like count to user
+									 	likeTerm = obj.likes == 1 ? 'like' : 'likes';
 										this.likeModal = new Ext.Panel({
 											id: 'likeModal',
 											floating: true,
@@ -139,7 +141,7 @@
 											modal: true,
 											height: 80,
 											width: 180,
-											html: obj.likes + ' likes!'
+											html: obj.likes + ' ' + likeTerm + '!'
 										});
 										likeModal = this.likeModal;
 										likeModal.on('hide', function() {
