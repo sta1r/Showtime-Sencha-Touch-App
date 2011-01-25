@@ -4,6 +4,9 @@
     Showtime.ProfilePanel = Ext.extend(Ext.Panel, {
     	scroll: false,
         initComponent: function() {
+	        this.monitorOrientation = true;
+            this.layout = "fit";
+    
 			this.tbar = new Showtime.Toolbar();	//setup the toolbar, see Toolbar.js
 			this.tbar.overlay = true; //set the toolbar to appear overlaid on the image
 			//this.hidden = true; //start hidden (when loaded before viewing profile)
@@ -26,10 +29,7 @@
 			
 			this.tbar.enableBubble('action');
 			this.mon(this, 'action', this.onAction, this);
-	        
-            this.monitorOrientation = true;
-            
-            this.layout = "fit";
+	                    
             
             this.imagePanel = new Ext.Panel({
                 cls: "profile-summary",
@@ -93,8 +93,6 @@
 			
 			//create sheet for title/like button - this is reusable by each image
 			this.bottomSheet = new Ext.Sheet({
-				//dock: 'bottom',
-				id: 'bottomSheet',
 				cls: 'bottom',
 				overlay: true,
 				modal: false,
@@ -432,16 +430,18 @@
                 if (this.imagePanel.ownerCt) {
                     this.imagePanel.ownerCt.remove(this.imagePanel, false);
                 }
-
-				//this.bottomSheet.destroy();
-				console.log('orientationchange');
-                
-                //this.descriptionPanel.flex = portrait ? 4 : 1;
-                
+								
+				if (this.bottomSheet.isVisible()){
+					this.bottomSheet.hide();
+				}
+				this.removeAll(true);
+				//console.log('orientationchange');
+                                
                 this.add.apply(this, newOrientationLayout);
                 this.layout.activeItem = this.items.first();
                 
                 this.doLayout();
+				
             }
         },
         
