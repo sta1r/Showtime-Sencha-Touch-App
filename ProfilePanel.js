@@ -217,6 +217,10 @@
 	                }
 	            ],
 	            listeners : {
+					beforesubmit : function(form, values){
+	                    console.log(values.email);
+						
+	                },
 	                submit : function(form, result){
 	                    console.log('success', Ext.toArray(arguments), result);
 	                },
@@ -241,11 +245,13 @@
 	                            text: 'Send',
 	                            ui: 'confirm',
 	                            handler: function() {
+									console.log(form);
 	                                form.submit({
 	                                    waitMsg : {message:'Submitting', cls : 'loading'}
 	                                });
 									console.log('form submitted');
-									form.hide('fade');
+									//form.reset();
+									//form.hide('fade');
 	                            }
 	                        }
 	                    ]
