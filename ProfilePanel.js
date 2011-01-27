@@ -194,6 +194,7 @@
 	                        xtype: 'emailfield',
 	                        name : 'email',
 	                        label: 'Email',
+	                        id: 'bookmarkemail',
 	                        placeHolder: 'you@domain.com',
 	                        useClearIcon: true
 	                    },{
@@ -217,6 +218,14 @@
 	                }
 	            ],
 	            listeners : {
+					beforehide : function(cmp){
+						console.log('hidden', cmp);
+						emailfield = Ext.getCmp('bookmarkemail');
+						emailfield.fieldEl.dom.blur();
+					},
+					beforedeactivate : function(cmp){
+						console.log('deactivate', cmp);
+					},
 					beforesubmit : function(form, values){
 	                    //console.log(values);
 	                    if (Ext.util.Format.trim(values.email) == '') {
