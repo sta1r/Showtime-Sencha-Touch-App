@@ -218,11 +218,16 @@
 	            ],
 	            listeners : {
 					beforesubmit : function(form, values){
-	                    console.log(values.email);
-						
+	                    //console.log(values);
+	                    if (Ext.util.Format.trim(values.email) == '') {
+	                    	console.log('email empty');
+	                    	return false;
+	                    }					
 	                },
 	                submit : function(form, result){
-	                    console.log('success', Ext.toArray(arguments), result);
+	                    //console.log('success', Ext.toArray(arguments), result);	                    
+	                    form.hide('fade');
+	                    form.reset();
 	                },
 	                exception : function(form, result){
 	                    console.log('failure', Ext.toArray(arguments), result);
@@ -245,13 +250,11 @@
 	                            text: 'Send',
 	                            ui: 'confirm',
 	                            handler: function() {
-									console.log(form);
+									//console.log(form);
 	                                form.submit({
 	                                    waitMsg : {message:'Submitting', cls : 'loading'}
 	                                });
-									console.log('form submitted');
-									//form.reset();
-									//form.hide('fade');
+									//console.log('form submitted');
 	                            }
 	                        }
 	                    ]
