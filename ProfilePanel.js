@@ -66,7 +66,7 @@
             
 			this.descriptionPanel = new Ext.Panel({
 				id: 'description',
-				tpl: new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5></h5>{description}</div>'),
+				tpl: new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5>{course}</h5>{description}</div>'),
 				floating: true,
 				centered: true,
 				modal: true,
@@ -322,7 +322,7 @@
         	var makeJSONPRequest = function() {
                 Ext.getBody().mask('Loading...', 'x-mask-loading', false);
                 Ext.util.JSONP.request({
-                    url: '/showtime/'+profile+'.json',
+                    url: '/showtime/'+profile.profileName+'.json',
                     callbackKey: 'callback',
                     callback: function(result) {
 	                	var video_cards = [];
@@ -422,6 +422,8 @@
 	                    
                         form.updateRecord(profilepanel.formBase.student, true);
                         
+                        //quick hack - place the course name in the result data - because at present only course id is available in json
+                        result.data.Student.Student['course'] = profile.course;
                         
 	                    profilepanel.descriptionPanel.update(result.data.Student.Student);
 	                    
