@@ -110,7 +110,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 		this.refreshButton = new Ext.Button({
 			iconMask: true,
 			ui: 'plain',
-			iconCls: 'info',
+			iconCls: 'refresh',
 			hidden: true,
 			handler: function() {
 				self.fireEvent('back', this);
