@@ -17,7 +17,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 
 		// begin student list
 		Ext.regModel('Student', {
-		    fields: ['firstName', 'lastName', 'fullName', 'profileName'],
+		    fields: ['firstName', 'lastName', 'fullName', 'profileName', 'course'],
 		    proxy: {
 		    	type: 'ajax',
 		    	url: '/showtime/lcf/ma/2011/index.json',
@@ -107,6 +107,17 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			}
 		});
 		
+		this.refreshButton = new Ext.Button({
+			iconMask: true,
+			ui: 'plain',
+			iconCls: 'info',
+			hidden: true,
+			handler: function() {
+				self.fireEvent('back', this);
+				//console.log('Firing info event');
+			}
+		});
+		
 		this.userButton = new Ext.Button({
 			iconMask: true,
 			ui: 'plain',
@@ -124,6 +135,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			this.browseButton,
             {xtype: 'spacer'},
 			this.actionButton,
+			this.refreshButton,
 			this.infoButton,
 			this.userButton
         ];
@@ -176,6 +188,17 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 		this.infoButton.show();
 		this.doComponentLayout();
 	},
+	
+	showRefreshButton: function() {
+		this.refreshButton.show();
+		this.doComponentLayout();
+	},
+	
+	hideRefreshButton: function() {
+        this.refreshButton.hide();
+      //refresh the layout
+        this.doComponentLayout();
+    },
 	
 	showUserButton: function() {
 		this.userButton.show();

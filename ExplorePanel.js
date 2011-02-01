@@ -67,6 +67,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         this.tbar.hideBackButton();
 		this.tbar.showBrowseButton();
 		this.tbar.showInfoButton();
+		this.tbar.showRefreshButton();
 		//bubble up the info button tap
 		this.tbar.enableBubble('info');
 		this.mon(this, 'info', this.onInfo, this);
@@ -136,6 +137,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         if (course) {
         	this.tbar.setTitle(course.name);
         	this.tbar.showBackButton();
+        	this.tbar.hideRefreshButton();
         	//this.tbar.hideBrowseButton();
         	this.tbar.enableBubble('back');
 	        this.mon(this, 'back', this.onBack, this);
@@ -305,6 +307,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     	this.tbar.setTitle('MA_11');
     	this.tbar.hideBackButton();
 		this.tbar.showBrowseButton();
+		this.tbar.showRefreshButton();
 	},
 	
 	onInfo: function() {
