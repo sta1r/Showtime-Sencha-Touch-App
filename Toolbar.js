@@ -135,7 +135,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			this.browseButton,
             {xtype: 'spacer'},
 			this.actionButton,
-			this.refreshButton,
+			//this.refreshButton,
 			this.infoButton,
 			this.userButton
         ];
