@@ -34,7 +34,8 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 		    getGroupString : function(record) {
 		        return record.get('firstName')[0];
 		    },
-		    autoLoad: true
+		    autoLoad: true,
+		    pageSize: 120
 		});
 		// end student list
 		
@@ -57,7 +58,8 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 		Showtime.CourseStore = new Ext.data.Store({
 		    model: 'Courses',
 		    sorters: 'name',
-		    autoLoad: true
+		    autoLoad: true,
+		    pageSize: 50
 		});
 		// end course list
 		

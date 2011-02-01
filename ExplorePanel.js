@@ -237,7 +237,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                     thepanel.doLayout();
                 }
             },
-            pageSize: 50,
+            pageSize: 120,
             //autoLoad: true
         });
         store.read();
