@@ -320,7 +320,7 @@
             
 
         	var makeJSONPRequest = function() {
-                Ext.getBody().mask('Loading...', 'x-mask-loading', false);
+                //Ext.getBody().mask('Loading...', 'x-mask-loading', false);
                 Ext.util.JSONP.request({
                     url: '/showtime/'+profile.profileName+'.json',
                     callbackKey: 'callback',
@@ -431,7 +431,7 @@
 	                    imagepanel.doLayout();
 	                    
 	                    //remove the loading indicator
-	                    Ext.getBody().unmask();
+	                    //Ext.getBody().unmask();
                     }
                 });
             };
