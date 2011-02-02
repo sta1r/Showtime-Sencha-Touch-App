@@ -67,10 +67,12 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
         this.tbar.hideBackButton();
 		this.tbar.showBrowseButton();
 		this.tbar.showInfoButton();
-		//this.tbar.showRefreshButton();
-		//bubble up the info button tap
+		this.tbar.showRefreshButton();
+		//bubble up the info and refresh button tap events
 		this.tbar.enableBubble('info');
+		this.tbar.enableBubble('refresh');
 		this.mon(this, 'info', this.onInfo, this);
+		this.mon(this, 'refresh', this.onRefresh, this);
         
         this.scroll = false;
         
@@ -307,8 +309,12 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
     	this.tbar.setTitle('MA_11');
     	this.tbar.hideBackButton();
 		this.tbar.showBrowseButton();
-		//this.tbar.showRefreshButton();
+		this.tbar.showRefreshButton();
 	},
+	
+	onRefresh: function() {
+		window.location.reload();
+	},	
 	
 	onInfo: function() {
 		this.infoPanel.show();

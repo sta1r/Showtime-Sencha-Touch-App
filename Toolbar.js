@@ -7,6 +7,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
     initComponent: function(){
 		//Adds the specified events to the list of events which this Observable may fire.
         this.addEvents('back');
+        this.addEvents('refresh');
         this.addEvents('profileSelected');
         this.enableBubble('profileSelected');
         this.addEvents('courseSelected');
@@ -113,7 +114,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			iconCls: 'refresh',
 			hidden: true,
 			handler: function() {
-				self.fireEvent('back', this);
+				self.fireEvent('refresh', this);
 				//console.log('Firing info event');
 			}
 		});
@@ -135,7 +136,7 @@ Showtime.Toolbar = Ext.extend(Ext.Toolbar, {
 			this.browseButton,
             {xtype: 'spacer'},
 			this.actionButton,
-			//this.refreshButton,
+			this.refreshButton,
 			this.infoButton,
 			this.userButton
         ];
