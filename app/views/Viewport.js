@@ -1,22 +1,22 @@
-app.views.Viewport = Ext.extend(Ext.Panel, {
+showtime.views.Viewport = Ext.extend(Ext.Panel, {
     fullscreen: true,
     layout: 'card',
     cardSwitchAnimation: 'slide',
     initComponent: function() {
         //put instances of cards into app.views namespace
-        Ext.apply(app.views, {
-            //contactsList: new app.views.ContactsList(),
-            //contactDetail: new app.views.ContactDetail(),
+        Ext.apply(showtime.views, {
+            profilesList: new showtime.views.ProfilesList(),
+            profileDetail: new showtime.views.ProfileDetail(),
             //contactForm: new app.views.ContactForm()
         });
         //put instances of cards into viewport
         Ext.apply(this, {
             items: [
-                //app.views.contactsList,
-                //app.views.contactDetail,
+                showtime.views.profilesList,
+                showtime.views.profileDetail,
                 //app.views.contactForm,
             ]
         });
-        app.views.Viewport.superclass.initComponent.apply(this, arguments);
+        showtime.views.Viewport.superclass.initComponent.apply(this, arguments);
     }
 });
