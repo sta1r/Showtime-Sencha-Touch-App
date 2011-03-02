@@ -204,7 +204,7 @@ Showtime.ExplorePanel = Ext.extend(Ext.Panel, {
                                 },
                                 scope: thepanel
                             }
-                        });                   	
+                        });
                     	
                         var renderData = function() {
                         	var tpl = Ext.getOrientation() == "portrait" ? this.portraitTpl : this.landscapeTpl;

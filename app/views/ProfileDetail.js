@@ -54,7 +54,8 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
             item.update(record.data);
         });*/
         var toolbar = this.getDockedItems()[0];
-        toolbar.setTitle(record.get('fullName'));
+
+        toolbar.setTitle(record.Student.firstName+' '+record.Student.lastName);
         toolbar.getComponent('edit').record = record;
     }
 });
