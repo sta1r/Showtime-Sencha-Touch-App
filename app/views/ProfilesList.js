@@ -43,7 +43,7 @@ templates.profileListPortrait = new Ext.XTemplate(
 showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
     dockedItems: [{
         xtype: 'toolbar',
-        title: 'Profiles'
+        title: 'Profiles',
     }],
     tpl: templates.profileListLandscape,
     /*items: [{
@@ -63,35 +63,41 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
     }],*/
     initComponent: function() {
 		thepanel = this;
-		
-		//this.showProfiles();
+		//setup customised toolbar
+		this.tbar = new showtime.ProfilesListToolbar();
+		//add the toolbar to the panel's docked items
+		this.dockedItems = [this.tbar];	
+		this.tbar.setTitle('MA_11');
+		this.tbar.show('fade');
 		
 		Ext.dispatch({
             controller: showtime.controllers.profiles,
-            action: 'list'
+            action: 'load'
         });
-		
-		
+
 		showtime.views.ProfilesList.superclass.initComponent.apply(this, arguments);
     },
     
     /*
      * Load (or reload) profiles into the main carousel
      */
-    updateCarousel: function(records) {
+    updateWithRecord: function(records) {
     	
-		//generate card components
+		//generate card components for main carousel
 	    var cards = this.createCards(records);
 	    
 	    thepanel.removeAll(true);
+	    if (carousel) {
+	    	carousel.hide();
+	    }
 	    carousel = undefined;
 	    if (!carousel) {
 	    	//new carousel using generated cards
 	        var carousel = new Ext.Carousel({
 	        	fullscreen: true,
+	        	hidden: true,
 	        	layout: 'fit',
 	        	flex: 1,
-	        	//tpl: thepanel.tpl,
 	        	items: cards,
 	        	id: 'car',
 	            itemId: 'carousel'
@@ -99,7 +105,7 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
 	    }
 	    thepanel.add(carousel);
 	    thepanel.doLayout();
-	    
+	    carousel.show('fade');	    
     },    
     
     /*
@@ -144,6 +150,7 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
                     scope: thepanel
                 },
                 //setProfile is fired when component's orientation changes:
+                //TODO re-attach tap events as they are lost on orientation change
                 setProfile: function(app_profile) {
                 	var tpl = app_profile == "tabletPortrait" ? templates.profileListPortrait : templates.profileListLandscape;
                 	//redraw card

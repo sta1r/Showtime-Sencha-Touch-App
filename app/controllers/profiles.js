@@ -1,19 +1,28 @@
 showtime.controllers.profiles = new Ext.Controller({
 	index: function(options) {
+		showtime.stores.profilesList.clearFilter(true);
+		if (options.courseData) {
+			//filter by course			
+			showtime.stores.profilesList.filter('course', options.courseData.name);
+			showtime.views.profilesList.updateWithRecord(showtime.stores.profilesList.data.items);
+		} else if (options.back) {
+			showtime.stores.profilesList.clearFilter(true);
+			showtime.views.profilesList.updateWithRecord(showtime.stores.profilesList.data.items);
+		}
 	    showtime.views.viewport.setActiveItem(
 	        showtime.views.profilesList, options.animation
 	    );
 	},
-	list: function(options) {
+	load: function(options) {
 		//can't autoload the store as it may run before deviceready in phonegap - so store must be loaded manually.
 		//load is asynchronous so a callback must be used to process the returned data
 		showtime.stores.profilesList.load({
 		    scope   : this,
 		    callback: function(records, operation, success) {
 				//handle timeout here?
-                
+				console.log(records);
 				//send records to view:
-				showtime.views.profilesList.updateCarousel(records);
+				showtime.views.profilesList.updateWithRecord(records);
 		    }
 		});
 	},
