@@ -20,7 +20,7 @@ showtime.controllers.profiles = new Ext.Controller({
 		    scope   : this,
 		    callback: function(records, operation, success) {
 				//handle timeout here?
-				console.log(records);
+
 				//send records to view:
 				showtime.views.profilesList.updateWithRecord(records);
 		    }

@@ -105,7 +105,7 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
 	    }
 	    thepanel.add(carousel);
 	    thepanel.doLayout();
-	    carousel.show('fade');	    
+	    carousel.show('fade');
     },    
     
     /*
