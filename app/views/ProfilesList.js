@@ -41,10 +41,6 @@ templates.profileListPortrait = new Ext.XTemplate(
 
 
 showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
-    dockedItems: [{
-        xtype: 'toolbar',
-        title: 'Profiles',
-    }],
     tpl: templates.profileListLandscape,
     /*items: [{
         xtype: 'list',

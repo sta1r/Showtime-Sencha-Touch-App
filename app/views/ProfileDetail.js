@@ -1,7 +1,7 @@
 showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
     dockedItems: [{
         xtype: 'toolbar',
-        title: 'View profile',
+        overlay: true,
         items: [
             {
                 text: 'Back',
@@ -16,27 +16,23 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
                     }
                 }
             },
-            {xtype:'spacer'},
             {
-                id: 'edit',
-                text: 'Edit',
+                text: 'Browse',
                 ui: 'action',
                 listeners: {
                     'tap': function () {
-                        //Ext.dispatch({
-                        //    controller: app.controllers.contacts,
-                        //    action: 'edit',
-                        //    id: this.record.getId()
-                        //});
+                        console.log(showtime.views);
                     }
                 }
-            }
+            },
         ]
     }],
     fullscreen: true,
     //layout: 'fit',
     initComponent: function() {
     	profilepanel = this;
+    	//var toolbar = this.getDockedItems()[0];
+    	//toolbar.show();
     	showtime.views.ProfileDetail.superclass.initComponent.apply(this, arguments);
     },
     updateWithRecord: function(result) {
