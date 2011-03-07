@@ -32,7 +32,7 @@ showtime.controllers.profiles = new Ext.Controller({
 		});
 		showtime.stores.profilesList.sort('updated', 'DESC');
 	},
-    view: function(options) {
+    view: function(options) {		
 		Ext.getBody().mask('Loading...', 'x-mask-loading', false);
 		//it is not possible in sencha to use a store / model proxy to read a single json record so:
 		 Ext.util.JSONP.request({
@@ -53,6 +53,6 @@ showtime.controllers.profiles = new Ext.Controller({
 		 
     },
     showBio: function(options) {
-    	showtime.views.profileDetail.descriptionPanel.show();
+    	showtime.views.profileDetail.showBio();
     }
 });

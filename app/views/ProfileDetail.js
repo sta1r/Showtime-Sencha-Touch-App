@@ -8,34 +8,6 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
 		this.tbar = new showtime.ProfileDetailToolbar();
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];
-    	
-		//setup description panel
-		this.descriptionPanel = new Ext.Panel({
-			id: 'description',
-			tpl: new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5>{course}</h5>{description}</div>'),
-			floating: true,
-			centered: true,
-			modal: true,
-			hidden: false,
-			height: 450,
-			width: 420,
-			/*dockedItems: [{
-				dock: 'top',
-				xtype: 'container', 
-				title: 'About'
-			}],*/
-			styleHtmlContent: true,
-            scroll: 'vertical',
-            listeners: {
-				body: {
-					click: function(e) {
-						//prevent links in the profile description opening safari
-						e.stopEvent(true);
-					},
-					delegate: 'a'
-				}
-			}
-		});
 		
 		//create sheet for title/like button - this is reusable by each image
 		this.bottomSheet = new Ext.Sheet({
@@ -110,6 +82,19 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
 		//add the toolbar to the panel's docked items
 		this.dockedItems.push(this.bottomSheet);
 		
+		profilepanel.on('deactivate', function(profilepanel){
+			//destroy the carousel
+			if (profilepanel.items.items[0]) {
+				profilepanel.items.items[0].destroy();
+			}
+			if (profilepanel.descriptionPanel) {
+				profilepanel.descriptionPanel.destroy();
+			}
+			/*if (profilepanel.tbar) {
+				profilepanel.tbar.destroy()
+			}*/
+		});
+		
     	showtime.views.ProfileDetail.superclass.initComponent.apply(this, arguments);
     },
     
@@ -132,9 +117,7 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
 	
 	//load a profile
 	loadProfile: function(result, listData) {
-    	/*Ext.each(this.items.items, function(item) {
-            item.update(record.data);
-        });*/
+		profilepanel.setLoading(true);
 
         this.tbar.setTitle(result.Student.firstName+' '+result.Student.lastName);
         //toolbar.getComponent('edit').record = record;
@@ -156,16 +139,10 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
         		beforeadd: function(container, card, index) {
         			if (index == 0) {
         				profilepanel.bottomSheet.update(card.mediaData);
-        				/*if (profilepanel.tbar.isVisible() && !profilepanel.bottomSheet.isVisible()) {
-        					profilepanel.bottomSheet.show();
-        				}*/
         			}
         		},
         		beforecardswitch: function(container, newCard, oldCard, index){
         			profilepanel.bottomSheet.update(newCard.mediaData);
-        			/*if (profilepanel.tbar.isVisible() && !profilepanel.bottomSheet.isVisible()) {
-        				profilepanel.bottomSheet.show();
-        			}*/
         		}
         	}
         });
@@ -191,14 +168,15 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
         //quick hack - place the course name in the result data - because at present only course id is available in json
         result.Student['course'] = listData.course;
         
-        profilepanel.descriptionPanel.update(result.Student);
+        //profilepanel.descriptionPanel.update(result.Student);
+        profilepanel.studentdata = result.Student;
         
         profilepanel.doLayout();
         profilepanel.show();
 	      
         //bottomSheet seems to like to be shown only after profilepanel has been shown
         profilepanel.bottomSheet.show();
-	   
+        profilepanel.setLoading(false);
     },
     
     createCards: function(result) {
@@ -260,6 +238,40 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
     	//join video and image cards together (video first seems to prevent crashing)
     	media_cards = video_cards.concat(image_cards);
     	return media_cards;
+    },
+    
+    showBio: function() {
+    	if (!this.descriptionPanel) {
+    		//setup description panel
+    		this.descriptionPanel = new Ext.Panel({
+    			id: 'description',
+    			tpl: new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5>{course}</h5>{description}</div>'),
+    			data: profilepanel.studentdata,
+    			floating: true,
+    			centered: true,
+    			modal: true,
+    			hidden: false,
+    			height: 450,
+    			width: 420,
+    			/*dockedItems: [{
+    				dock: 'top',
+    				xtype: 'container', 
+    				title: 'About'
+    			}],*/
+    			styleHtmlContent: true,
+                scroll: 'vertical',
+                listeners: {
+    				body: {
+    					click: function(e) {
+    						//prevent links in the profile description opening safari
+    						e.stopEvent(true);
+    					},
+    					delegate: 'a'
+    				}
+    			}
+    		});
+    	};
+    	this.descriptionPanel.show();
     }
     
 });

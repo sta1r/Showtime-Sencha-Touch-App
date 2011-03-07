@@ -95,7 +95,27 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
 	        	flex: 1,
 	        	items: cards,
 	        	id: 'car',
-	            itemId: 'carousel'
+	            itemId: 'carousel',
+	            listeners: {
+	        		el: {
+	        			//using delegate for better memory management
+		        		tap: function(e, target) {
+		        			if (target) {
+		        				var carousel_item = carousel.items.items[carousel.getActiveIndex()];
+			        			var index = carousel.items.items[carousel.getActiveIndex()].items.indexOf(target);
+			        			var data = carousel_item.profileData[index];
+                                if (Ext.isObject(data)) {
+                                	Ext.dispatch({
+                                        controller: showtime.controllers.profiles,
+                                        action: 'view',
+                                        profileData: data
+                                    });
+                                }
+                            }
+		        		},
+		        		delegate: '.explore-item'
+	        		}
+	        	}
 	        });
 	    }
 	    this.add(carousel);
@@ -122,28 +142,7 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
         Ext.each(carditems, function(cardData){
         	var component = new Ext.Component({
             	profileData: cardData,
-            	//showAnimation: 'fade',
-            	listeners: {
-                    afterrender: function() {
-        				thepanel.mon(component.el, 'tap', function(e) {
-                            var item = e.getTarget('.explore-item', component.el);
-                            if (item) {
-                                var index = component.items.indexOf(item),
-                                    data = component.profileData[index];
 
-                                if (Ext.isObject(data)) {
-                                	Ext.dispatch({
-                                        controller: showtime.controllers.profiles,
-                                        action: 'view',
-                                        profileData: data
-                                    });
-                                }
-                            }
-                        }, thepanel);
-        				
-                    },
-                    scope: thepanel
-                },
                 //setProfile is fired when component's orientation changes:
                 //TODO re-attach tap events as they are lost on orientation change
                 setProfile: function(app_profile) {
