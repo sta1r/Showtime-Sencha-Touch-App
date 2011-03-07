@@ -8,6 +8,7 @@ showtime.models.ProfilesList = Ext.regModel("showtime.models.ProfilesList", {
         {name: "fullName", type: "string"},
         {name: "course", type: "auto"},
         {name: "thumb", type: "auto"},
+        {name: "updated"},
     ],
     idProperty: 'id',
     proxy: {
@@ -26,5 +27,11 @@ showtime.stores.profilesList = new Ext.data.Store({
     getGroupString : function(record) {
         return record.get('firstName')[0];
     },
+    //sortOnFilter: false,
+    //defaultSortDirection: 'DESC',
+    /*sorters: [{
+    	   property : 'updated',
+    	   direction: 'DESC'
+       }],*/
     pageSize: 130
 });

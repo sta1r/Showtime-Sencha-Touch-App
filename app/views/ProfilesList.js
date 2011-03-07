@@ -42,47 +42,46 @@ templates.profileListPortrait = new Ext.XTemplate(
 
 showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
     tpl: templates.profileListLandscape,
-    /*items: [{
-        xtype: 'list',
-        store: showtime.stores.profiles,
-        itemTpl: '{firstName} {lastName}',
-        onItemDisclosure: function (record) {
-            Ext.dispatch({
-                controller: showtime.controllers.profiles,
-                action: 'view',
-                id: record.getId()
-            });
-        },
-        scroll: 'vertical',
-        indexBar: true,
-        height: 600,
-    }],*/
     initComponent: function() {
 		thepanel = this;
-		//setup customised toolbar
+
+		//use custom toolbar
 		this.tbar = new showtime.ProfilesListToolbar();
-		//add the toolbar to the panel's docked items
-		this.dockedItems = [this.tbar];	
 		this.tbar.setTitle('MA_11');
-		this.tbar.show('fade');
+		//add the toolbar to the panel's docked items
+		this.dockedItems = [this.tbar];
 		
+		//load profiles list into store
 		Ext.dispatch({
             controller: showtime.controllers.profiles,
             action: 'load'
         });
-
+		//load course info
+        Ext.dispatch({
+            controller: showtime.controllers.courses,
+            action: 'list'
+        });       
+        
 		showtime.views.ProfilesList.superclass.initComponent.apply(this, arguments);
     },
     
     /*
      * Load (or reload) profiles into the main carousel
      */
-    updateWithRecord: function(records) {
-    	
-		//generate card components for main carousel
+    loadProfiles: function(records, courseData) {
+	    
+	    this.removeAll(true);
+	    
+	    if (courseData) {
+	    	this.tbar.setTitle(courseData.name);
+	    	this.tbar.backButton.show();
+	    } else {
+	    	this.tbar.setTitle('MA_11');
+	    }
+	    
+	    //generate card components for main carousel
 	    var cards = this.createCards(records);
 	    
-	    thepanel.removeAll(true);
 	    if (carousel) {
 	    	carousel.hide();
 	    }
@@ -99,8 +98,8 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
 	            itemId: 'carousel'
 	        });
 	    }
-	    thepanel.add(carousel);
-	    thepanel.doLayout();
+	    this.add(carousel);
+	    this.doLayout();
 	    carousel.show('fade');
     },    
     

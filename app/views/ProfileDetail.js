@@ -1,49 +1,144 @@
 showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
-    dockedItems: [{
-        xtype: 'toolbar',
-        overlay: true,
-        items: [
-            {
-                text: 'Back',
-                ui: 'back',
-                listeners: {
-                    'tap': function () {
-                        Ext.dispatch({
-                            controller: showtime.controllers.profiles,
-                            action: 'index',
-                            animation: {type:'slide', direction:'right'}
-                        });
-                    }
-                }
-            },
-            {
-                text: 'Browse',
-                ui: 'action',
-                listeners: {
-                    'tap': function () {
-                        console.log(showtime.views);
-                    }
-                }
-            },
-        ]
-    }],
     fullscreen: true,
-    //layout: 'fit',
+    
     initComponent: function() {
     	profilepanel = this;
-    	//var toolbar = this.getDockedItems()[0];
-    	//toolbar.show();
+    	
+    	//use custom toolbar
+		this.tbar = new showtime.ProfileDetailToolbar();
+		//add the toolbar to the panel's docked items
+		this.dockedItems = [this.tbar];
+    	
+		//setup description panel
+		this.descriptionPanel = new Ext.Panel({
+			id: 'description',
+			tpl: new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5>{course}</h5>{description}</div>'),
+			floating: true,
+			centered: true,
+			modal: true,
+			hidden: false,
+			height: 450,
+			width: 420,
+			/*dockedItems: [{
+				dock: 'top',
+				xtype: 'container', 
+				title: 'About'
+			}],*/
+			styleHtmlContent: true,
+            scroll: 'vertical',
+            listeners: {
+				body: {
+					click: function(e) {
+						//prevent links in the profile description opening safari
+						e.stopEvent(true);
+					},
+					delegate: 'a'
+				}
+			}
+		});
+		
+		//create sheet for title/like button - this is reusable by each image
+		this.bottomSheet = new Ext.Sheet({
+			id: 'bottomSheet',
+			cls: 'bottom',
+			dock: 'bottom',
+			overlay: true,
+			modal: false,
+			layout: {
+				type: 'hbox',
+				align: 'right'
+			},
+			height: 45,
+			stretchX: true,
+			tpl: new Ext.XTemplate(
+				'<div class="title">{title}</div>'	
+			),
+			dockedItems: [{
+				xtype: 'toolbar',
+				dock: 'bottom',
+				flex: 1,
+				items: [
+				{ xtype: 'spacer'},			
+				{
+					xtype: 'button',
+					iconMask: true,
+					ui: 'plain',
+					iconCls: 'heart',
+					cls: 'like',
+					handler: function() {
+			            Ext.getBody().mask('Liking...', 'x-mask-loading', false);
+			            bottomSheet = Ext.getCmp('bottomSheet');
+			            Ext.Ajax.request({
+			                url: '/showtime/media/like/'+bottomSheet.data.id,
+			                success: function(response, opts) {
+								//console.log('You liked media id=' + bottomSheet.data.id);
+								var obj = Ext.decode(response.responseText);
+								//console.log(obj);
+								if (obj.success == true) {
+									//console.log('likes='+obj.likes);
+									//like saved successfully
+									// modal to display like count to user
+								 	likeTerm = obj.likes == 1 ? 'like' : 'likes';
+									this.likeModal = new Ext.Panel({
+										id: 'likeModal',
+										floating: true,
+										centered: true,
+										hidden: true,
+										modal: true,
+										height: 80,
+										width: 180,
+										html: obj.likes + ' ' + likeTerm + '!'
+									});
+									likeModal = this.likeModal;
+									likeModal.on('hide', function() {
+										likeModal.destroy();
+									});
+									likeModal.show('pop');
+								} else {
+									//failed to like
+								}									
+								Ext.getBody().unmask();
+			                }
+			            });
+			        }
+				}]
+			}]
+			//add custom animation?
+			//place the like button in the items/docked items property here?
+			//listener for click to fire ajax on like button
+		});
+		//add the toolbar to the panel's docked items
+		this.dockedItems.push(this.bottomSheet);
+		
     	showtime.views.ProfileDetail.superclass.initComponent.apply(this, arguments);
     },
-    updateWithRecord: function(result) {
+    
+    listeners: { // listen for a tap on the image - show overlay and toolbar
+		body: {
+			tap: function() { 							
+            	if (profilepanel.tbar.isVisible()){
+            		profilepanel.tbar.hide();
+            		profilepanel.bottomSheet.hide();
+            		profilepanel.doLayout();
+                 } else {
+                	profilepanel.tbar.show();              	
+                	profilepanel.bottomSheet.show();
+                	profilepanel.doLayout();
+                 }
+			},
+			scope: this
+		}
+	},
+	
+	//load a profile
+	loadProfile: function(result, listData) {
     	/*Ext.each(this.items.items, function(item) {
             item.update(record.data);
         });*/
-        var toolbar = this.getDockedItems()[0];
 
-        toolbar.setTitle(result.Student.firstName+' '+result.Student.lastName);
+        this.tbar.setTitle(result.Student.firstName+' '+result.Student.lastName);
         //toolbar.getComponent('edit').record = record;
-
+        
 		
 		profilepanel.removeAll(true);
 	    if (profilecarousel) {
@@ -55,33 +150,30 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
 	    
         var profilecarousel = new Ext.Carousel({
         	fullscreen: true,
-        	//hidden: true,
-        	//layout: 'fit',
-        	//flex: 1,
-        	items: media_cards,
         	id: 'profilecar',
             itemId: 'carousel',
-        	/*listeners: {
+        	listeners: {
         		beforeadd: function(container, card, index) {
         			if (index == 0) {
         				profilepanel.bottomSheet.update(card.mediaData);
-        				if (profilepanel.tbar.isVisible()) {
-            				profilepanel.bottomSheet.show();
-            			}
+        				/*if (profilepanel.tbar.isVisible() && !profilepanel.bottomSheet.isVisible()) {
+        					profilepanel.bottomSheet.show();
+        				}*/
         			}
         		},
         		beforecardswitch: function(container, newCard, oldCard, index){
         			profilepanel.bottomSheet.update(newCard.mediaData);
-        			if (profilepanel.tbar.isVisible()) {
+        			/*if (profilepanel.tbar.isVisible() && !profilepanel.bottomSheet.isVisible()) {
         				profilepanel.bottomSheet.show();
-        			}
+        			}*/
         		}
-        	}*/
+        	}
         });
         
         //using add rather than setting items so we can fire event for each card
-        //carousel.add(media_cards);
-        //profilecarousel.doLayout();
+        profilecarousel.add(media_cards);      
+        profilecarousel.doLayout();
+        //add the carousel
         profilepanel.add(profilecarousel);
 
         //update the form values
@@ -94,20 +186,19 @@ showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
 
         form.loadModel(profilepanel.formBase.student);
         
-        form.updateRecord(profilepanel.formBase.student, true);
+        form.updateRecord(profilepanel.formBase.student, true);*/
         
         //quick hack - place the course name in the result data - because at present only course id is available in json
-        result.data.Student.Student['course'] = profile.course;
+        result.Student['course'] = listData.course;
         
-        profilepanel.descriptionPanel.update(result.data.Student.Student);*/
+        profilepanel.descriptionPanel.update(result.Student);
         
         profilepanel.doLayout();
         profilepanel.show();
-        
-        //imagepanel.doLayout();
-        
-        //remove the loading indicator
-        //Ext.getBody().unmask();
+	      
+        //bottomSheet seems to like to be shown only after profilepanel has been shown
+        profilepanel.bottomSheet.show();
+	   
     },
     
     createCards: function(result) {

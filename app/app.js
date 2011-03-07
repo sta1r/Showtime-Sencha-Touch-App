@@ -17,3 +17,10 @@ Ext.regApplication({
         }
     }
 });
+
+Ext.setup({
+    tabletStartupScreen: 'tablet_startup.png',
+    phoneStartupScreen: 'phone_startup.png',
+    icon: 'http://showtime.arts.ac.uk/img/touch/icon.png',
+    glossOnIcon: true
+});
