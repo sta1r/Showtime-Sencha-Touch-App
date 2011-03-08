@@ -1,5 +1,10 @@
 Ext.regApplication({
     name: 'showtime',
+    tabletStartupScreen: 'tablet_startup.png',
+    phoneStartupScreen: 'phone_startup.png',
+    icon: 'http://showtime.arts.ac.uk/img/touch/icon.png',
+    glossOnIcon: true
+    
     launch: function() {
         this.launched = true;
         this.mainLaunch();
@@ -16,11 +21,4 @@ Ext.regApplication({
             return Ext.is.Tablet && Ext.orientation == 'landscape';
         }
     }
-});
-
-Ext.setup({
-    tabletStartupScreen: 'tablet_startup.png',
-    phoneStartupScreen: 'phone_startup.png',
-    icon: 'http://showtime.arts.ac.uk/img/touch/icon.png',
-    glossOnIcon: true
 });
