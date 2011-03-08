@@ -1,3 +1,4 @@
+/* MasterPanel.js */
 showtime.views.Viewport = Ext.extend(Ext.Panel, {
     fullscreen: true,
     layout: 'card',
