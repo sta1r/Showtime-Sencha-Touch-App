@@ -39,56 +39,62 @@ templates.profileListPortrait = new Ext.XTemplate(
 	'</div>' 
 	);
 
-
-showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
+/**
+ * @class Showtime.views.ProfileListPanel
+ * @extends Ext.Panel
+ * The panel containing our contact list.
+ */
+Showtime.views.ProfileListPanel = Ext.extend(Ext.Panel, {
+//showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
     tpl: templates.profileListLandscape,
     initComponent: function() {
 		thepanel = this;
-
+		console.log('list panel init');
 		//use custom toolbar
-		this.tbar = new showtime.ProfilesListToolbar();
-		this.tbar.setTitle('MA_11');
+//		this.tbar = new showtime.ProfileListToolbar();
+//		this.tbar.setTitle('MA_11');
 		//add the toolbar to the panel's docked items
-		this.dockedItems = [this.tbar];
+//		this.dockedItems = [this.tbar];
 		
 		//load profiles list into store
-		Ext.dispatch({
+/*		Ext.dispatch({
             controller: showtime.controllers.profiles,
             action: 'load'
         });
-		//load course info
-        Ext.dispatch({
+*/		//load course info
+/*        Ext.dispatch({
             controller: showtime.controllers.courses,
             action: 'list'
         });       
-        
-		showtime.views.ProfilesList.superclass.initComponent.apply(this, arguments);
+*/        
+        Showtime.views.ProfileListPanel.superclass.initComponent.apply(this, arguments);
+		//showtime.views.ProfilesList.superclass.initComponent.apply(this, arguments);
     },
     
     /*
      * Load (or reload) profiles into the main carousel
      */
     loadProfiles: function(records, courseData) {
-	    
+	    console.log('loadprofiles');
 	    this.removeAll(true);
 	    
-	    if (courseData) {
+	    /*if (courseData) {
 	    	this.tbar.setTitle(courseData.name);
 	    	this.tbar.backButton.show();
 	    } else {
 	    	this.tbar.setTitle('MA_11');
-	    }
+	    }*/
 	    
 	    //generate card components for main carousel
 	    var cards = this.createCards(records);
 	    
-	    if (carousel) {
-	    	carousel.hide();
+	    if (this.carousel) {
+	    	this.carousel.hide();
 	    }
-	    carousel = undefined;
-	    if (!carousel) {
+	    this.carousel = undefined;
+	    if (!this.carousel) {
 	    	//new carousel using generated cards
-	        var carousel = new Ext.Carousel({
+	        this.carousel = new Ext.Carousel({
 	        	fullscreen: true,
 	        	hidden: true,
 	        	layout: 'fit',
@@ -100,7 +106,7 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
 	        		el: {
 	        			//using delegate for better memory management
 		        		tap: function(e, target) {
-		        			if (target) {
+		        			/*if (target) {
 		        				var carousel_item = carousel.items.items[carousel.getActiveIndex()];
 			        			var index = carousel.items.items[carousel.getActiveIndex()].items.indexOf(target);
 			        			var data = carousel_item.profileData[index];
@@ -111,16 +117,16 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
                                         profileData: data
                                     });
                                 }
-                            }
+                            }*/
 		        		},
 		        		delegate: '.explore-item'
 	        		}
 	        	}
 	        });
 	    }
-	    this.add(carousel);
+	    this.add(this.carousel);
 	    this.doLayout();
-	    carousel.show('fade');
+	    this.carousel.show('fade');
     },    
     
     /*
@@ -155,7 +161,7 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
         	
             var renderData = function() {
             	//detect current profile
-            	var tpl = showtime.getProfile() == "tabletPortrait" ? templates.profileListPortrait : templates.profileListLandscape;
+            	var tpl = Showtime.getProfile() == "tabletPortrait" ? templates.profileListPortrait : templates.profileListLandscape;
             	tpl.overwrite(component.el, cardData);
                 component.el.repaint();
                 component.items = new Ext.CompositeElementLite();
@@ -175,6 +181,6 @@ showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
         //use delegate to add tap event for all cards?
         return cards;
     }
-    
    
 });
+Ext.reg('profile-listpanel', Showtime.views.ProfileListPanel);

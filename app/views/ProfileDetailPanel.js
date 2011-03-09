@@ -1,4 +1,10 @@
-showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
+/**
+ * @class Showtime.views.ProfileDetail
+ * @extends Ext.Panel
+ * 
+ */
+Showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
+//showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
     fullscreen: true,
     
     initComponent: function() {

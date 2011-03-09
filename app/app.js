@@ -1,17 +1,30 @@
+/**
+ * This file sets application-wide settings and launches the application when everything has
+ * been loaded onto the page. By default we just render the application's Viewport inside the
+ * launch method (see app/views/Viewport.js).
+ */ 
 Ext.regApplication({
-    name: 'showtime',
+    name: 'Showtime',
+    
     tabletStartupScreen: 'tablet_startup.png',
     phoneStartupScreen: 'phone_startup.png',
     icon: 'http://showtime.arts.ac.uk/img/touch/icon.png',
-    glossOnIcon: true
+    glossOnIcon: true,
+    
+    defaultTarget: "viewport",
+    defaultUrl   : 'Profiles/index',
     
     launch: function() {
         this.launched = true;
         this.mainLaunch();
+        console.log('1. launched');
     },
     mainLaunch: function() {
         //if (!device || !this.launched) {return;}
-        this.views.viewport = new this.views.Viewport();
+        this.viewport = new Showtime.Viewport({
+            application: this
+        });
+        //this.views.viewport = new this.views.Viewport();
     },
 	profiles: {
         tabletPortrait: function() {

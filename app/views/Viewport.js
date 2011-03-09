@@ -1,5 +1,15 @@
-/* MasterPanel.js */
-showtime.views.Viewport = Ext.extend(Ext.Panel, {
+/**
+ * @class Showtime.Viewport
+ * @extends Ext.Panel
+ */
+Showtime.Viewport = Ext.extend(Ext.Panel, {
+    id        : 'viewport',
+    layout    : 'card',
+    cardSwitchAnimation: 'slide',
+    fullscreen: true,
+});
+
+/*showtime.views.Viewport = Ext.extend(Ext.Panel, {
     fullscreen: true,
     layout: 'card',
     cardSwitchAnimation: 'slide',
@@ -20,4 +30,4 @@ showtime.views.Viewport = Ext.extend(Ext.Panel, {
         });
         showtime.views.Viewport.superclass.initComponent.apply(this, arguments);
     }
-});
+});*/

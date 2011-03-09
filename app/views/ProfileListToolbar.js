@@ -1,5 +1,11 @@
+/**
+ * @class Showtime.views.ProfilesListToolbar
+ * @extends Ext.Toolbar
+ * Custom toolbar
+ */
+Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
 //define a custom toolbar by extending the object
-showtime.ProfilesListToolbar = Ext.extend(Ext.Toolbar, {
+//showtime.ProfilesListToolbar = Ext.extend(Ext.Toolbar, {
     dock: 'top',
     initComponent: function(){
         //grab the toolbar object into the variable 'self' so it can be referenced within other objects
