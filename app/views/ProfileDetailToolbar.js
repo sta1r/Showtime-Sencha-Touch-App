@@ -13,11 +13,12 @@ Showtime.views.ProfileDetailToolbar = Ext.extend(Ext.Toolbar, {
         var self = this;
         
         this.backButton = new Ext.Button({
+        	itemId: 'backButton',
         	//button will appear styled as a back button
             ui: 'back',
             text: 'Back',
             //function called when the button is clicked
-            handler: this.onBackButtonTap
+            //handler: this.onBackButtonTap
         });
         
 		this.browseButton = new Ext.Button({
@@ -157,7 +158,6 @@ Showtime.views.ProfileDetailToolbar = Ext.extend(Ext.Toolbar, {
 					beforeshow: function(comp) {
 						//deselecting any selected items - workaround for bug in Sencha Touch:
 						//using fix from: http://www.sencha.com/forum/showthread.php?114896-OPEN-534-List-items-can-no-longer-be-deselected-in-0.99
-						console.log(comp);
 						studentlist = comp.items.items[0];		
 						var selArray = studentlist.getSelectedRecords();
 						for (i=0;i<selArray.length;i++) {

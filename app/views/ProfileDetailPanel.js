@@ -4,7 +4,7 @@
  * 
  */
 Showtime.views.ProfileDetailPanel = Ext.extend(Ext.Panel, {
-    fullscreen: true,
+    //fullscreen: true,
     
     initComponent: function() {
     	profilepanel = this;

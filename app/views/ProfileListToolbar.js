@@ -12,6 +12,7 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
         var self = this;
         
         this.backButton = new Ext.Button({
+        	itemId: 'backButton',
         	//button will appear styled as a back button
             ui: 'back',
             text: 'Back',

@@ -39,10 +39,6 @@ Ext.regController("Profiles", {
             
             //listen here for button taps and fire appropriate controller func
             
-            /*this.listPanel.query('#addButton')[0].on({
-                tap: this.compose,
-                scope: this
-            });*/
             
             this.application.viewport.setActiveItem(this.listPanel);
         }
@@ -66,10 +62,6 @@ Ext.regController("Profiles", {
             });            
         }
 		
-		
-	    /*showtime.views.viewport.setActiveItem(
-	        showtime.views.profilesList, options.animation
-	    );*/
 	},
 
 	load: function() {
@@ -95,13 +87,21 @@ Ext.regController("Profiles", {
 	},
 
     view: function(options) {
-    	
-    	if (!this.detailPanel) {
-    		
+    	if (!this.detailPanel || this.detailPanel.isDestroyed) {
+    		console.log('trying');
     		this.detailPanel = this.render({
                 xtype: 'profile-detailpanel',
+                listeners: {
+                	//destroy this panel when we go back to the main view to save memory:
+	                deactivate: function(detail) {
+	                    detail.destroy();
+	                    console.log(this);
+	                },
+	                scope: this
+	            }
             });
     		
+    		//load profile
 			Ext.getBody().mask('Loading...', 'x-mask-loading', false);
 			
 			//it is not possible in sencha to use a store / model proxy to read a single json record so:
@@ -122,7 +122,13 @@ Ext.regController("Profiles", {
 				scope: this
 			});
 			
-		}
+			
+			//add listeners for detailpanel buttons
+			this.detailPanel.query('#backButton')[0].on({
+            	tap: this.index,
+            	scope: this
+            });
+		} 
     },
     
     browse: function(options) {
