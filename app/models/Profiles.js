@@ -1,7 +1,7 @@
 /**
  * @class Profiles
  * @extends Ext.data.Model
- * The Profiles model
+ * The Profiles model used in the main carousel listing and A-Z popup
  */
 Ext.regModel("Profiles", {
     fields: [
@@ -25,31 +25,8 @@ Ext.regModel("Profiles", {
 	}
 });
 
-// Model for Profile *in list* - there is a separate model for individual profile
-/*showtime.models.ProfilesList = Ext.regModel("showtime.models.ProfilesList", {
-    fields: [
-        {name: "id", type: "int"},
-        {name: "profileName", type: "string"},
-        {name: "firstName", type: "string"},
-        {name: "lastName", type: "string"},
-        {name: "fullName", type: "string"},
-        {name: "course", type: "auto"},
-        {name: "thumb", type: "auto"},
-        {name: "updated"},
-    ],
-    idProperty: 'id',
-    proxy: {
-		type: 'scripttag',
-	    url : '/showtime/lcf/ma/2011/explore.json',
-	    reader: {
-            type: 'json',
-            root: 'data.Profiles'
-        }
-	}
-});*/
-
 // Data Store
-Ext.regStore('ProfilesStore', {
+Ext.regStore('Profiles', {
 //showtime.stores.profilesList = new Ext.data.Store({
     //model: "showtime.models.ProfilesList",
     model: 'Profiles',

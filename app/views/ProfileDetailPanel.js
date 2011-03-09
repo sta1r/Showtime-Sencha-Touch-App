@@ -1,17 +1,16 @@
 /**
- * @class Showtime.views.ProfileDetail
+ * @class Showtime.views.ProfileDetailPanel
  * @extends Ext.Panel
  * 
  */
-Showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
-//showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
+Showtime.views.ProfileDetailPanel = Ext.extend(Ext.Panel, {
     fullscreen: true,
     
     initComponent: function() {
     	profilepanel = this;
     	
     	//use custom toolbar
-		this.tbar = new showtime.ProfileDetailToolbar();
+		this.tbar = new Showtime.views.ProfileDetailToolbar();
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];
 		
@@ -101,7 +100,7 @@ Showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
 			}*/
 		});
 		
-    	showtime.views.ProfileDetail.superclass.initComponent.apply(this, arguments);
+    	Showtime.views.ProfileDetailPanel.superclass.initComponent.apply(this, arguments);
     },
     
     listeners: { // listen for a tap on the image - show overlay and toolbar
@@ -122,8 +121,8 @@ Showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
 	},
 	
 	//load a profile
-	loadProfile: function(result, listData) {
-		profilepanel.setLoading(true);
+	loadProfile: function(result, listData) {		
+		//profilepanel.setLoading(true);
 
         this.tbar.setTitle(result.Student.firstName+' '+result.Student.lastName);
         //toolbar.getComponent('edit').record = record;
@@ -182,7 +181,7 @@ Showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
 	      
         //bottomSheet seems to like to be shown only after profilepanel has been shown
         profilepanel.bottomSheet.show();
-        profilepanel.setLoading(false);
+        //profilepanel.setLoading(false);
     },
     
     createCards: function(result) {
@@ -281,3 +280,4 @@ Showtime.views.ProfileDetail = Ext.extend(Ext.Panel, {
     }
     
 });
+Ext.reg('profile-detailpanel', Showtime.views.ProfileDetailPanel);

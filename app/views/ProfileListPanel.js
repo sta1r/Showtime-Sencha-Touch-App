@@ -49,41 +49,28 @@ Showtime.views.ProfileListPanel = Ext.extend(Ext.Panel, {
     tpl: templates.profileListLandscape,
     initComponent: function() {
 		thepanel = this;
-		console.log('list panel init');
+
 		//use custom toolbar
-//		this.tbar = new showtime.ProfileListToolbar();
-//		this.tbar.setTitle('MA_11');
+		this.tbar = new Showtime.views.ProfileListToolbar();
+		this.tbar.setTitle('MA_11');
 		//add the toolbar to the panel's docked items
-//		this.dockedItems = [this.tbar];
-		
-		//load profiles list into store
-/*		Ext.dispatch({
-            controller: showtime.controllers.profiles,
-            action: 'load'
-        });
-*/		//load course info
-/*        Ext.dispatch({
-            controller: showtime.controllers.courses,
-            action: 'list'
-        });       
-*/        
+		this.dockedItems = [this.tbar];
+		        
         Showtime.views.ProfileListPanel.superclass.initComponent.apply(this, arguments);
-		//showtime.views.ProfilesList.superclass.initComponent.apply(this, arguments);
     },
     
     /*
      * Load (or reload) profiles into the main carousel
      */
     loadProfiles: function(records, courseData) {
-	    console.log('loadprofiles');
 	    this.removeAll(true);
 	    
-	    /*if (courseData) {
+	    if (courseData) {
 	    	this.tbar.setTitle(courseData.name);
 	    	this.tbar.backButton.show();
 	    } else {
 	    	this.tbar.setTitle('MA_11');
-	    }*/
+	    }
 	    
 	    //generate card components for main carousel
 	    var cards = this.createCards(records);
@@ -101,27 +88,7 @@ Showtime.views.ProfileListPanel = Ext.extend(Ext.Panel, {
 	        	flex: 1,
 	        	items: cards,
 	        	id: 'car',
-	            itemId: 'carousel',
-	            listeners: {
-	        		el: {
-	        			//using delegate for better memory management
-		        		tap: function(e, target) {
-		        			/*if (target) {
-		        				var carousel_item = carousel.items.items[carousel.getActiveIndex()];
-			        			var index = carousel.items.items[carousel.getActiveIndex()].items.indexOf(target);
-			        			var data = carousel_item.profileData[index];
-                                if (Ext.isObject(data)) {
-                                	Ext.dispatch({
-                                        controller: showtime.controllers.profiles,
-                                        action: 'view',
-                                        profileData: data
-                                    });
-                                }
-                            }*/
-		        		},
-		        		delegate: '.explore-item'
-	        		}
-	        	}
+	            itemId: 'carousel'
 	        });
 	    }
 	    this.add(this.carousel);

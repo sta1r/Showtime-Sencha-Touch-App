@@ -17,7 +17,6 @@ Ext.regApplication({
     launch: function() {
         this.launched = true;
         this.mainLaunch();
-        console.log('1. launched');
     },
     mainLaunch: function() {
         //if (!device || !this.launched) {return;}

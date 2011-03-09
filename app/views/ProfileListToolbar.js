@@ -82,7 +82,7 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
         ];
 
         //call parent initComponent: because this class is an extended toolbar, the toolbar init needs to be called also:
-        showtime.ProfilesListToolbar.superclass.initComponent.call(this);       
+        Showtime.views.ProfileListToolbar.superclass.initComponent.call(this);       
     },
     
     onBackButtonTap: function() {
@@ -106,7 +106,7 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
 					width: 300,
 					height: 600,
 		            xtype: 'list',
-		            store: showtime.stores.profilesList,
+		            store: Showtime.stores.profiles,
 		            itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
 		            grouped: true,
 		            indexBar: true,
@@ -127,7 +127,7 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
 						},
 						itemTap: function(selected, index, item, e) {
 							Ext.dispatch({
-	                            controller: showtime.controllers.profiles,
+	                            controller: Showtime.controllers.profiles,
 	                            action: 'view',
 	                            profileData: selected.store.data.items[index].data
 	                        });
@@ -141,12 +141,12 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
 					width: 300,
 					height: 600,
 		            xtype: 'list',
-		            store: showtime.stores.courseList,
+		            store: Showtime.stores.courses,
 		            itemTpl: '<div class="course"><strong>{name}</strong></div>',
 		            listeners: {
 						itemTap: function(selected, index, item, e) {
 							Ext.dispatch({
-	                            controller: showtime.controllers.profiles,
+	                            controller: Showtime.controllers.profiles,
 	                            action: 'index',
 	                            courseData: selected.store.data.items[index].data
 	                        });
@@ -175,8 +175,8 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
 				
 			});
 		}		
-		showtime.stores.profilesList.clearFilter(true);
-		showtime.stores.profilesList.sort('firstName', 'ASC');
+		Showtime.stores.profiles.clearFilter(true);
+		Showtime.stores.profiles.sort('firstName', 'ASC');
 		this.popup.showBy(this.browseButton, 'fade');
     },
     
@@ -209,3 +209,4 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
     },
     
 });
+Ext.reg('profile-listtoolbar', Showtime.views.ProfileListToolbar);

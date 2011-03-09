@@ -37,7 +37,7 @@ Ext.regModel("Courses", {
 });
 */
 
-Ext.regStore('CourseList', {
+Ext.regStore('Courses', {
 //showtime.stores.courseList = new Ext.data.Store({
     //model: 'showtime.models.CourseList',
     model: 'Courses',
