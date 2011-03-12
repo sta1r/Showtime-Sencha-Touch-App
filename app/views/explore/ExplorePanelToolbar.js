@@ -1,9 +1,9 @@
 /**
- * @class Showtime.views.ProfilesListToolbar
+ * @class Showtime.views.ExplorePanelToolbar
  * @extends Ext.Toolbar
  * Custom toolbar
  */
-Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
+Showtime.views.ExplorePanelToolbar = Ext.extend(Ext.Toolbar, {
 //define a custom toolbar by extending the object
 //showtime.ProfilesListToolbar = Ext.extend(Ext.Toolbar, {
     dock: 'top',
@@ -80,7 +80,7 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
         ];
 
         //call parent initComponent: because this class is an extended toolbar, the toolbar init needs to be called also:
-        Showtime.views.ProfileListToolbar.superclass.initComponent.call(this);       
+        Showtime.views.ExplorePanelToolbar.superclass.initComponent.call(this);       
     },
     
     
@@ -113,4 +113,4 @@ Showtime.views.ProfileListToolbar = Ext.extend(Ext.Toolbar, {
     },
     
 });
-Ext.reg('profile-listtoolbar', Showtime.views.ProfileListToolbar);
+Ext.reg('explore-toolbar', Showtime.views.ExplorePanelToolbar);

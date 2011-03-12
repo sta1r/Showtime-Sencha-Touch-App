@@ -1,16 +1,16 @@
 /**
- * @class Showtime.views.ProfileDetailPanel
+ * @class Showtime.views.ProfilePanel
  * @extends Ext.Panel
  * 
  */
-Showtime.views.ProfileDetailPanel = Ext.extend(Ext.Panel, {
+Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
     //fullscreen: true,
     
     initComponent: function() {
     	profilepanel = this;
     	
     	//use custom toolbar
-		this.tbar = new Showtime.views.ProfileDetailToolbar();
+		this.tbar = new Showtime.views.ProfilePanelToolbar();
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];
 		
@@ -100,7 +100,7 @@ Showtime.views.ProfileDetailPanel = Ext.extend(Ext.Panel, {
 			}*/
 		});
 		
-    	Showtime.views.ProfileDetailPanel.superclass.initComponent.apply(this, arguments);
+    	Showtime.views.ProfilePanel.superclass.initComponent.apply(this, arguments);
     },
     
     listeners: { // listen for a tap on the image - show overlay and toolbar
@@ -280,4 +280,4 @@ Showtime.views.ProfileDetailPanel = Ext.extend(Ext.Panel, {
     }
     
 });
-Ext.reg('profile-detailpanel', Showtime.views.ProfileDetailPanel);
+Ext.reg('profile-panel', Showtime.views.ProfilePanel);

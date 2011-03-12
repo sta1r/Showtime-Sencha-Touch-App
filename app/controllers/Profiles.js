@@ -9,7 +9,7 @@ Ext.regController("Profiles", {
 		if (!this.listPanel) {
 			//create the panel
             this.listPanel = this.render({
-                xtype: 'profile-listpanel',
+                xtype: 'explore-listpanel',
                 listeners: {
                 	el: {
 	        			//listen for a tap on elements with .explore-item class:
@@ -106,7 +106,7 @@ Ext.regController("Profiles", {
 
     	if (!this.detailPanel || this.detailPanel.isDestroyed) {
     		this.detailPanel = this.render({
-                xtype: 'profile-detailpanel',
+                xtype: 'profile-panel',
                 listeners: {
                 	//destroy this panel when we go back to the main view to save memory:
 	                deactivate: function(detail) {
@@ -116,43 +116,43 @@ Ext.regController("Profiles", {
 	                scope: this
 	            }
             });
-    		
-    		//load profile
-			Ext.getBody().mask('Loading...', 'x-mask-loading', false);
-			
-			//it is not possible in sencha to use a store / model proxy to read a single json record so:
-			Ext.util.JSONP.request({
-	        	url: '/showtime/'+options.profileData.profileName+'.json',
-	            callbackKey: 'callback',
-	            callback: function(result) {
-					if (result.data.Student) {
-						
-				 		this.detailPanel.loadProfile(result.data.Student, options.profileData);
-				 		this.application.viewport.setActiveItem(
-				            this.detailPanel, options.animation
-				        );
-				 		//remove the loading indicator
-				        Ext.getBody().unmask();
-					}
-				},
-				scope: this
-			});
-			
-			
-			//add listeners for detailpanel buttons            
-            this.detailBackButton = this.detailPanel.query('#backButton')[0];
-			this.detailBackButton.on({
-            	tap: function() {
-            		profiles.index()
-            	}
-            });
-            this.detailBrowseButton = this.detailPanel.query('#browseButton')[0];
-            this.detailBrowseButton.on({
-            	tap: function() {
-            		profiles.browse(this)
-            	}
-            });
-		}
+    	}
+    	
+		//load profile
+		Ext.getBody().mask('Loading...', 'x-mask-loading', false);
+		
+		//it is not possible in sencha to use a store / model proxy to read a single json record so:
+		Ext.util.JSONP.request({
+        	url: '/showtime/'+options.profileData.profileName+'.json',
+            callbackKey: 'callback',
+            callback: function(result) {
+				if (result.data.Student) {
+					
+			 		this.detailPanel.loadProfile(result.data.Student, options.profileData);
+			 		this.application.viewport.setActiveItem(
+			            this.detailPanel, options.animation
+			        );
+			 		//remove the loading indicator
+			        Ext.getBody().unmask();
+				}
+			},
+			scope: this
+		});
+		
+		
+		//add listeners for detailpanel buttons            
+        this.detailBackButton = this.detailPanel.query('#backButton')[0];
+		this.detailBackButton.on({
+        	tap: function() {
+        		profiles.index()
+        	}
+        });
+        this.detailBrowseButton = this.detailPanel.query('#browseButton')[0];
+        this.detailBrowseButton.on({
+        	tap: function() {
+        		profiles.browse(this)
+        	}
+        });
     },
 
     browse: function(button) {

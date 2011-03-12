@@ -1,11 +1,11 @@
 /**
- * @class Showtime.views.ProfileDetailToolbar
+ * @class Showtime.views.ProfilePanelToolbar
  * @extends Ext.Toolbar
  * Custom toolbar
  */
-Showtime.views.ProfileDetailToolbar = Ext.extend(Ext.Toolbar, {
+Showtime.views.ProfilePanelToolbar = Ext.extend(Ext.Toolbar, {
 //define a custom toolbar by extending the object
-//showtime.ProfileDetailToolbar = Ext.extend(Ext.Toolbar, {
+//showtime.ProfilePanelToolbar = Ext.extend(Ext.Toolbar, {
     dock: 'top',
     overlay: true,
     initComponent: function(){
@@ -87,7 +87,7 @@ Showtime.views.ProfileDetailToolbar = Ext.extend(Ext.Toolbar, {
         ];
 
         //call parent initComponent: because this class is an extended toolbar, the toolbar init needs to be called also:
-        Showtime.views.ProfileDetailToolbar.superclass.initComponent.call(this);       
+        Showtime.views.ProfilePanelToolbar.superclass.initComponent.call(this);       
     },
     
     onActionButtonTap: function() {
@@ -106,4 +106,4 @@ Showtime.views.ProfileDetailToolbar = Ext.extend(Ext.Toolbar, {
     }
     
 });
-Ext.reg('profiledetail-toolbar', Showtime.views.ProfileDetailToolbar);
+Ext.reg('profile-toolbar', Showtime.views.ProfilePanelToolbar);

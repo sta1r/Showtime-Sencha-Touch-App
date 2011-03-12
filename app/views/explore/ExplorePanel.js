@@ -40,23 +40,23 @@ templates.profileListPortrait = new Ext.XTemplate(
 	);
 
 /**
- * @class Showtime.views.ProfileListPanel
+ * @class Showtime.views.ExplorePanel
  * @extends Ext.Panel
  * The panel containing our contact list.
  */
-Showtime.views.ProfileListPanel = Ext.extend(Ext.Panel, {
+Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
 //showtime.views.ProfilesList = Ext.extend(Ext.Panel, {
     tpl: templates.profileListLandscape,
     initComponent: function() {
 		thepanel = this;
 
 		//use custom toolbar
-		this.tbar = new Showtime.views.ProfileListToolbar();
+		this.tbar = new Showtime.views.ExplorePanelToolbar();
 		this.tbar.setTitle('MA_11');
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];
 		        
-        Showtime.views.ProfileListPanel.superclass.initComponent.apply(this, arguments);
+        Showtime.views.ExplorePanel.superclass.initComponent.apply(this, arguments);
     },
     
     /*
@@ -150,4 +150,4 @@ Showtime.views.ProfileListPanel = Ext.extend(Ext.Panel, {
     }
    
 });
-Ext.reg('profile-listpanel', Showtime.views.ProfileListPanel);
+Ext.reg('explore-listpanel', Showtime.views.ExplorePanel);
