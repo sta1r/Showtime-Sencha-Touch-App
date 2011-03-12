@@ -150,4 +150,4 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
     }
    
 });
-Ext.reg('explore-listpanel', Showtime.views.ExplorePanel);
+Ext.reg('explore-panel', Showtime.views.ExplorePanel);

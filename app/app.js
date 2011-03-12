@@ -23,14 +23,13 @@ Ext.regApplication({
         this.viewport = new Showtime.Viewport({
             application: this
         });
-        //this.views.viewport = new this.views.Viewport();
     },
 	profiles: {
         tabletPortrait: function() {
-            return Ext.is.Tablet && Ext.orientation == 'portrait';
+            //return Ext.is.Tablet && Ext.orientation == 'portrait';
         },
         tabletLandscape: function() {
-            return Ext.is.Tablet && Ext.orientation == 'landscape';
+            //return Ext.is.Tablet && Ext.orientation == 'landscape';
         }
     }
 });

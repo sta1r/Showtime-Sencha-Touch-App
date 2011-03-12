@@ -9,7 +9,7 @@ Ext.regController("Profiles", {
 		if (!this.listPanel) {
 			//create the panel
             this.listPanel = this.render({
-                xtype: 'explore-listpanel',
+                xtype: 'explore-panel',
                 listeners: {
                 	el: {
 	        			//listen for a tap on elements with .explore-item class:
@@ -70,8 +70,6 @@ Ext.regController("Profiles", {
 				this.listPanel.loadProfiles(Showtime.stores.profiles.data.items);
 			}
             
-            //this.listPanel.store.sort();
-            
             this.application.viewport.setActiveItem(this.listPanel, {
                 type: 'slide',
                 direction: 'right'
@@ -116,6 +114,20 @@ Ext.regController("Profiles", {
 	                scope: this
 	            }
             });
+    		
+    		//add listeners for detailpanel buttons            
+            this.detailBackButton = this.detailPanel.query('#backButton')[0];
+    		this.detailBackButton.on({
+            	tap: function() {
+            		profiles.index()
+            	}
+            });
+            this.detailBrowseButton = this.detailPanel.query('#browseButton')[0];
+            this.detailBrowseButton.on({
+            	tap: function() {
+            		profiles.browse(this)
+            	}
+            });
     	}
     	
 		//load profile
@@ -138,101 +150,36 @@ Ext.regController("Profiles", {
 			},
 			scope: this
 		});
-		
-		
-		//add listeners for detailpanel buttons            
-        this.detailBackButton = this.detailPanel.query('#backButton')[0];
-		this.detailBackButton.on({
-        	tap: function() {
-        		profiles.index()
-        	}
-        });
-        this.detailBrowseButton = this.detailPanel.query('#browseButton')[0];
-        this.detailBrowseButton.on({
-        	tap: function() {
-        		profiles.browse(this)
-        	}
-        });
     },
 
     browse: function(button) {
     	//if not exists create popup panel
     	//sort store etc
-    	if (!this.popup) {
-			this.popup = new Ext.TabPanel({
-				cls: 'explore-menu',
-				floating: true,
-				width: 300,
-				height: 660,
-				items: [{
-					title: 'Student',
-					width: 300,
-					height: 600,
-		            xtype: 'list',
-		            store: Showtime.stores.profiles,
-		            itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
-		            grouped: true,
-		            indexBar: true,
-		            multiSelect: false,
-		            singleSelect: true,
-		            allowDeselect: true,
-		            itemSelector: 'div.x-list-item',
-		            listeners: {
-						beforeactivate: function() {
-							//this.setBlockRefresh(true);
-							//this.update('');
-							//this.setLoading(true);
-						},
-						activate: function() {
-							//this.setBlockRefresh(false);
-							//this.refresh();
-							//this.setLoading(false);
-						},
-						itemTap: function(selected, index, item, e) {
-	                        this.view({profileData: selected.store.data.items[index].data});
-							//hide the browse list
-							this.popup.hide();
-						},
-						scope: this
-					}
-				},{
-					title: 'Course',
-					width: 300,
-					height: 600,
-		            xtype: 'list',
-		            store: Showtime.stores.courses,
-		            itemTpl: '<div class="course"><strong>{name}</strong></div>',
-		            listeners: {
-						itemTap: function(selected, index, item, e) {
-	                        this.index({courseData: selected.store.data.items[index].data})
-							//hide the browse list
-							this.popup.hide();
-							this.listBackButton.show();
-						},
-						scope: this
-					}
-				}],
-				listeners: {
-					beforeshow: function(comp) {
-						//deselecting any selected items - workaround for bug in Sencha Touch:
-						//using fix from: http://www.sencha.com/forum/showthread.php?114896-OPEN-534-List-items-can-no-longer-be-deselected-in-0.99
-						studentlist = comp.items.items[0];					
-						var selArray = studentlist.getSelectedRecords();
-						for (i=0;i<selArray.length;i++) {
-						studentlist.deselect(selArray[i]); }
-						
-						courselist = comp.items.items[1];						
-						var selArray = courselist.getSelectedRecords();
-						for (i=0;i<selArray.length;i++) {
-						courselist.deselect(selArray[i]); }
-					}
-				}
-				
-			});
-		}		
+    	if (!this.browsePopup) {
+    		this.browsePopup = new Showtime.views.BrowsePopup();
+    		
+    		//add listeners for list taps
+    		this.browsePopup.query('#AZList')[0].on({
+    			itemTap: function(selected, index, item, e) {
+	                this.view({profileData: selected.store.data.items[index].data});
+					//hide the browse list
+					this.browsePopup.hide();
+				},
+				scope: this
+    		});
+    		this.browsePopup.query('#CourseList')[0].on({
+    			itemTap: function(selected, index, item, e) {
+	    			this.index({courseData: selected.store.data.items[index].data})
+					//hide the browse list
+					this.browsePopup.hide();
+					this.listBackButton.show();
+				},
+				scope: this
+    		});
+		}
 		Showtime.stores.profiles.clearFilter(true);
 		Showtime.stores.profiles.sort('firstName', 'ASC');
-		this.popup.showBy(button, 'fade');
+		this.browsePopup.showBy(button, 'fade');
     },
     
     showBio: function(options) {

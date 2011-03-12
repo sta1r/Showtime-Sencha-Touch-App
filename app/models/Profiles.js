@@ -27,8 +27,6 @@ Ext.regModel("Profiles", {
 
 // Data Store
 Ext.regStore('Profiles', {
-//showtime.stores.profilesList = new Ext.data.Store({
-    //model: "showtime.models.ProfilesList",
     model: 'Profiles',
     getGroupString : function(record) {
         return record.get('firstName')[0];
