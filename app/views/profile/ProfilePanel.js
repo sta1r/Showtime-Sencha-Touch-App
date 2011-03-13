@@ -100,23 +100,6 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 		
     	Showtime.views.ProfilePanel.superclass.initComponent.apply(this, arguments);
     },
-    
-    listeners: { // listen for a tap on the image - show overlay and toolbar
-		body: {
-			tap: function() { 							
-            	if (profilepanel.tbar.isVisible()){
-            		profilepanel.tbar.hide();
-            		profilepanel.bottomSheet.hide();
-            		profilepanel.doLayout();
-                 } else {
-                	profilepanel.tbar.show();              	
-                	profilepanel.bottomSheet.show();
-                	profilepanel.doLayout();
-                 }
-			},
-			scope: this
-		}
-	},
 	
 	//load a profile
 	loadProfile: function(result, listData) {		

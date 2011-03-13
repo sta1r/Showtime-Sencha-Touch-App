@@ -103,6 +103,20 @@ Ext.regController("Profiles", {
     		this.profilePanel = this.render({
                 xtype: 'profile-panel',
                 listeners: {
+                	body: {
+						tap: function() { 						
+			            	if (this.profilePanel.tbar.isVisible()){
+			            		this.profilePanel.tbar.hide();
+			            		this.profilePanel.bottomSheet.hide();
+			            		this.profilePanel.doLayout();
+			                } else {
+			                	this.profilePanel.tbar.show();              	
+			                	this.profilePanel.bottomSheet.show();
+			                	this.profilePanel.doLayout();
+			                }
+						},
+						scope: this
+					},
                 	//destroy this panel when we go back to the main view to save memory:
 	                deactivate: function(profile) {
 	                    profile.destroy();
