@@ -36,3 +36,6 @@ Ext.regStore('Profiles', {
     //sorters: [{ property : 'updated', direction: 'DESC' }],
     pageSize: 130
 });
+
+//add the store to the global Showtime namespace:
+Showtime.stores.profiles = Ext.getStore('Profiles');

@@ -11,7 +11,7 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 	initComponent: function(){
 		this.items = [{
 			title: 'Student',
-			itemId: 'AZList',
+			itemId: 'StudentList',
 			width: 300,
 			height: 600,
 	        xtype: 'list',
@@ -23,6 +23,12 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 	        singleSelect: true,
 	        allowDeselect: true,
 	        itemSelector: 'div.x-list-item',
+	        listeners: {
+	    		beforeshow : function(comp) {
+	    	        console.log('beforeshow');
+	    	        comp.getSelectionModel().deselectAll();
+				}
+			}
 		},{
 			title: 'Course',
 			itemId: 'CourseList',
@@ -36,17 +42,8 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 	},
 	listeners: {
 		beforeshow: function(comp) {
-			//deselecting any selected items - workaround for bug in Sencha Touch:
-			//using fix from: http://www.sencha.com/forum/showthread.php?114896-OPEN-534-List-items-can-no-longer-be-deselected-in-0.99
-			studentlist = comp.items.items[0];					
-			var selArray = studentlist.getSelectedRecords();
-			for (i=0;i<selArray.length;i++) {
-			studentlist.deselect(selArray[i]); }
-			
-			courselist = comp.items.items[1];						
-			var selArray = courselist.getSelectedRecords();
-			for (i=0;i<selArray.length;i++) {
-			courselist.deselect(selArray[i]); }
+			this.query('#StudentList')[0].getSelectionModel().deselectAll();
+			this.query('#CourseList')[0].getSelectionModel().deselectAll();
 		}
 	}
 	

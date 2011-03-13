@@ -3,9 +3,7 @@
  * @extends Ext.Panel
  * 
  */
-Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
-    //fullscreen: true,
-    
+Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {    
     initComponent: function() {
     	profilepanel = this;
     	
@@ -158,17 +156,13 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
         //add the carousel
         profilepanel.add(profilecarousel);
 
-        //update the form values
-        /*profilepanel.formBase.student = Ext.ModelMgr.create({
-            'firstname' : result.data.Student.Student.firstName,
-            'lastname'  : result.data.Student.Student.lastName,
-            'profileurl': result.data.Student.Student.profileurl,
-            'shorturl'  : result.data.Student.Student.shorturl,
-        }, 'Student');
-
-        form.loadModel(profilepanel.formBase.student);
-        
-        form.updateRecord(profilepanel.formBase.student, true);*/
+        //create an instance of the student model (used by form)
+        profilepanel.student = new Showtime.models.Student({
+        	'firstname' : result.Student.firstName,
+            'lastname'  : result.Student.lastName,
+            'profileurl': result.Student.profileurl,
+            'shorturl'  : result.Student.shorturl,
+        });
         
         //quick hack - place the course name in the result data - because at present only course id is available in json
         result.Student['course'] = listData.course;
@@ -245,7 +239,7 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
     	return media_cards;
     },
     
-    showBio: function() {
+    showDesc: function() {
     	if (!this.descriptionPanel) {
     		//setup description panel
     		this.descriptionPanel = new Ext.Panel({
@@ -272,6 +266,9 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
     						e.stopEvent(true);
     					},
     					delegate: 'a'
+    				},
+    				deactivate: {
+    					//this.destroy();
     				}
     			}
     		});
