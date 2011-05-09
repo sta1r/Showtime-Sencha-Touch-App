@@ -6,7 +6,7 @@
 /*global Ext,Showtime*/
 Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {    
     initComponent: function() {
-		var profilepanel = this;
+		profilepanel = this;
 			
 		//use custom toolbar
 		this.tbar = new Showtime.views.ProfilePanelToolbar();
