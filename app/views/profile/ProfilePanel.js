@@ -3,11 +3,12 @@
  * @extends Ext.Panel
  * 
  */
+/*global Ext,Showtime*/
 Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {    
     initComponent: function() {
-    	profilepanel = this;
-    	
-    	//use custom toolbar
+		var profilepanel = this;
+			
+		//use custom toolbar
 		this.tbar = new Showtime.views.ProfilePanelToolbar();
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];

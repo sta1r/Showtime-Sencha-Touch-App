@@ -3,6 +3,7 @@
  * been loaded onto the page. By default we just render the application's Viewport inside the
  * launch method (see app/views/Viewport.js).
  */ 
+/*global Ext,Showtime*/
 Ext.regApplication({
     name: 'Showtime',
     
