@@ -20,7 +20,7 @@ Ext.regApplication({
         this.mainLaunch();
     },
     mainLaunch: function() {
-        //if (!device || !this.launched) {return;}
+        if (!device || !this.launched) {return;}
         this.viewport = new Showtime.Viewport({
             application: this
         });

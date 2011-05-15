@@ -13,7 +13,7 @@ Ext.regModel("Courses", {
     
     proxy: {
 		type: 'scripttag',
-	    url : '/showtime/lcf/ma/2011/courses.json',
+	    url : 'http://showtime.arts.ac.uk/lcf/ma/2011/courses.json',
 	    reader: {
             type: 'json',
             root: 'data.Courses'

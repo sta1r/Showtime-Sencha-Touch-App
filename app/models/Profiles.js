@@ -17,7 +17,7 @@ Ext.regModel("Profiles", {
     
     proxy: {
 		type: 'scripttag',
-	    url : '/showtime/lcf/ma/2011/explore.json',
+	    url : 'http://showtime.arts.ac.uk/lcf/ma/2011/explore.json',
 	    reader: {
             type: 'json',
             root: 'data.Profiles'

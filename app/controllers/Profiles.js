@@ -158,7 +158,7 @@ Ext.regController("Profiles", {
 		
 		//it is not possible in sencha to use a store / model proxy to read a single json record so:
 		Ext.util.JSONP.request({
-        	url: '/showtime/'+options.profileData.profileName+'.json',
+        	url: 'http://showtime.arts.ac.uk/'+options.profileData.profileName+'.json',
             callbackKey: 'callback',
             callback: function(result) {
 				if (result.data.Student) {
