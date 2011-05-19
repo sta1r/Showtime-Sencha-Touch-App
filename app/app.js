@@ -20,7 +20,8 @@ Ext.regApplication({
         this.mainLaunch();
     },
     mainLaunch: function() {
-        if (!device || !this.launched) {return;}
+        //uncomment the line below for phonegap
+        //if (!device || !this.launched) {return;}
         this.viewport = new Showtime.Viewport({
             application: this
         });
