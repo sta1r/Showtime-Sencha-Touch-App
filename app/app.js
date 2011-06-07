@@ -33,5 +33,10 @@ Ext.regApplication({
         tabletLandscape: function() {
             //return Ext.is.Tablet && Ext.orientation == 'landscape';
         }
-    }
+   },
+   setThumbUrl: function (id, dataUrl) {
+        var profile = this.stores.offlineProfiles.getById(id);
+        profile.set('thumb', dataUrl);
+        this.stores.offlineProfiles.sync();
+   }
 });

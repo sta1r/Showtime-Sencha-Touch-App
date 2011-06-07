@@ -5,8 +5,15 @@
  */
 Ext.regController("Profiles", {
 	index: function(options) {
-
+		
+		// Create loading message
+		loading = new Ext.LoadMask(Ext.getBody(), {msg:"Loading..."});
+		
+		//if explore panel not setup yet, create it:
 		if (!this.explorePanel) {
+			// Show loading message
+			loading.show();
+			
 			//create the panel
             this.explorePanel = this.render({
                 xtype: 'explore-panel',
@@ -30,8 +37,10 @@ Ext.regController("Profiles", {
                 }
             });
             
+            //load the profile list
             this.loadProfiles();
-
+			
+			//load the course list
             Ext.dispatch({
 	            controller: 'Courses',
 	            action: 'load'
@@ -59,15 +68,16 @@ Ext.regController("Profiles", {
             this.application.viewport.setActiveItem(this.explorePanel);
         }
         else {
+        	console.log('using offline data');
         	if (options && options.courseData) {
 				//filter by course			
-				Showtime.stores.profiles.filter('course', options.courseData.name);
-				Showtime.stores.profiles.sort('updated', 'DESC');
-				this.explorePanel.loadProfiles(Showtime.stores.profiles.data.items, options.courseData);
+				Showtime.stores.offlineProfiles.filter('course', options.courseData.name);
+				Showtime.stores.offlineProfiles.sort('updated', 'DESC');
+				this.explorePanel.loadProfiles(Showtime.stores.offlineProfiles.data.items, options.courseData);
 			} else if (options && options.home) {
-				Showtime.stores.profiles.clearFilter(true);
-				Showtime.stores.profiles.sort('updated', 'DESC');
-				this.explorePanel.loadProfiles(Showtime.stores.profiles.data.items);
+				Showtime.stores.offlineProfiles.clearFilter(true);
+				Showtime.stores.offlineProfiles.sort('updated', 'DESC');
+				this.explorePanel.loadProfiles(Showtime.stores.offlineProfiles.data.items);
 			}
             
             this.application.viewport.setActiveItem(this.explorePanel, {
@@ -77,24 +87,21 @@ Ext.regController("Profiles", {
         }
 		
 	},
-
+	//load the profile list using the store (see models/profiles.js)
 	loadProfiles: function() {	
-		//tell the store to load from its proxy
-        Showtime.stores.profiles.load({
-		    scope   : this,
-		    callback: function(records, operation, success) {
-				//handle timeout here? and/or success/failure
-				Ext.each(records, function(record){
-					//remove all non-numeric characters to reduce date/time into sortable number
-					record.data.updated = record.data.updated.replace(/[^\d]/g, "");
-				});
-				//now we can sort by updated date/time
-				Showtime.stores.profiles.sort('updated', 'DESC');
-				//send records to view:
-				this.explorePanel.loadProfiles(records);
-		    }
-		});			
 		
+		var profile_controller = this;			
+		
+		//listen for the load method on the offline store:
+		Showtime.stores.offlineProfiles.addListener('load', function () {
+			console.log('loading from offline store');
+			//send records to view (see views/ExplorePanel.js):
+			profile_controller.explorePanel.loadProfiles(this.data.items);
+			loading.hide();
+		});
+		
+		//tell the store to load using its proxy
+        Showtime.stores.onlineProfiles.load();
 	},
 
     view: function(options) {
@@ -198,8 +205,9 @@ Ext.regController("Profiles", {
 				scope: this
     		});
 		}
-		Showtime.stores.profiles.clearFilter(true);
-		Showtime.stores.profiles.sort('firstName', 'ASC');
+
+		Showtime.stores.offlineProfiles.clearFilter(true);
+		Showtime.stores.offlineProfiles.sort('firstName', 'ASC');
 		this.browsePopup.showBy(button, 'fade');
     },
     

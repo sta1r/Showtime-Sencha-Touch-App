@@ -8,6 +8,7 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 	floating: true,
 	width: 300,
 	height: 660,
+	cardSwitchAnimation: false,
 	initComponent: function(){
 		this.items = [{
 			title: 'Student',
@@ -15,7 +16,7 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 			width: 300,
 			height: 600,
 	        xtype: 'list',
-	        store: Showtime.stores.profiles,
+	        store: Showtime.stores.offlineProfiles,
 	        itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
 	        grouped: true,
 	        indexBar: true,
@@ -25,7 +26,7 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 	        itemSelector: 'div.x-list-item',
 	        listeners: {
 	    		beforeshow : function(comp) {
-	    	        console.log('beforeshow');
+	    	        //console.log('beforeshow');
 	    	        comp.getSelectionModel().deselectAll();
 				}
 			}
@@ -35,7 +36,7 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 			width: 300,
 			height: 600,
 	        xtype: 'list',
-	        store: Showtime.stores.courses,
+	        store: Showtime.stores.offlineCourses,
 	        itemTpl: '<div class="course"><strong>{name}</strong></div>',
 		}]
 		Showtime.views.BrowsePopup.superclass.initComponent.apply(this, arguments);

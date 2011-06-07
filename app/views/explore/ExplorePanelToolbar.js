@@ -90,7 +90,7 @@ Showtime.views.ExplorePanelToolbar = Ext.extend(Ext.Toolbar, {
 			this.infoPanel = new Ext.Panel({
 				id: 'info',
 				html: '<div id="description">' 
-					+ '<h4>Welcome to MA_11</h4>' 
+					+ '<h4>Welcome to BA_11</h4>' 
 					+ '<p>We are delighted to present a digital showcase of new work from the London College of Fashion Graduate School.</p>'
 					+ '<p>Please show your appreciation for this wonderful work by <strong>liking</strong> individual images and <strong>bookmarking</strong> your favourite student profiles. Bookmark links will be emailed to you for later browsing.</p>'
 					+ '<p>Designed to be an interactive, portable companion to the physical exhibitions, this app was created from Showtime, a web-based portfolio platform offered to all graduating students at University of the Arts London.</p>'

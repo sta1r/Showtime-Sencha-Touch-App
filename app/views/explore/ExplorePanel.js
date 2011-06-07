@@ -52,7 +52,7 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
 
 		//use custom toolbar
 		this.tbar = new Showtime.views.ExplorePanelToolbar();
-		this.tbar.setTitle('MA_11');
+		this.tbar.setTitle('BA_11');
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];
 		        
@@ -65,11 +65,11 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
     loadProfiles: function(records, courseData) {
 	    this.removeAll(true);
 	    
-	    if (courseData) {
+	    if (courseData) { 	//we are viewing a course
 	    	this.tbar.setTitle(courseData.name);
 	    	this.tbar.backButton.show();
-	    } else {
-	    	this.tbar.setTitle('MA_11');
+	    } else {			//viewing all profiles
+	    	this.tbar.setTitle('BA_11');
 	    }
 	    
 	    //generate card components for main carousel
@@ -78,9 +78,9 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
 	    if (this.carousel) {
 	    	this.carousel.hide();
 	    }
-	    this.carousel = undefined;
+	    this.carousel = undefined;	//destroy existing carousel component
 	    if (!this.carousel) {
-	    	//new carousel using generated cards
+	    	//create a new carousel and populate with cards
 	        this.carousel = new Ext.Carousel({
 	        	fullscreen: true,
 	        	hidden: true,
