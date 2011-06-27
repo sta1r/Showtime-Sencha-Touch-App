@@ -62,10 +62,17 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
     /*
      * Load (or reload) profiles into the main carousel
      */
-    loadProfiles: function(records, courseData) {
-	    this.removeAll(true);
+    loadProfiles: function(records, courseData, reload) {
+	    if (reload) {
+	    	Showtime.stores.onlineProfiles.endReached = false;
+	    	if (this.carousel) {
+	    		this.carousel.hide();
+	    		this.removeAll(true);
+	    		this.carousel = undefined;	//destroy existing carousel component
+	    	}
+	    }
 	    
-	    if (courseData) { 	//we are viewing a course
+	    if (courseData) { 	//we are viewing a course    	
 	    	this.tbar.setTitle(courseData.name);
 	    	this.tbar.backButton.show();
 	    } else {			//viewing all profiles
@@ -75,10 +82,6 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
 	    //generate card components for main carousel
 	    var cards = this.createCards(records);
 	    
-	    if (this.carousel) {
-	    	this.carousel.hide();
-	    }
-	    this.carousel = undefined;	//destroy existing carousel component
 	    if (!this.carousel) {
 	    	//create a new carousel and populate with cards
 	        this.carousel = new Ext.Carousel({
@@ -88,12 +91,41 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
 	        	flex: 1,
 	        	items: cards,
 	        	id: 'car',
-	            itemId: 'carousel'
+	            itemId: 'carousel',
+	            listeners: {
+	        		cardswitch: function(container, newCard, oldCard, index){
+	        			
+	        			var current_page = this.getActiveIndex()+1;
+	        			var total_pages = this.items.length;
+	        			console.log('data page: '+Showtime.stores.onlineProfiles.currentPage);
+	        			console.log('current page: '+current_page);
+	        			console.log('total pages: '+total_pages);
+	        			
+	        			//if near end of carousel, load new data
+	        			console.log('endreached?'+Showtime.stores.onlineProfiles.endReached)
+	        			if ( current_page >= total_pages && !Showtime.stores.onlineProfiles.endReached) {
+	        				loading.show();
+	        				Showtime.stores.onlineProfiles.nextPage();
+	        			}
+	        			
+						
+	        		}
+        		}
 	        });
+	        this.add(this.carousel);
+	        this.carousel.show('fade');
+	    } else {
+	    	var current_page = this.carousel.getActiveIndex()+1;
+
+	    	this.carousel.add(cards);
+	    	if (current_page > 2) {
+	    		//destroy first cards up to current - 2 
+	    		//this.trimCards(current_page-2);
+	    	}
+	    	this.carousel.doLayout();
+	    	//console.log(this.carousel.items.length);
 	    }
-	    this.add(this.carousel);
 	    this.doLayout();
-	    this.carousel.show('fade');
     },    
     
     /*
@@ -147,6 +179,14 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
         
         //use delegate to add tap event for all cards?
         return cards;
+    },
+    trimCards: function(startcard, endcard) {
+    	//remove all cards of index not within the range of startcard and endcard
+    	for (var i=1; i<=startcard; i++){
+    		console.log('removing:'+i);
+    		console.log(this.carousel.items.items[i-1]);
+    		this.carousel.remove(this.carousel.items.items[i-1]);
+    	}
     }
    
 });

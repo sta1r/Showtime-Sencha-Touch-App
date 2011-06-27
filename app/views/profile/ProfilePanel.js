@@ -45,11 +45,12 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 			            Ext.getBody().mask('Liking...', 'x-mask-loading', false);
 			            bottomSheet = Ext.getCmp('bottomSheet');
 			            Ext.Ajax.request({
-			                url: '/showtime/media/like/'+bottomSheet.data.id,
+			                url: 'http://showtime.arts.ac.uk/media/like/'+bottomSheet.data.id,
 			                success: function(response, opts) {
-								//console.log('You liked media id=' + bottomSheet.data.id);
+								console.log('You liked media id=' + bottomSheet.data.id);
+								console.log(response);
 								var obj = Ext.decode(response.responseText);
-								//console.log(obj);
+								console.log(obj);
 								if (obj.success == true) {
 									//console.log('likes='+obj.likes);
 									//like saved successfully
@@ -74,7 +75,12 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 									//failed to like
 								}									
 								Ext.getBody().unmask();
-			                }
+			                },
+							failure: function(response, opts) {
+								console.log('server-side failure with status code ' + response.status);
+								console.log(response);
+								Ext.getBody().unmask();
+							}
 			            });
 			        }
 				}]
@@ -184,7 +190,7 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
         	                    		if (media.video_host == 'vimeo') {
         		                    		return '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe></div>';
         		                    	} else {
-        	                    			return '<div class="video youtube"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>';
+        		                    		return '<div class="video youtube"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>';
         	                    		}    		
         	                    	}  else {
         	                    		if (media.touch) {

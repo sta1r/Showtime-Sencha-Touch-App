@@ -47,33 +47,66 @@ Ext.regStore('Profiles', {
 		    }
 		},
 	},
+	urlChanged: false,
+	endReached: false,
+	oldPage: 0,
 	listeners: {
 		load:function (store, records, success) {
-			console.log('fetching json feed from server');
+			//TODO test for success
 			
-    		console.log('emptying the offline store');
-			//empty the offline store
-			Showtime.stores.offlineProfiles.proxy.clear();
+			//is this a request for profiles on a course?
+			var courses = false, offlineStore;
+			if (store.proxy.url != 'http://showtime.arts.ac.uk/lcf/ug/2011.json') {
+				courses = true;
+				offlineStore = Showtime.stores.offlineCourseProfiles;
+				console.log('fetching course json feed from server');
+			} else {
+				offlineStore = Showtime.stores.offlineProfiles;
+				console.log('fetching json feed from server');
+			}
+			
+			//empty the offline store if loading the first page of json:
+			if (store.urlChanged) {
+				offlineStore.removeAll();
+				store.urlChanged = false;
+			}
+			
+			console.log('emptying the offline store proxy');
+			offlineStore.proxy.clear();
 			
 			console.log('adding ' + records.length + ' records');
+
 			this.each(function(record){
-				//remove all non-numeric characters to reduce date/time into sortable number
+				//replace all non-numeric characters to reduce date/time into sortable number
 				record.data.updated = record.data.updated.replace(/[^\d]/g, "");
 				//add record to store
-				var profile = Showtime.stores.offlineProfiles.add(record.data)[0];
-				//profile.setThumbUrl();
+				if (offlineStore.findExact('id', record.data.id) == -1) {
+					var profile = offlineStore.add(record.data)[0];		
+					//profile.setThumbUrl();
+				}
 			});
-			
-			Showtime.stores.offlineProfiles.sync();
+
+			offlineStore.sync();
 			
 			//now we can sort by updated date/time
-			Showtime.stores.offlineProfiles.sort('updated', 'DESC');
-			
+			offlineStore.sort('updated', 'DESC');
+
 			//load from the now primed offline store:
-			Showtime.stores.offlineProfiles.load();
+			offlineStore.load();
+
+			//set the total amount of records:
+			offlineStore.recordcount = offlineStore.data.length;
+			
+			console.log('Offline store now contains '+ offlineStore.data.length +' records');
+			records = undefined;
+		},
+		datachanged: function (store) {
+			console.log('store changed');
+			//console.log(store.data)
 		}
 	},
-    pageSize: 60
+	pageSize: 16 //important this needs to be greater than and in multiples of the number of profiles per page (8) e.g. 16, 24, 32 etc 
+    //pageSize: 60
 });
 
 //Offline Data Store:
@@ -91,7 +124,20 @@ Ext.regStore('OfflineProfiles', {
     //sorters: [{ property : 'updated', direction: 'DESC' }],
 });
 
+//Offline Data Store:
+Ext.regStore('OfflineCourseProfiles', {
+    model: 'Profile',
+    proxy: {
+		type: 'localstorage',
+	    id: 'LocalCourseProfiles'
+	},
+    getGroupString : function(record) {
+        return record.get('firstName')[0];
+    }
+});
+
 
 //add the stores to the global Showtime namespace:
 Showtime.stores.onlineProfiles = Ext.getStore('Profiles');
 Showtime.stores.offlineProfiles = Ext.getStore('OfflineProfiles');
+Showtime.stores.offlineCourseProfiles = Ext.getStore('OfflineCourseProfiles');

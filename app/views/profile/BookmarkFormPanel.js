@@ -6,7 +6,7 @@
 Showtime.views.BookmarkFormPanel = Ext.extend(Ext.ux.JSONPFormPanel, {
 	itemId: 'bookmarkForm',
     scroll: 'vertical',
-    url   : 'http://showtime.arts.ac.uk/showtime/lcf/sendprofile/',
+    url   : 'http://showtime.arts.ac.uk/lcf/sendprofile/',
     standardSubmit : false,
 	cls: 'emailForm',
 	autoRender: true,
@@ -69,6 +69,7 @@ Showtime.views.BookmarkFormPanel = Ext.extend(Ext.ux.JSONPFormPanel, {
         },
         exception : function(form, result){
             console.log('failure', Ext.toArray(arguments), result);
+            this.hideMask();
         }
     },
 

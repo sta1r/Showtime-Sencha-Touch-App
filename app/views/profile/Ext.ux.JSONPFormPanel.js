@@ -55,6 +55,16 @@ Ext.extend(Ext.ux.JSONPFormPanel, Ext.form.FormPanel, {
             if (options.waitMsg) {
                 this.showMask(options.waitMsg);
             }
+            
+            //timeout in case of failure
+			var me = this;
+            setTimeout(function(){
+            	me.hideMask();
+            	console.log('did not receive a response in time')
+            	//options.failure.call(options.scope || me, me, false, false);
+            	//me.fireEvent('exception', me, false);
+            }, 3000);
+            
             Ext.util.JSONP.request({
                 url     : options.url,
                 callbackKey: options.callbackKey,

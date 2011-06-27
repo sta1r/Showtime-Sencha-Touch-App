@@ -68,16 +68,31 @@ Ext.regController("Profiles", {
             this.application.viewport.setActiveItem(this.explorePanel);
         }
         else {
-        	console.log('using offline data');
         	if (options && options.courseData) {
-				//filter by course			
-				Showtime.stores.offlineProfiles.filter('course', options.courseData.name);
-				Showtime.stores.offlineProfiles.sort('updated', 'DESC');
-				this.explorePanel.loadProfiles(Showtime.stores.offlineProfiles.data.items, options.courseData);
+        		//load profiles using course json
+        		Showtime.stores.onlineProfiles.proxy.url = 'http://showtime.arts.ac.uk/lcf/2011/'+options.courseData.slug+'.json';
+        		Showtime.stores.onlineProfiles.urlChanged = true;
+				Showtime.stores.onlineProfiles.data.removeAll();
+				Showtime.stores.onlineProfiles.oldPage = Showtime.stores.onlineProfiles.currentPage;
+				Showtime.stores.onlineProfiles.currentPage = 1;
+				Showtime.stores.onlineProfiles.endReached = false;
+        		
+        		//load the profile list
+            	this.loadProfiles(options.courseData, true);
+        		
+        		/*Showtime.stores.onlineProfiles.load();
+				//filter by course
+				Showtime.stores.offlineCourseProfiles.filter('course', options.courseData.name);
+				Showtime.stores.offlineCourseProfiles.sort('updated', 'DESC');
+				this.explorePanel.loadProfiles(Showtime.stores.offlineCourseProfiles.data.items, options.courseData);*/
+				
 			} else if (options && options.home) {
 				Showtime.stores.offlineProfiles.clearFilter(true);
 				Showtime.stores.offlineProfiles.sort('updated', 'DESC');
-				this.explorePanel.loadProfiles(Showtime.stores.offlineProfiles.data.items);
+				Showtime.stores.onlineProfiles.proxy.url = 'http://showtime.arts.ac.uk/lcf/ug/2011.json';
+				Showtime.stores.onlineProfiles.endReached = false;
+				Showtime.stores.onlineProfiles.currentPage = Showtime.stores.onlineProfiles.oldPage;
+				this.explorePanel.loadProfiles(Showtime.stores.offlineProfiles.data.items, false, true);
 			}
             
             this.application.viewport.setActiveItem(this.explorePanel, {
@@ -88,20 +103,59 @@ Ext.regController("Profiles", {
 		
 	},
 	//load the profile list using the store (see models/profiles.js)
-	loadProfiles: function() {	
+	loadProfiles: function(courses, init) {	
+		var offlineStore;
+		if (courses) {
+			offlineStore = Showtime.stores.offlineCourseProfiles;
+			offlineStore.clearListeners();
+		} else {
+			offlineStore = Showtime.stores.offlineProfiles;
+		}
 		
-		var profile_controller = this;			
+		var profile_controller = this;
 		
 		//listen for the load method on the offline store:
-		Showtime.stores.offlineProfiles.addListener('load', function () {
+		offlineStore.addListener('load', function (store, records, success) {
+			
+			
+			//console.log(store, records, success);
 			console.log('loading from offline store');
 			//send records to view (see views/ExplorePanel.js):
-			profile_controller.explorePanel.loadProfiles(this.data.items);
+			if (!this.recordcount) {	this.recordcount = 0;	}
+			
+			if (this.recordcount == this.data.items.length) {
+				Showtime.stores.onlineProfiles.endReached = true;
+			}
+
+			var reload, therecordData;
+			
+			recordData = this.data.items.slice(this.recordcount, this.data.items.length);
+			if (courses) {
+				if (init) {
+					console.log('CLEARING FILTER to:'+courses.name);
+					this.clearFilter(true);
+					this.filter('course', courses.name);
+					this.sort('updated', 'DESC');
+					init = false;
+					reload = true;
+					console.log('current store items:');
+					recordData = this.data.items;
+				} else {
+					recordData = this.data.items.slice(this.recordcount, this.data.items.length);
+				}
+			}
+			profile_controller.explorePanel.loadProfiles(recordData, courses, reload);
+			reload = false;
+			
+			//remove un-needed cards:
+			//profile_controller.explorePanel.trimCards();
+			
 			loading.hide();
 		});
 		
 		//tell the store to load using its proxy
-        Showtime.stores.onlineProfiles.load();
+		Showtime.stores.onlineProfiles.load();
+        
 	},
 
     view: function(options) {
@@ -161,6 +215,7 @@ Ext.regController("Profiles", {
     	}
     	
 		//load profile
+		//TODO change this mask to new method:
 		Ext.getBody().mask('Loading...', 'x-mask-loading', false);
 		
 		//it is not possible in sencha to use a store / model proxy to read a single json record so:
