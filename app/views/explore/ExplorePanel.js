@@ -52,7 +52,7 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
 
 		//use custom toolbar
 		this.tbar = new Showtime.views.ExplorePanelToolbar();
-		this.tbar.setTitle('BA_11');
+		this.tbar.setTitle('LCF 2011');
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];
 		        
@@ -76,7 +76,7 @@ Showtime.views.ExplorePanel = Ext.extend(Ext.Panel, {
 	    	this.tbar.setTitle(courseData.name);
 	    	this.tbar.backButton.show();
 	    } else {			//viewing all profiles
-	    	this.tbar.setTitle('BA_11');
+	    	this.tbar.setTitle('LCF 2011');
 	    }
 	    
 	    //generate card components for main carousel
