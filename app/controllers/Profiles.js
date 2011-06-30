@@ -46,6 +46,9 @@ Ext.regController("Profiles", {
 	            action: 'load'
 	        });
             
+            //load the complete student list for the A-Z
+			Showtime.stores.onlineStudentList.load();
+            
             //listen here for button taps and fire appropriate controller func
 			profiles = this;
 			

@@ -16,7 +16,7 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 			width: 300,
 			height: 600,
 	        xtype: 'list',
-	        store: Showtime.stores.offlineProfiles,
+	        store: Showtime.stores.offlineStudentList,
 	        itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
 	        grouped: true,
 	        indexBar: true,

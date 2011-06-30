@@ -27,7 +27,51 @@ Ext.regModel("Profile", {
     }
 });
 
-	
+
+//Online Student List Data Store:
+Ext.regStore('Students', {
+    model: 'Profile',
+    sorters: 'firstName',
+    pageSize: 1,
+    proxy: {
+		type: 'scripttag',
+	    url : 'http://showtime.arts.ac.uk/lcf/ug/2011/students.json',
+	    reader: {
+            type: 'json',
+            root: 'data.Students'
+       },
+       timeout: 2000,
+		listeners: {
+		    exception:function () {
+		    	//we are offline so use the previously loaded data
+		    	console.log('offline - using old student list');
+		        Showtime.stores.offlineStudentList.load();
+		    }
+		},
+	},
+	listeners: {
+		load:function (store, records, success) {
+			console.log('fetching student json feed from server');
+			
+    		console.log('emptying the offline student store');
+			//empty the offline store
+			Showtime.stores.offlineStudentList.proxy.clear();
+			
+			console.log('adding ' + records.length + ' student records');
+			this.each(function(record){
+				//add record to store
+				Showtime.stores.offlineStudentList.add(record.data)[0];
+			});
+			
+			Showtime.stores.offlineStudentList.sync();
+			
+			//load from the now primed offline store:
+			Showtime.stores.offlineStudentList.load();
+		}
+	}
+});
+
+
 // Online Data Store:
 Ext.regStore('Profiles', {
     model: 'Profile',
@@ -105,8 +149,20 @@ Ext.regStore('Profiles', {
 			//console.log(store.data)
 		}
 	},
-	pageSize: 16 //important this needs to be greater than and in multiples of the number of profiles per page (8) e.g. 16, 24, 32 etc 
+	pageSize: 64 //important this needs to be greater than and in multiples of the number of profiles per page (8) e.g. 16, 24, 32 etc 
     //pageSize: 60
+});
+
+//Offline Data Store:
+Ext.regStore('OfflineStudents', {
+    model: 'Profile',
+    proxy: {
+		type: 'localstorage',
+	    id: 'LocalStudents'
+	},
+    getGroupString : function(record) {
+        return record.get('firstName')[0];
+    },
 });
 
 //Offline Data Store:
@@ -138,6 +194,8 @@ Ext.regStore('OfflineCourseProfiles', {
 
 
 //add the stores to the global Showtime namespace:
+Showtime.stores.onlineStudentList = Ext.getStore('Students');
+Showtime.stores.offlineStudentList = Ext.getStore('OfflineStudents');
 Showtime.stores.onlineProfiles = Ext.getStore('Profiles');
 Showtime.stores.offlineProfiles = Ext.getStore('OfflineProfiles');
 Showtime.stores.offlineCourseProfiles = Ext.getStore('OfflineCourseProfiles');
