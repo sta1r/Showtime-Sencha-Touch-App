@@ -57,13 +57,14 @@ Ext.extend(Ext.ux.JSONPFormPanel, Ext.form.FormPanel, {
             }
             
             //timeout in case of failure
-			var me = this;
+			/*var me = this;
             setTimeout(function(){
-            	me.hideMask();
-            	console.log('did not receive a response in time')
-            	//options.failure.call(options.scope || me, me, false, false);
-            	//me.fireEvent('exception', me, false);
-            }, 3000);
+	            	me.hideMask();
+	            	console.log('did not receive a response in time');
+	            	console.log(me);
+	            //	options.failure.call(options.scope || me, me, false, false);
+	            	me.fireEvent('exception', me, false);
+            }, 7000);*/
             
             Ext.util.JSONP.request({
                 url     : options.url,

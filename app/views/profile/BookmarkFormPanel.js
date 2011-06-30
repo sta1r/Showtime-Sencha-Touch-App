@@ -3,7 +3,7 @@
  * @extends Ext.Panel
  * 
  */
-Showtime.views.BookmarkFormPanel = Ext.extend(Ext.ux.JSONPFormPanel, {
+Showtime.views.BookmarkFormPanel = Ext.extend(Ext.form.FormPanel, {
 	itemId: 'bookmarkForm',
     scroll: 'vertical',
     url   : 'http://showtime.arts.ac.uk/lcf/sendprofile/',
