@@ -3,7 +3,7 @@
  * @extends Ext.Panel
  * 
  */
-Showtime.views.BookmarkFormPanel = Ext.extend(Ext.form.FormPanel, {
+Showtime.views.BookmarkFormPanel = Ext.extend(Ext.ux.JSONPFormPanel, {
 	itemId: 'bookmarkForm',
     scroll: 'vertical',
     url   : 'http://showtime.arts.ac.uk/lcf/sendprofile/',
@@ -63,7 +63,7 @@ Showtime.views.BookmarkFormPanel = Ext.extend(Ext.form.FormPanel, {
 		},
 		beforesubmit : function(form, values){
             if (Ext.util.Format.trim(values.email) == '') {
-            	console.log('email empty');
+            		console.log('email empty');
             	return false;
             }					
         },
