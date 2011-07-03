@@ -56,15 +56,18 @@ Ext.extend(Ext.ux.JSONPFormPanel, Ext.form.FormPanel, {
                 this.showMask(options.waitMsg);
             }
             
+            var me = this;
             //timeout in case of failure
-			/*var me = this;
-            setTimeout(function(){
-	            	me.hideMask();
-	            	console.log('did not receive a response in time');
-	            	console.log(me);
-	            //	options.failure.call(options.scope || me, me, false, false);
-	            	me.fireEvent('exception', me, false);
-            }, 7000);*/
+	        setTimeout(function(){
+	        	var msg = Ext.getBody().down('.x-mask-message .loading');
+	        	if (msg) {
+		        	msg.setHTML('Error');
+		        	console.log('Did not receive a response in time');
+					setTimeout(function(){
+						me.hideMask();
+					}, 2000);
+				}
+	        }, 3000);
             
             Ext.util.JSONP.request({
                 url     : options.url,

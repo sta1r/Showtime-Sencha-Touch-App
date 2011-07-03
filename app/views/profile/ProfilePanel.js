@@ -43,6 +43,7 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 					cls: 'like',
 					handler: function() {
 			            Ext.getBody().mask('Liking...', 'x-mask-loading', false);
+			            
 			            bottomSheet = Ext.getCmp('bottomSheet');
 			            Ext.Ajax.request({
 			                url: 'http://showtime.arts.ac.uk/media/like/'+bottomSheet.data.id,
@@ -79,7 +80,15 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 							failure: function(response, opts) {
 								console.log('server-side failure with status code ' + response.status);
 								console.log(response);
-								Ext.getBody().unmask();
+								var msg = Ext.getBody().down('.x-mask-loading');
+					        	if (msg) {
+						        	msg.setHTML('Unable to like');
+						        	console.log('did not receive a response in time');
+						        	//wait two seconds then unmask:
+									setTimeout(function(){
+										Ext.getBody().unmask();
+									}, 2000);
+								}
 							}
 			            });
 			        }
