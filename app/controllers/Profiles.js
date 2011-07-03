@@ -217,9 +217,23 @@ Ext.regController("Profiles", {
             });
     	}
     	
-		//load profile
-		//TODO change this mask to new method:
+		//put a mask while loading
 		Ext.getBody().mask('Loading...', 'x-mask-loading', false);
+		
+		//timeout in case of failure
+        setTimeout(function(){
+        	var body = Ext.getBody();
+        	var msg = body.down('.x-mask-loading');
+        	if (msg) {
+	        	msg.setHTML('Unable to load');
+	        	console.log('did not receive a response in time');
+				setTimeout(function(){
+					Ext.getBody().unmask();
+					//go back to the thumbs list
+					profiles.index({home: true});
+				}, 2000);
+			}
+        }, 3000);
 		
 		//it is not possible in sencha to use a store / model proxy to read a single json record so:
 		Ext.util.JSONP.request({
@@ -232,9 +246,9 @@ Ext.regController("Profiles", {
 			 		this.application.viewport.setActiveItem(
 			            this.profilePanel, options.animation
 			        );
-			 		//remove the loading indicator
-			        Ext.getBody().unmask();
-				}
+				} 
+				//remove the loading indicator
+			    Ext.getBody().unmask();
 			},
 			scope: this
 		});
