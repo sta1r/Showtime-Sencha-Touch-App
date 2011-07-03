@@ -1,3 +1,6 @@
+//register an xtype for bufferelist component:
+Ext.reg('bufferedList', Ext.ux.BufferedList);
+
 /**
  * @class Showtime.views.BrowsePopup
  * @extends Ext.TabPanel
@@ -15,7 +18,7 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 			itemId: 'StudentList',
 			width: 300,
 			height: 600,
-	        xtype: 'list',
+	        xtype: 'bufferedList',
 	        store: Showtime.stores.offlineStudentList,
 	        itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
 	        grouped: true,
@@ -35,7 +38,7 @@ Showtime.views.BrowsePopup = Ext.extend(Ext.TabPanel, {
 			itemId: 'CourseList',
 			width: 300,
 			height: 600,
-	        xtype: 'list',
+	        xtype: 'bufferedList',
 	        store: Showtime.stores.offlineCourses,
 	        itemTpl: '<div class="course"><strong>{name}</strong></div>',
 		}]
