@@ -13,6 +13,28 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];
 		
+		this.player = new Ext.Panel({
+			id: 'player'
+		});
+		// Create the player overlay wrapper
+		this.overlay = new Ext.Panel({
+			id: 'vidOverlay',
+			floating: true,
+			modal: true,
+			centered: true,
+			width: 650,
+			height: 395,
+			items: [this.player],
+			listeners: {
+				beforehide: {
+					fn: function(evt) {
+						Ext.get('player').update('');
+					}
+				}
+			}
+		});
+		
+		
 		//create sheet for title/like button - this is reusable by each image
 		this.bottomSheet = new Ext.Sheet({
 			id: 'bottomSheet',
@@ -30,6 +52,7 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 				'<div class="title">{title}</div>'	
 			),
 			dockedItems: [{
+				id: 'bottomSheetToolbar',
 				xtype: 'toolbar',
 				dock: 'bottom',
 				flex: 1,
@@ -174,6 +197,7 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 	      
         //bottomSheet seems to like to be shown only after profilepanel has been shown
         profilepanel.bottomSheet.show();
+        console.log(Ext.get('bottomSheetToolbar').dom.clientHeight);
         //profilepanel.setLoading(false);
     },
     
@@ -197,9 +221,20 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
         						renderMedia: function(media){
             						if (media.video) {	                    		
         	                    		if (media.video_host == 'vimeo') {
-        		                    		return '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe></div>';
+											Ext.util.JSONP.request({
+												url: 'http://www.vimeo.com/api/v2/video/'+media.video_id+'.json',
+												params: {
+													callback: 'Ext.util.JSONP.callback'
+												},
+												callback: function(response) {
+													Ext.DomHelper.append('vm_'+media.video_id, {tag: 'img', id: 'vimeo_'+media.video_id, src: response[0].thumbnail_large});
+												}
+											});	
+        	                    			return '<div id="vm_'+media.video_id+'" class="video vimeo"></div>';
+        		                    		//return '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe></div>';
         		                    	} else {
-        		                    		return '<div class="video youtube"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>';
+        		                    		return '<div id="yt_'+media.video_id+'" class="video youtube"><img src="http://img.youtube.com/vi/'+media.video_id+'/0.jpg" /></div>';
+        		                    		//return '<div class="video youtube"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>';
         	                    		}    		
         	                    	}  else {
         	                    		if (media.touch) {
@@ -216,7 +251,7 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
         			),
         			data: media,
         		});
-        			
+        		
         		//the carousel card that holds the media/sheet
         		var card = new Ext.Panel({
         			mediaData: media,

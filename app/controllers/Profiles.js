@@ -5,7 +5,7 @@
  */
 Ext.regController("Profiles", {
 	index: function(options) {
-		
+		try{
 		// Create loading message
 		loading = new Ext.LoadMask(Ext.getBody(), {msg:"Loading..."});
 		
@@ -69,6 +69,7 @@ Ext.regController("Profiles", {
             });
             
             this.application.viewport.setActiveItem(this.explorePanel);
+            
         }
         else {
         	if (options && options.courseData) {
@@ -103,7 +104,15 @@ Ext.regController("Profiles", {
                 direction: 'right'
             });            
         }
-		
+		} catch (ex) {
+                if (ex.message && ex.name) {
+                    console.log("someMethod caught an exception of type "  + ex.name + ": ", ex.message);
+                    console.log(ex);
+                } else {
+                    console.log("someMethod caught a poorly-typed exception: " + ex);
+                }
+                console.log(ex.stack);
+            }
 	},
 	//load the profile list using the store (see models/profiles.js)
 	loadProfiles: function(courses, init) {	
@@ -162,29 +171,48 @@ Ext.regController("Profiles", {
 	},
 
     view: function(options) {
-
+try {
     	if (!this.profilePanel || this.profilePanel.isDestroyed) {
     		this.profilePanel = this.render({
                 xtype: 'profile-panel',
                 listeners: {
                 	body: {
-						tap: function() { 						
-			            	if (this.profilePanel.tbar.isVisible()){
-			            		this.profilePanel.tbar.hide();
-			            		this.profilePanel.bottomSheet.hide();
-			            		this.profilePanel.doLayout();
-			                } else {
-			                	this.profilePanel.tbar.show();              	
-			                	this.profilePanel.bottomSheet.show();
-			                	this.profilePanel.doLayout();
-			                }
+						tap: function(target) {
+							if (Ext.get(target.target).is('.video img')) {
+								this.profilePanel.overlay.setCentered(true);
+								this.profilePanel.overlay.show();
+								if (target.target.parentElement.id.substr(0, 3) == 'vm_') {
+									Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="js/touch/app/views/blank.html" frameborder="0"></iframe>');
+									Ext.get('player').down('iframe').set({src: 'http://player.vimeo.com/video/'+target.target.parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff'})
+									//Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+target.target.parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe>');
+								}
+								else {
+									Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="js/touch/app/views/blank.html" frameborder="0"></iframe>');
+									Ext.get('player').down('iframe').set({src: 'http://www.youtube.com/embed/'+target.target.parentElement.id.substr(3)})
+									//Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+target.target.parentElement.id.substr(3)+'" frameborder="0"></iframe>');
+								}
+								
+								
+							} else {
+				            	if (this.profilePanel.tbar.isVisible()){
+				            		this.profilePanel.tbar.hide();
+				            		this.profilePanel.bottomSheet.hide();
+				            		this.profilePanel.doLayout();
+				                } else {
+				                	this.profilePanel.tbar.show();              	
+				                	this.profilePanel.bottomSheet.show();
+				                	this.profilePanel.doLayout();
+				                }
+				            }
 						},
 						scope: this
 					},
                 	//destroy this panel when we go back to the main view to save memory:
-	                deactivate: function(profile) {
+	                deactivate: function(profile) {                	
 	                    profile.destroy();
-	                    //console.log('destroying panel');
+	                    Ext.destroy(profile);
+	                    Ext.destroy(Ext.get('player'));
+	                    Ext.destroy(Ext.get('vidOverlay'));
 	                },
 	                scope: this
 	            }
@@ -252,6 +280,15 @@ Ext.regController("Profiles", {
 			},
 			scope: this
 		});
+		} catch (ex) {
+                if (ex.message && ex.name) {
+                    console.log("someMethod caught an exception of type "  + ex.name + ": ", ex.message);
+                    console.log(ex);
+                } else {
+                    console.log("someMethod caught a poorly-typed exception: " + ex);
+                }
+                console.log(ex.stack);
+            }
     },
 
     browse: function(button) {
