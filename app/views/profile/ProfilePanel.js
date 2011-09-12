@@ -13,6 +13,8 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 		//add the toolbar to the panel's docked items
 		this.dockedItems = [this.tbar];
 		
+		this.layout = 'vbox';
+		
 		this.player = new Ext.Panel({
 			id: 'player'
 		});
