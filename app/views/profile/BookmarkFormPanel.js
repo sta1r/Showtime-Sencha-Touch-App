@@ -18,8 +18,8 @@ Showtime.views.BookmarkFormPanel = Ext.extend(Ext.ux.JSONPFormPanel, {
     items: [
         {
             xtype: 'fieldset',
-            title: 'Bookmark this profile',
-			instructions: 'Please enter your email address. You will receive an email with a link to this profile on the Showtime website.',
+            title: 'Share this profile by email',
+			instructions: 'Please enter an email address. An email will be sent with a link to this profile on the Showtime website.',
             defaults: {
                 required: true,
                 labelAlign: 'left'
