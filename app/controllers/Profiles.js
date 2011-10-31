@@ -282,10 +282,10 @@ try {
 		});
 		} catch (ex) {
                 if (ex.message && ex.name) {
-                    console.log("someMethod caught an exception of type "  + ex.name + ": ", ex.message);
+                    console.log("profile->view method caught an exception of type "  + ex.name + ": ", ex.message);
                     console.log(ex);
                 } else {
-                    console.log("someMethod caught a poorly-typed exception: " + ex);
+                    console.log("profile->view caught a poorly-typed exception: " + ex);
                 }
                 console.log(ex.stack);
             }
@@ -331,6 +331,7 @@ try {
 					console.log(form, result);
 					form.hide('fade');
 					form.reset();
+					Ext.Msg.alert('Share this profile by email', 'An email with a link to this profile has been sent');
 		        }
     		});
     		
