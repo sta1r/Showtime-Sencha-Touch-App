@@ -14,7 +14,7 @@ Ext.regModel("Profile", {
         {name: "thumb", type: "auto"},
         {name: "updated"},
     ],
-    setThumbUrl: function() {
+    /*setThumbUrl: function() {
         var url = this.get('thumb');
 		
         var script = document.createElement("script");
@@ -24,7 +24,7 @@ Ext.regModel("Profile", {
         );
         script.setAttribute("type","text/javascript");
         document.body.appendChild(script);
-    }
+    }*/
 });
 
 

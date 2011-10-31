@@ -191,7 +191,6 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
         //quick hack - place the course name in the result data - because at present only course id is available in json
         result.Student['course'] = listData.course;
         
-        //profilepanel.descriptionPanel.update(result.Student);
         profilepanel.studentdata = result.Student;
         
         profilepanel.doLayout();
@@ -277,10 +276,14 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
     
     showDesc: function() {
     	if (!this.descriptionPanel) {
+    		//turn urls into links:
+    		var exp = '\(?\bhttp://[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]';
+    		profilepanel.studentdata.description.replace(exp, "<a href='$1'>$1</a>");
+    		//console.log(profilepanel.studentdata.description);
     		//setup description panel
     		this.descriptionPanel = new Ext.Panel({
     			id: 'description',
-    			tpl: new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5>{course}</h5>{description}</div>'),
+    			tpl: new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5>{course}</h5><p>{[profilepanel.studentdata.description]}</p></div>'), //sencha strips the html :(
     			data: profilepanel.studentdata,
     			floating: true,
     			centered: true,
@@ -296,13 +299,13 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
     			styleHtmlContent: true,
                 scroll: 'vertical',
                 listeners: {
-    				body: {
+    				/*body: {
     					click: function(e) {
     						//prevent links in the profile description opening safari
     						e.stopEvent(true);
     					},
     					delegate: 'a'
-    				},
+    				},*/
     				deactivate: {
     					//this.destroy();
     				}
