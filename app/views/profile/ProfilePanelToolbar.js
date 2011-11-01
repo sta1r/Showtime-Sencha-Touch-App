@@ -19,10 +19,16 @@ Showtime.views.ProfilePanelToolbar = Ext.extend(Ext.Toolbar, {
             text: 'Back'
         });
         
-		this.browseButton = new Ext.Button({
-			itemId: 'browseButton',
+		this.studentsButton = new Ext.Button({
+			itemId: 'studentsButton',
 			ui: 'action',
-			text: 'Browse',
+			text: 'Students',
+		});
+		
+		this.coursesButton = new Ext.Button({
+			itemId: 'coursesButton',
+			ui: 'action',
+			text: 'Courses',
 		});
 		
 		this.actionButton = new Ext.Button({
@@ -42,7 +48,8 @@ Showtime.views.ProfilePanelToolbar = Ext.extend(Ext.Toolbar, {
         //specify what appears on the toolbar: back button, spacer (see Ext.Spacer)
         this.items = [
             this.backButton,
-			this.browseButton,
+			this.studentsButton,
+			this.coursesButton,
             {xtype: 'spacer'},
             this.actionButton,
 			this.userButton

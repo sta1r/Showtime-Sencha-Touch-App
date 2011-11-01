@@ -60,11 +60,18 @@ Ext.regController("Profiles", {
             	},
             	//scope: this
             });
-            this.browseButton = this.explorePanel.query('#browseButton')[0];
-            this.browseButton.on({
+            this.studentsButton = this.explorePanel.query('#studentsButton')[0];
+            this.studentsButton.on({
             	tap: function() {
-            		//create the browse panel
-            		profiles.browse(this);
+            		//create the students list popup panel
+            		profiles.studentsList(this);
+            	},
+            });
+            this.coursesButton = this.explorePanel.query('#coursesButton')[0];
+            this.coursesButton.on({
+            	tap: function() {
+            		//create the courses list popup panel
+            		profiles.coursesList(this);
             	},
             });
             
@@ -219,17 +226,22 @@ try {
             });
     		
     		//add listeners for profilePanel buttons            
-            this.profileBackButton = this.profilePanel.query('#backButton')[0];
-    		this.profileBackButton.on({
+            this.profilePanel.query('#backButton')[0].on({
             	tap: function() {
             		profiles.index()
             	}
             });
-            this.profileBrowseButton = this.profilePanel.query('#browseButton')[0];
-            this.profileBrowseButton.on({
+            this.profilePanel.query('#studentsButton')[0].on({
             	tap: function() {
-            		profiles.browse(this)
-            	}
+            		//create the students list popup panel
+            		profiles.studentsList(this);
+            	},
+            });
+            this.profilePanel.query('#coursesButton')[0].on({
+            	tap: function() {
+            		//create the courses list popup panel
+            		profiles.coursesList(this);
+            	},
             });
             this.profilePanel.query('#actionButton')[0].on({
             	tap: function() {
@@ -291,24 +303,36 @@ try {
             }
     },
 
-    browse: function(button) {
-    	if (!this.browsePopup) {
-    		this.browsePopup = new Showtime.views.BrowsePopup();
-    		
+    studentsList: function(button) {
+    	if (!this.studentsListPopup) {
+    		this.studentsListPopup = new Showtime.views.StudentsListPopup();
+
     		//add listeners for taps on list items
-    		this.browsePopup.query('#StudentList')[0].on({
+    		Ext.ComponentQuery.query('#StudentList')[0].on({
     			itemTap: function(selected, index, item, e) {
 	                this.view({profileData: selected.store.data.items[index].data});
-					//hide the browse list
-					this.browsePopup.hide();
+					//hide the studentsListPopup
+					this.studentsListPopup.hide();
 				},
 				scope: this
     		});
-    		this.browsePopup.query('#CourseList')[0].on({
+		}
+
+		Showtime.stores.offlineProfiles.clearFilter(true);
+		Showtime.stores.offlineProfiles.sort('firstName', 'ASC');
+		this.studentsListPopup.showBy(button, 'fade');
+    },
+
+    coursesList: function(button) {
+    	if (!this.coursesListPopup) {
+    		this.coursesListPopup = new Showtime.views.CoursesListPopup();
+    		
+    		//add listeners for taps on list items
+    		Ext.ComponentQuery.query('#CourseList')[0].on({
     			itemTap: function(selected, index, item, e) {
 	    			this.index({courseData: selected.store.data.items[index].data})
-					//hide the browse list
-					this.browsePopup.hide();
+					//hide the coursesListPopup
+					this.coursesListPopup.hide();
 					this.exploreBackButton.show();
 				},
 				scope: this
@@ -317,7 +341,7 @@ try {
 
 		Showtime.stores.offlineProfiles.clearFilter(true);
 		Showtime.stores.offlineProfiles.sort('firstName', 'ASC');
-		this.browsePopup.showBy(button, 'fade');
+		this.coursesListPopup.showBy(button, 'fade');
     },
     
     bookmark: function(options) {
