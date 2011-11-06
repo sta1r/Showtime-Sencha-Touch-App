@@ -6,23 +6,28 @@ Ext.reg('bufferedList', Ext.ux.BufferedList);
  * @extends Ext.ux.BufferedList
  * A popup with a list of courses
  */
-Showtime.views.CoursesListPopup = Ext.extend(Ext.ux.BufferedList, {
-	//cls: 'explore-menu',
+Showtime.views.CoursesListPopup = Ext.extend(Ext.Panel, {
+	cls: 'explore-menu',
 	floating: true,
-	title: 'Courses',
-	itemId: 'CourseList',
 	width: 300,
-	height: 600,
-    store: Showtime.stores.offlineCourses,
-    itemTpl: '<div class="course"><strong>{name}</strong></div>',
-	multiSelect: false,
-	singleSelect: true,
-	allowDeselect: true,
-	itemSelector: 'div.x-list-item',
-	listeners: {
-		beforeshow: function(comp) {
-			comp.getSelectionModel().deselectAll();
-		}
+	height: 660,
+	cardSwitchAnimation: false,
+	initComponent: function(){
+		this.items = [{
+			title: 'Courses',
+			itemId: 'CourseList',
+			width: 300,
+			height: 600,
+			xtype: 'bufferedList',
+		    store: Showtime.stores.offlineCourses,
+		    itemTpl: '<div class="course"><strong>{name}</strong></div>',
+			listeners: {
+				beforeshow: function(comp) {
+					comp.getSelectionModel().deselectAll();
+				}
+			}
+		}];
+		Showtime.views.CoursesListPopup.superclass.initComponent.apply(this, arguments);
 	}
 });
 

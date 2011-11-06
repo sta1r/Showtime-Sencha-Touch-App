@@ -6,25 +6,34 @@ Ext.reg('bufferedList', Ext.ux.BufferedList);
  * @extends Ext.ux.BufferedList
  * A popup list of A-Z of students
  */
-Showtime.views.StudentsListPopup = Ext.extend(Ext.ux.BufferedList, {
-	//cls: 'explore-menu',
+Showtime.views.StudentsListPopup = Ext.extend(Ext.Panel, {
+	cls: 'explore-menu',
 	floating: true,
-	title: 'Students',
-	itemId: 'StudentList',
 	width: 300,
-	height: 600,
-	store: Showtime.stores.offlineStudentList,
-	itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
-	grouped: true,
-	indexBar: true,
-	multiSelect: false,
-	singleSelect: true,
-	allowDeselect: true,
-	itemSelector: 'div.x-list-item',
-	listeners: {
-		beforeshow: function(comp) {
-	        comp.getSelectionModel().deselectAll();
-		}
+	height: 660,
+	cardSwitchAnimation: false,
+	initComponent: function(){
+		this.items = [{
+			title: 'Students',
+			itemId: 'StudentList',
+			width: 300,
+			height: 600,
+			xtype: 'bufferedList',
+			store: Showtime.stores.offlineStudentList,
+			itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
+			grouped: true,
+			indexBar: true,
+			multiSelect: false,
+			singleSelect: true,
+			allowDeselect: true,
+			itemSelector: 'div.x-list-item',
+			listeners: {
+				beforeshow: function(comp) {
+			        comp.getSelectionModel().deselectAll();
+				}
+			}
+		}];
+		Showtime.views.StudentsListPopup.superclass.initComponent.apply(this, arguments);
 	}
 });
 
