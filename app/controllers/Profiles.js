@@ -90,12 +90,6 @@ Ext.regController("Profiles", {
         		
         		//load the profile list
             	this.loadProfiles(options.courseData, true);
-        		
-        		/*Showtime.stores.onlineProfiles.load();
-				//filter by course
-				Showtime.stores.offlineCourseProfiles.filter('course', options.courseData.name);
-				Showtime.stores.offlineCourseProfiles.sort('updated', 'DESC');
-				this.explorePanel.loadProfiles(Showtime.stores.offlineCourseProfiles.data.items, options.courseData);*/
 				
 			} else if (options && options.home) {
 				Showtime.stores.offlineProfiles.clearFilter(true);

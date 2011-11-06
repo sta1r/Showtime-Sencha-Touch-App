@@ -86,8 +86,13 @@ Ext.regStore('Profiles', {
 		    exception:function () {
 		        console.log("Timed out so now offline");
 		        loading.hide();
-		        //if empty and offline - display message internet connection required?
+
 		        Showtime.stores.offlineProfiles.load();
+		        if(typeof networkState != 'undefined' && networkState == 'unknown') {
+	                Ext.Msg.alert('Offline', 'Could not connect - internet connection required');
+	            } else {
+	                Ext.Msg.alert('Connection timed out', 'Sorry, could not reach the Showtime server, please try later');
+	            }
 		    }
 		},
 	},

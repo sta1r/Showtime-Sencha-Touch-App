@@ -232,10 +232,8 @@ Showtime.views.ProfilePanel = Ext.extend(Ext.Panel, {
 												}
 											});	
         	                    			return '<div id="vm_'+media.video_id+'" class="video vimeo"></div>';
-        		                    		//return '<div class="video vimeo"><iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+media.video_id+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe></div>';
         		                    	} else {
         		                    		return '<div id="yt_'+media.video_id+'" class="video youtube"><img src="http://img.youtube.com/vi/'+media.video_id+'/0.jpg" /></div>';
-        		                    		//return '<div class="video youtube"><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+media.video_id+'" frameborder="0"></iframe></div>';
         	                    		}    		
         	                    	}  else {
         	                    		if (media.touch) {
