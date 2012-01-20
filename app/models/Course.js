@@ -19,7 +19,7 @@ Ext.regStore('Courses', {
     pageSize: 50,
     proxy: {
 		type: 'scripttag',
-	    url : 'http://showtime.arts.ac.uk/lcf/ug/2011/courses.json',
+	    url : 'http://showtime.arts.ac.uk/lcf/ma/2012/courses.json',
 	    reader: {
             type: 'json',
             root: 'data.Courses'

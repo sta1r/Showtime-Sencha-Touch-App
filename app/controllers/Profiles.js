@@ -81,7 +81,7 @@ Ext.regController("Profiles", {
         else {
         	if (options && options.courseData) {
         		//load profiles using course json
-        		Showtime.stores.onlineProfiles.proxy.url = 'http://showtime.arts.ac.uk/lcf/2011/'+options.courseData.slug+'.json';
+        		Showtime.stores.onlineProfiles.proxy.url = 'http://showtime.arts.ac.uk/lcf/2012/'+options.courseData.slug+'.json';
         		Showtime.stores.onlineProfiles.urlChanged = true;
 				Showtime.stores.onlineProfiles.data.removeAll();
 				Showtime.stores.onlineProfiles.oldPage = Showtime.stores.onlineProfiles.currentPage;
@@ -94,7 +94,7 @@ Ext.regController("Profiles", {
 			} else if (options && options.home) {
 				Showtime.stores.offlineProfiles.clearFilter(true);
 				Showtime.stores.offlineProfiles.sort('updated', 'DESC');
-				Showtime.stores.onlineProfiles.proxy.url = 'http://showtime.arts.ac.uk/lcf/ug/2011.json';
+				Showtime.stores.onlineProfiles.proxy.url = 'http://showtime.arts.ac.uk/lcf/ma/2012.json';
 				Showtime.stores.onlineProfiles.endReached = false;
 				Showtime.stores.onlineProfiles.currentPage = Showtime.stores.onlineProfiles.oldPage;
 				this.explorePanel.loadProfiles(Showtime.stores.offlineProfiles.data.items, false, true);

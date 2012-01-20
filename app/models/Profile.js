@@ -35,7 +35,7 @@ Ext.regStore('Students', {
     pageSize: 1,
     proxy: {
 		type: 'scripttag',
-	    url : 'http://showtime.arts.ac.uk/lcf/ug/2011/students.json',
+	    url : 'http://showtime.arts.ac.uk/lcf/ma/2012/students.json',
 	    reader: {
             type: 'json',
             root: 'data.Students'
@@ -77,7 +77,7 @@ Ext.regStore('Profiles', {
     model: 'Profile',
     proxy: {
 		type: 'scripttag',
-	    url : 'http://showtime.arts.ac.uk/lcf/ug/2011.json',
+	    url : 'http://showtime.arts.ac.uk/lcf/ma/2012.json',
 	    reader: new Ext.data.JsonReader({
                 root: 'data.Profiles'
         }),
@@ -105,7 +105,7 @@ Ext.regStore('Profiles', {
 			
 			//is this a request for profiles on a course?
 			var courses = false, offlineStore;
-			if (store.proxy.url != 'http://showtime.arts.ac.uk/lcf/ug/2011.json') {
+			if (store.proxy.url != 'http://showtime.arts.ac.uk/lcf/ma/2012.json') {
 				courses = true;
 				offlineStore = Showtime.stores.offlineCourseProfiles;
 				console.log('fetching course json feed from server');
