@@ -150,13 +150,18 @@ span.course { color: #666; margin-top: 2px;}
 	border: none;
 }
 
-/* Browse button popout */
+/* List popouts */
 .x-floating.x-panel, .x-anchor {
 	background-color: $active-color;
 }
 
 .explore-menu .x-panel-body {
 	background: transparent;
+}
+
+/* contain lists within panel borders */
+.x-list {
+	width: auto !important;
 }
 
 /* PROFILE PANEL */
