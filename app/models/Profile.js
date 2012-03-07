@@ -40,7 +40,7 @@ Ext.regStore('Students', {
             type: 'json',
             root: 'data.Students'
        },
-       timeout: 2000,
+       timeout: 7000,
 		listeners: {
 		    exception:function () {
 		    	//we are offline so use the previously loaded data
@@ -87,7 +87,7 @@ Ext.regStore('Profiles', {
 	    reader: new Ext.data.JsonReader({
                 root: 'data.Profiles'
         }),
-        timeout: 2000,
+        timeout: 7000,
 		listeners: {
 		    exception:function () {
 		        console.log("Timed out so now offline");

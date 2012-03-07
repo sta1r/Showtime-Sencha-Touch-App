@@ -38,7 +38,7 @@ Showtime.views.ExplorePanelToolbar = Ext.extend(Ext.Toolbar, {
 			handler: this.onInfoButtonTap,
 		});
 		
-		this.refreshButton = new Ext.Button({
+		/*this.refreshButton = new Ext.Button({
 			iconMask: true,
 			ui: 'plain',
 			iconCls: 'refresh',
@@ -74,7 +74,7 @@ Showtime.views.ExplorePanelToolbar = Ext.extend(Ext.Toolbar, {
 				},
 				scope: this
 			}
-		});
+		});*/
         
         //specify what appears on the toolbar: back button, spacer (see Ext.Spacer)
         this.items = [
@@ -82,7 +82,7 @@ Showtime.views.ExplorePanelToolbar = Ext.extend(Ext.Toolbar, {
 			this.studentsButton,
 			this.coursesButton,
             {xtype: 'spacer'},
-			this.refreshButton,
+			/*this.refreshButton,*/
 			this.infoButton
         ];
 
