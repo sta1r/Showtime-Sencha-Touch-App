@@ -46,6 +46,12 @@ Ext.regStore('Students', {
 		    	//we are offline so use the previously loaded data
 		    	console.log('offline - using old student list');
 		        Showtime.stores.offlineStudentList.load();
+
+             if(networkState == 'unknown') {
+                Ext.Msg.alert('Offline', 'Could not connect - internet connection required');
+             } else {
+                Ext.Msg.alert('Connection timed out', 'Sorry, could not reach the Showtime server, please try later');
+             }
 		    }
 		},
 	},
