@@ -1,13 +1,15 @@
 /**
- * @class Showtime.views.ExplorePanelToolbar
+ * @class Showtime.view.explore.Toolbar
  * @extends Ext.Toolbar
  * Custom toolbar
  */
-Showtime.views.ExplorePanelToolbar = Ext.extend(Ext.Toolbar, {
-//define a custom toolbar by extending the object
-//showtime.ProfilesListToolbar = Ext.extend(Ext.Toolbar, {
-    dock: 'top',
-    initComponent: function(){
+Ext.define('Showtime.view.explore.Toolbar', {
+    define: 'Ext.Toolbar',
+    config: {
+        dock: 'top'
+    },
+
+    initialize: function(){
         //grab the toolbar object into the variable 'self' so it can be referenced within other objects
         var self = this;
         
@@ -22,20 +24,20 @@ Showtime.views.ExplorePanelToolbar = Ext.extend(Ext.Toolbar, {
 		this.studentsButton = new Ext.Button({
 			itemId: 'studentsButton',
 			ui: 'action',
-			text: 'Students',
+			text: 'Students'
 		});
 		
 		this.coursesButton = new Ext.Button({
 			itemId: 'coursesButton',
 			ui: 'action',
-			text: 'Courses',
+			text: 'Courses'
 		});
 		
 		this.infoButton = new Ext.Button({
 			iconMask: true,
 			ui: 'plain',
 			iconCls: 'info',
-			handler: this.onInfoButtonTap,
+			handler: this.onInfoButtonTap
 		});
 		
 		/*this.refreshButton = new Ext.Button({
