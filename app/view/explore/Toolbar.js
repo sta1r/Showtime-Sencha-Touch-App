@@ -4,41 +4,81 @@
  * Custom toolbar
  */
 Ext.define('Showtime.view.explore.Toolbar', {
-    define: 'Ext.Toolbar',
+    extend: 'Ext.Toolbar',
+    alias: 'explore-toolbar',
     config: {
-        dock: 'top'
+        docked: 'top',
+        items: [
+            {
+                xtype: 'button',
+                itemId: 'backButton',
+                //button will appear styled as a back button
+                ui: 'back',
+                text: 'Back',
+                hidden: true
+            },
+            {
+                xtype: 'button',
+                itemId: 'studentsButton',
+                ui: 'action',
+                text: 'Students'
+            },
+            {
+                xtype: 'button',
+                itemId: 'coursesButton',
+                ui: 'action',
+                text: 'Courses'
+            },
+            {   xtype: 'spacer',
+                flex: 1},
+            {
+                iconMask: true,
+                ui: 'plain',
+                iconCls: 'info',
+                handler: this.onInfoButtonTap
+            }
+        ]
     },
-
     initialize: function(){
+        this.callParent();
+
         //grab the toolbar object into the variable 'self' so it can be referenced within other objects
         var self = this;
         
-        this.backButton = new Ext.Button({
-        	itemId: 'backButton',
-        	//button will appear styled as a back button
-            ui: 'back',
-            text: 'Back',
-            hidden: true
+        /*this.backButton = Ext.create('Ext.Button', {
+            config: {
+                itemId: 'backButton',
+                //button will appear styled as a back button
+                ui: 'back',
+                text: 'Back',
+                hidden: true
+            }
         });
         
-		this.studentsButton = new Ext.Button({
-			itemId: 'studentsButton',
-			ui: 'action',
-			text: 'Students'
+		this.studentsButton = Ext.create('Ext.Button', {
+            config: {
+                itemId: 'studentsButton',
+                ui: 'action',
+                text: 'Students'
+            }
 		});
 		
-		this.coursesButton = new Ext.Button({
-			itemId: 'coursesButton',
-			ui: 'action',
-			text: 'Courses'
+		this.coursesButton = Ext.create('Ext.Button', {
+            config: {
+                itemId: 'coursesButton',
+                ui: 'action',
+                text: 'Courses'
+            }
 		});
 		
-		this.infoButton = new Ext.Button({
-			iconMask: true,
-			ui: 'plain',
-			iconCls: 'info',
-			handler: this.onInfoButtonTap
-		});
+		this.infoButton = Ext.create('Ext.Button', {
+            config: {
+                iconMask: true,
+                ui: 'plain',
+                iconCls: 'info',
+                handler: this.onInfoButtonTap
+            }
+		});*/
 		
 		/*this.refreshButton = new Ext.Button({
 			iconMask: true,
@@ -79,17 +119,14 @@ Ext.define('Showtime.view.explore.Toolbar', {
 		});*/
         
         //specify what appears on the toolbar: back button, spacer (see Ext.Spacer)
-        this.items = [
+        /*this.add([
             this.backButton,
 			this.studentsButton,
 			this.coursesButton,
-            {xtype: 'spacer'},
-			/*this.refreshButton,*/
+            {xtype: 'spacer', flex: 1},
+			//this.refreshButton,
 			this.infoButton
-        ];
-
-        //call parent initComponent: because this class is an extended toolbar, the toolbar init needs to be called also:
-        Showtime.views.ExplorePanelToolbar.superclass.initComponent.call(this);       
+        ]);*/
     },
     
     
@@ -114,11 +151,9 @@ Ext.define('Showtime.view.explore.Toolbar', {
 				height: 450,
 				width: 500,
 				styleHtmlContent: true,
-	            scroll: 'vertical',
+	            scroll: 'vertical'
 			});
-    	} 	
+    	}
     	this.infoPanel.show('fade');
-    },
-    
+    }
 });
-Ext.reg('explore-toolbar', Showtime.views.ExplorePanelToolbar);

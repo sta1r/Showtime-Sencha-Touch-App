@@ -3,172 +3,170 @@
  * @extends Ext.Controller
  * The Profiles controller
  */
-Ext.regController("Profiles", {
-	index: function(options) {
-		try{
-		// Create loading message
-		loading = new Ext.LoadMask(Ext.getBody(), {msg:"Loading..."});
-		
-		//if explore panel not setup yet, create it:
-		if (!this.explorePanel) {
-			// Show loading message
-			loading.show();
-			
-			//create the panel
-            this.explorePanel = this.render({
-                xtype: 'explore-panel',
-                listeners: {
-                	el: {
-	        			//listen for a tap on elements with .explore-item class:
-	        			delegate: '.explore-item',
-	        			scope: this,
-		        		tap: function(e, target) {
-		        			if (target) {
-		        				var carousel = this.explorePanel.carousel;
-		        				var carousel_item = carousel.items.items[carousel.getActiveIndex()];
-			        			var index = carousel.items.items[carousel.getActiveIndex()].items.indexOf(target);
-			        			var data = carousel_item.profileData[index];
-                                if (Ext.isObject(data)) {
-                                	this.view({profileData: data});
-                                }
-                            }
-		        		}
-	        		},
+Ext.define("Showtime.controller.Profiles", {
+    extend: 'Ext.app.Controller',
+    config: {
+        routes: {},
+        refs: {
+            mainView: 'main-view',
+            explorePanel: 'explore-panel',
+            exploreItem: '.explore-item',
+            backButton: '#backButton',
+            studentsButton: '#studentsButton',
+            coursesButton: '#coursesButton'
+        },
+        control: {
+            exploreItem: {
+                tap: function(e, target) {
+                    console.log('tap tap');
+                    if (target) {
+                        var carousel = this.explorePanel.carousel;
+                        var carousel_item = carousel.items.items[carousel.getActiveIndex()];
+                        var index = carousel.items.items[carousel.getActiveIndex()].items.indexOf(target);
+                        var data = carousel_item.profileData[index];
+                        if (Ext.isObject(data)) {
+                            this.view({profileData: data});
+                        }
+                    }
                 }
-            });
-            
+            },
+            backButton: {
+                tap: function() {
+                    //this.hide();
+                    this.index({home: true});
+                }
+            },
+            studentsButton: {
+                tap: function() {
+                    console.log('tap tap');
+                    //create the students list popup panel
+                    this.studentsList(this);
+                }
+            },
+            coursesButton: {
+                tap: function() {
+                    console.log('tap tap');
+                    //create the courses list popup panel
+                    this.coursesList(this);
+                }
+            }
+        }
+    },
+
+    launch: function() {
+        this.index();
+    },
+
+	index: function(options) {
+        // Create loading message
+        loading = new Ext.LoadMask(Ext.getBody(), {msg:"Loading..."});
+
+        //if explore panel not setup yet, create it:
+        if (!this.explorePanel) {
+            // Show loading message
+            loading.show();
+
+			//create the panel
+            this.explorePanel = Ext.create('Showtime.view.explore.ExplorePanel');
+
             //load the profile list
+            console.log('trying loading profiles');
             this.loadProfiles();
-			
-			//load the course list
-            Ext.dispatch({
-	            controller: 'Courses',
-	            action: 'load'
-	        });
-            
+            console.log('done loading profiles');
+
             //load the complete student list for the A-Z
-			Showtime.stores.onlineStudentList.load();
-            
-            //listen here for button taps and fire appropriate controller func
-			profiles = this;
-			
-			this.exploreBackButton = this.explorePanel.query('#backButton')[0];
-			this.exploreBackButton.on({
-            	tap: function() {
-            		this.hide();
-            		profiles.index({home: true});
-            	},
-            	//scope: this
-            });
-            this.studentsButton = this.explorePanel.query('#studentsButton')[0];
-            this.studentsButton.on({
-            	tap: function() {
-            		//create the students list popup panel
-            		profiles.studentsList(this);
-            	},
-            });
-            this.coursesButton = this.explorePanel.query('#coursesButton')[0];
-            this.coursesButton.on({
-            	tap: function() {
-            		//create the courses list popup panel
-            		profiles.coursesList(this);
-            	},
-            });
-            
-            this.application.viewport.setActiveItem(this.explorePanel);
-            
+            Ext.getStore('onlineStudent').load();
+
+            //Showtime.view.Main.setActiveItem(this.explorePanel);
+            //add the panel to the main view container
+            //Showtime.view.Main.add(this.explorePanel);
+            Showtime.view.Main.setActiveItem(this.explorePanel);
+
         }
         else {
         	if (options && options.courseData) {
         		//load profiles using course json
-        		Showtime.stores.onlineProfiles.proxy.url = 'http://showtime.arts.ac.uk/lcf/2012/'+options.courseData.slug+'.json';
-        		Showtime.stores.onlineProfiles.urlChanged = true;
-				Showtime.stores.onlineProfiles.data.removeAll();
-				Showtime.stores.onlineProfiles.oldPage = Showtime.stores.onlineProfiles.currentPage;
-				Showtime.stores.onlineProfiles.currentPage = 1;
-				Showtime.stores.onlineProfiles.endReached = false;
-        		
+                var onlineProfileStore = Ext.getStore('onlineProfile');
+                onlineProfileStore.proxy.url = 'http://showtime.arts.ac.uk/lcf/2012/'+options.courseData.slug+'.json';
+                onlineProfileStore.urlChanged = true;
+                onlineProfileStore.data.removeAll();
+                onlineProfileStore.oldPage = onlineProfileStore.currentPage;
+                onlineProfileStore.currentPage = 1;
+                onlineProfileStore.endReached = false;
+
         		//load the profile list
             	this.loadProfiles(options.courseData, true);
-				
+
 			} else if (options && options.home) {
-				Showtime.stores.offlineProfiles.clearFilter(true);
-				Showtime.stores.offlineProfiles.sort('updated', 'DESC');
-				Showtime.stores.onlineProfiles.proxy.url = 'http://showtime.arts.ac.uk/lcf/ma/2012.json';
-				Showtime.stores.onlineProfiles.endReached = false;
-				Showtime.stores.onlineProfiles.currentPage = Showtime.stores.onlineProfiles.oldPage;
-				this.explorePanel.loadProfiles(Showtime.stores.offlineProfiles.data.items, false, true);
-			}
-            
-            this.application.viewport.setActiveItem(this.explorePanel, {
-                type: 'slide',
-                direction: 'right'
-            });            
-        }
-		} catch (ex) {
-                if (ex.message && ex.name) {
-                    console.log("someMethod caught an exception of type "  + ex.name + ": ", ex.message);
-                    console.log(ex);
-                } else {
-                    console.log("someMethod caught a poorly-typed exception: " + ex);
-                }
-                console.log(ex.stack);
-            }
-	},
-	//load the profile list using the store (see models/profiles.js)
-	loadProfiles: function(courses, init) {	
-		var offlineStore;
-		if (courses) {
-			offlineStore = Showtime.stores.offlineCourseProfiles;
-			offlineStore.clearListeners();
-		} else {
-			offlineStore = Showtime.stores.offlineProfiles;
-		}
-		
-		var profile_controller = this;
-		
-		//listen for the load method on the offline store:
-		offlineStore.addListener('load', function (store, records, success) {
-			
-			
-			//console.log(store, records, success);
-			console.log('loading from offline store');
-			//send records to view (see views/ExplorePanel.js):
-			if (!this.recordcount) {	this.recordcount = 0;	}
-			
-			if (this.recordcount == this.data.items.length) {
-				Showtime.stores.onlineProfiles.endReached = true;
+                var offlineProfileStore = Ext.getStore('offlineProfile');
+                offlineProfileStore.clearFilter(true);
+                offlineProfileStore.sort('updated', 'DESC');
+                onlineProfileStore.proxy.url = 'http://showtime.arts.ac.uk/lcf/ma/2012.json';
+                onlineProfileStore.endReached = false;
+                onlineProfileStore.currentPage = onlineProfileStore.oldPage;
+				this.explorePanel.loadProfiles(offlineProfileStore.data.items, false, true);
 			}
 
+            Showtime.view.Main.setActiveItem(this.explorePanel, {
+                type: 'slide',
+                direction: 'right'
+            });
+        }
+	},
+	//load the profile list using the store (see models/profiles.js)
+	loadProfiles: function(courses, init) {
+        console.log('controller:Profiles:loadProfiles: Loading profiles');
+		var offlineStore;
+		if (courses) {
+			offlineStore = Ext.getStore('offlineCourseProfile');
+			offlineStore.clearListeners();
+		} else {
+			offlineStore = Ext.getStore('offlineProfile');
+		}
+
+		var profile_controller = this;
+
+		//listen for the load method on the offline store:
+		offlineStore.addListener('refresh', function (store, data, eOpts) {
+			console.log('controller:Profiles > store:Profile:offline: Loading from offline store');
+			//send records to view (see view/ExplorePanel.js):
+			if (!this.recordcount) {	this.recordcount = 0;	}
+
+			if (this.recordcount == data.items.length) {
+                Ext.getStore('onlineProfile').endReached = true;
+			}
+            console.log('controller:Profiles > store:Profile:offline: recordcount:'+this.recordcount);
+            console.log('controller:Profiles > store:Profile:offline: data:'+data.items.length);
 			var reload, therecordData;
-			
-			recordData = this.data.items.slice(this.recordcount, this.data.items.length);
+
+			recordData = data.items.slice(this.recordcount, data.items.length);
 			if (courses) {
 				if (init) {
-					console.log('CLEARING FILTER to:'+courses.name);
+					console.log('controller:Profiles > store:Profiles:offline: Clearing filter to:'+courses.name);
 					this.clearFilter(true);
 					this.filter('course', courses.name);
 					this.sort('updated', 'DESC');
 					init = false;
 					reload = true;
-					console.log('current store items:');
-					recordData = this.data.items;
+					console.log('controller:Profiles > store:Profiles:offline: Current store items:');
+					recordData = data.items;
 				} else {
-					recordData = this.data.items.slice(this.recordcount, this.data.items.length);
+					recordData = data.items.slice(this.recordcount, data.items.length);
 				}
 			}
+            console.log('controller:Profiles:loadProfiles: Applying profile data to the explore Panel');
 			profile_controller.explorePanel.loadProfiles(recordData, courses, reload);
 			reload = false;
-			
+
 			//remove un-needed cards:
 			//profile_controller.explorePanel.trimCards();
-			
+
 			loading.hide();
 		});
-		
+
 		//tell the store to load using its proxy
-		Showtime.stores.onlineProfiles.load();
-        
+        Ext.getStore('onlineProfile').load();
+
 	},
 
     view: function(options) {
@@ -183,24 +181,24 @@ try {
 								this.profilePanel.overlay.setCentered(true);
 								this.profilePanel.overlay.show();
 								if (target.target.parentElement.id.substr(0, 3) == 'vm_') {
-									//Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="js/touch/app/views/blank.html" frameborder="0"></iframe>');
+									//Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="js/touch/app/view/blank.html" frameborder="0"></iframe>');
 									//Ext.get('player').down('iframe').set({src: 'http://player.vimeo.com/video/'+target.target.parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff'})
 									Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+target.target.parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe>');
 								}
 								else {
-									//Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="js/touch/app/views/blank.html" frameborder="0"></iframe>');
+									//Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="js/touch/app/view/blank.html" frameborder="0"></iframe>');
 									//Ext.get('player').down('iframe').set({src: 'http://www.youtube.com/embed/'+target.target.parentElement.id.substr(3)})
                                             Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+target.target.parentElement.id.substr(3)+'" frameborder="0"></iframe>');
 								}
-								
-								
+
+
 							} else {
 				            	if (this.profilePanel.tbar.isVisible()){
 				            		this.profilePanel.tbar.hide();
 				            		this.profilePanel.bottomSheet.hide();
 				            		this.profilePanel.doLayout();
 				                } else {
-				                	this.profilePanel.tbar.show();              	
+				                	this.profilePanel.tbar.show();
 				                	this.profilePanel.bottomSheet.show();
 				                	this.profilePanel.doLayout();
 				                }
@@ -209,7 +207,7 @@ try {
 						scope: this
 					},
                 	//destroy this panel when we go back to the main view to save memory:
-	                deactivate: function(profile) {                	
+	                deactivate: function(profile) {
 	                    profile.destroy();
 	                    Ext.destroy(profile);
 	                    Ext.destroy(Ext.get('player'));
@@ -218,8 +216,8 @@ try {
 	                scope: this
 	            }
             });
-    		
-    		//add listeners for profilePanel buttons            
+
+    		//add listeners for profilePanel buttons
             this.profilePanel.query('#backButton')[0].on({
             	tap: function() {
             		profiles.index()
@@ -250,10 +248,10 @@ try {
             	scope: this
             });
     	}
-    	
+
 		//put a mask while loading
 		Ext.getBody().mask('Loading...', 'x-mask-loading', false);
-		
+
 		//timeout in case of failure
         setTimeout(function(){
         	var body = Ext.getBody();
@@ -268,19 +266,19 @@ try {
 				}, 2000);
 			}
         }, 3000);
-		
+
 		//it is not possible in sencha to use a store / model proxy to read a single json record so:
 		Ext.util.JSONP.request({
         	url: 'http://showtime.arts.ac.uk/'+options.profileData.profileName+'.json',
             callbackKey: 'callback',
             callback: function(result) {
 				if (result.data.Student) {
-					
+
 			 		this.profilePanel.loadProfile(result.data.Student, options.profileData);
-			 		this.application.viewport.setActiveItem(
+                    Showtime.view.Main.setActiveItem(
 			            this.profilePanel, options.animation
 			        );
-				} 
+				}
 				//remove the loading indicator
 			    Ext.getBody().unmask();
 			},
@@ -299,7 +297,7 @@ try {
 
     studentsList: function(button) {
     	if (!this.studentsListPopup) {
-    		this.studentsListPopup = new Showtime.views.StudentsListPopup();
+    		this.studentsListPopup = new Showtime.view.StudentsListPopup();
 
     		//add listeners for taps on list items
     		Ext.ComponentQuery.query('#StudentList')[0].on({
@@ -319,8 +317,8 @@ try {
 
     coursesList: function(button) {
     	if (!this.coursesListPopup) {
-    		this.coursesListPopup = new Showtime.views.CoursesListPopup();
-    		
+    		this.coursesListPopup = new Showtime.view.CoursesListPopup();
+
     		//add listeners for taps on list items
     		Ext.ComponentQuery.query('#CourseList')[0].on({
     			itemTap: function(selected, index, item, e) {
@@ -337,10 +335,10 @@ try {
 		Showtime.stores.offlineProfiles.sort('firstName', 'ASC');
 		this.coursesListPopup.showBy(button, 'fade');
     },
-    
+
     bookmark: function(options) {
     	if (!this.bookmarkForm) {
-    		this.bookmarkForm = new Showtime.views.BookmarkFormPanel();   		
+    		this.bookmarkForm = new Showtime.view.BookmarkFormPanel();
     		this.bookmarkForm.on({
     			beforesubmit : function(form, values, options){
 					options.waitMsg = {message:'Submitting', cls : 'loading'};
@@ -352,7 +350,7 @@ try {
 					Ext.Msg.alert('Share this profile by email', 'An email with a link to this profile has been sent');
 		        }
     		});
-    		
+
     		this.bookmarkForm.query('#submitButton')[0].on({
     			tap: function(){
     				this.bookmarkForm.submit();
@@ -365,15 +363,15 @@ try {
     			},
     			scope: this
     		});
-    		
+
     		//populate the form's hidden fields with the model instance profilepanel.student
-    		this.bookmarkForm.load(profilepanel.student);	
+    		this.bookmarkForm.load(profilepanel.student);
     	}
         this.bookmarkForm.show();
     },
-    
+
     user: function(options) {
     	this.profilePanel.showDesc();
     }
-    
+
 });

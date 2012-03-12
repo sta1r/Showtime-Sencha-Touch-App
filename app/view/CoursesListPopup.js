@@ -1,4 +1,4 @@
-//register an xtype for bufferelist component:
+//register an xtype for buffered list component:
 Ext.reg('bufferedList', Ext.ux.BufferedList);
 
 /**

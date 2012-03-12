@@ -4,8 +4,9 @@
  */
 Ext.define('Showtime.view.Main', {
     extend: 'Ext.Panel',
+    alias: 'main-view',
     config: {
-        id: 'viewport',
+        id: 'Main',
         layout: 'card',
         cardSwitchAnimation: 'slide',
         fullscreen: true
