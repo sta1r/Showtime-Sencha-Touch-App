@@ -9,20 +9,20 @@ Ext.define("Showtime.controller.Profiles", {
         refs: {
             mainView: 'main-view',
             explorePanel: 'explore-panel',
-            tile: '.explore-card',
+            exploreCard: '.explore-card',
             backButton: '#backButton',
             studentsButton: '#studentsButton',
             coursesButton: '#coursesButton'
         },
         control: {
-            tile: {
-                delegate: '.explore-item',
-                tap: function (component, event, target) {
-                    if (event.getTarget('.explore-item')) {
+            exploreCard: {
+                tap: function (component, event, target) {;
+                    var tileElement = event.getTarget('.explore-item');
+                    if (tileElement) {
                         var carousel = this.explorePanel.carousel;
-                        var carousel_item = carousel.innerItems[carousel.getActiveIndex()];
-                        var index = carousel.innerItems[carousel.getActiveIndex()].items.indexOf(event.getTarget('.explore-item'));
-                        var data = carousel_item.getProfileData()[index];
+                        var carouselCard = carousel.innerItems[carousel.getActiveIndex()];
+                        var index = carouselCard.items.indexOf(tileElement);
+                        var data = carouselCard.getProfileData()[index];
                         if (Ext.isObject(data)) {
                             this.view({profileData: data});
                         }

@@ -183,9 +183,7 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
                 this.element.on ({
                     scope: me,
                     tap: function (e, t) {
-                        if (e.getTarget('.explore-item')) {
-                            me.fireEvent ('tap', me, e, t);
-                        }
+                        me.fireEvent ('tap', me, e, t);
                     }
                 });
             }
