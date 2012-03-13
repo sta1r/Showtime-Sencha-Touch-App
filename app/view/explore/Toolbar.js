@@ -11,7 +11,7 @@ Ext.define('Showtime.view.explore.Toolbar', {
         items: [
             {
                 xtype: 'button',
-                itemId: 'backButton',
+                id: 'backButton',
                 //button will appear styled as a back button
                 ui: 'back',
                 text: 'Back',
@@ -19,18 +19,20 @@ Ext.define('Showtime.view.explore.Toolbar', {
             },
             {
                 xtype: 'button',
-                itemId: 'studentsButton',
+                id: 'studentsButton',
                 ui: 'action',
                 text: 'Students'
             },
             {
                 xtype: 'button',
-                itemId: 'coursesButton',
+                id: 'coursesButton',
                 ui: 'action',
                 text: 'Courses'
             },
-            {   xtype: 'spacer',
-                flex: 1},
+            {
+                xtype: 'spacer',
+                flex: 1
+            },
             {
                 iconMask: true,
                 ui: 'plain',

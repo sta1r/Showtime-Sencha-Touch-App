@@ -159,23 +159,44 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
 
         //create components for each card
         var cards = [];
-        Ext.each(carditems, function(cardData){
-            var component = Ext.create('Ext.Component', {
-                profileData: cardData,
 
+        //define the tile object:
+        Ext.define('Showtime.view.Card',  {
+            extend: 'Ext.Component',
+            xtype: 'explore-card',
+            config: {
+                profileData: []
                 //setProfile is fired when component's orientation changes:
                 //TODO re-attach tap events as they are lost on orientation change
-                setProfile: function(app_profile) {
+                /*setProfile: function(app_profile) {
                     //var tpl = app_profile == "tabletPortrait" ? templates.profileListPortrait : templates.profileListLandscape;
                     var tpl = templates.profileListLandscape;
                     //redraw card
-                    tpl.overwrite(component.el, cardData);
+                    tpl.overwrite(component.el, profileData);
                     component.el.repaint();
-                }
-            });
+                }*/
+            },
+            // have to fire the event as they are not bubbled up from components:
+            initialize: function () {
+                this.callParent();
+                var me = this;
+                this.element.on ({
+                    scope: me,
+                    tap: function (e, t) {
+                        if (e.getTarget('.explore-item')) {
+                            me.fireEvent ('tap', me, e, t);
+                        }
+                    }
+                });
+            }
+        });
 
+        Ext.each(carditems, function(cardData){
+            var component = Ext.create('Showtime.view.Card', {
+                profileData: cardData
+            });
             var renderData = function() {
-                console.log('rendering item');
+                console.log('rendering item: '+component.xtype);
                 //detect current profile
                 //var tpl = Showtime.getProfile() == "tabletPortrait" ? templates.profileListPortrait : templates.profileListLandscape;
                 var tpl = templates.profileListLandscape;
@@ -186,7 +207,7 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
             };
 
             if (component.rendered) {
-                console.log('rendering item data');
+                console.log('rendering item data'+component.xtype);
                 renderData();
             }
             else {
@@ -196,7 +217,6 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
             cards.push(component);
         });
 
-        //use delegate to add tap event for all cards?
         return cards;
     },
     trimCards: function(startcard, endcard) {

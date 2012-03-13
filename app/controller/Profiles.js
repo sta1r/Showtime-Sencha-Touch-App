@@ -6,24 +6,23 @@
 Ext.define("Showtime.controller.Profiles", {
     extend: 'Ext.app.Controller',
     config: {
-        routes: {},
         refs: {
             mainView: 'main-view',
             explorePanel: 'explore-panel',
-            exploreItem: '.explore-item',
+            tile: '.explore-card',
             backButton: '#backButton',
             studentsButton: '#studentsButton',
             coursesButton: '#coursesButton'
         },
         control: {
-            exploreItem: {
-                tap: function(e, target) {
-                    console.log('tap tap');
-                    if (target) {
+            tile: {
+                delegate: '.explore-item',
+                tap: function (component, event, target) {
+                    if (event.getTarget('.explore-item')) {
                         var carousel = this.explorePanel.carousel;
-                        var carousel_item = carousel.items.items[carousel.getActiveIndex()];
-                        var index = carousel.items.items[carousel.getActiveIndex()].items.indexOf(target);
-                        var data = carousel_item.profileData[index];
+                        var carousel_item = carousel.innerItems[carousel.getActiveIndex()];
+                        var index = carousel.innerItems[carousel.getActiveIndex()].items.indexOf(event.getTarget('.explore-item'));
+                        var data = carousel_item.getProfileData()[index];
                         if (Ext.isObject(data)) {
                             this.view({profileData: data});
                         }
@@ -37,14 +36,14 @@ Ext.define("Showtime.controller.Profiles", {
                 }
             },
             studentsButton: {
-                tap: function() {
+                tap: function(e) {
                     console.log('tap tap');
                     //create the students list popup panel
                     this.studentsList(this);
                 }
             },
             coursesButton: {
-                tap: function() {
+                tap: function(e) {
                     console.log('tap tap');
                     //create the courses list popup panel
                     this.coursesList(this);
