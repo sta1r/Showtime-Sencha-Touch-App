@@ -46,11 +46,16 @@ templates.profileListPortrait = new Ext.XTemplate(
  */
 Ext.define('Showtime.view.explore.ExplorePanel', {
     extend: 'Ext.Panel',
-    alias: 'explore-panel',
     requires: ['Showtime.view.explore.Toolbar'],
     config: {
+        alias: 'explore-panel',
         tpl: templates.profileListLandscape,
-        layout: 'fit'
+        layout: 'fit',
+        masked: {
+            xtype: 'loadmask',
+            message: 'Loading profiles',
+            indicator: false
+        }
     },
     initialize: function() {
         this.callParent();
@@ -93,54 +98,41 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
         //generate card components for main carousel
         var cards = this.createCards(records);
 
-        if (!this.carousel) {
-            //create a new carousel and populate with cards
-            this.carousel = Ext.create('Ext.Carousel', {
-                //fullscreen: true,
-                hidden: true,
-                layout: 'fit',
-                //flex: 1,
-                items: cards,
-                id: 'car',
-                itemId: 'carousel',
-                listeners: {
-                    show: function () {
-                        console.log('showing carousel supposedly');
-                    },
-                    cardswitch: function(container, newCard, oldCard, index){
-                        var current_page = this.getActiveIndex()+1;
-                        var total_pages = this.items.length;
-                        console.log('data page: '+Showtime.store.Profile.currentPage);
-                        console.log('current page: '+current_page);
-                        console.log('total pages: '+total_pages);
 
-                        //if near end of carousel, load new data
-                        console.log('endreached?'+Showtime.store.Profile.endReached)
-                        if ( current_page >= total_pages && !Showtime.stores.onlineProfiles.endReached) {
-                            loading.show();
-                            Showtime.store.onlineProfile.nextPage();
-                        }
+        //create a new carousel and populate with cards
+        this.carousel = Ext.create('Ext.Carousel', {
+            //fullscreen: true,
+            hidden: true,
+            layout: 'fit',
+            //flex: 1,
+            items: cards,
+            id: 'car',
+            itemId: 'carousel',
+            listeners: {
+                show: function () {
+                    console.log('showing carousel supposedly');
+                },
+                cardswitch: function(container, newCard, oldCard, index){
+                    var current_page = this.getActiveIndex()+1;
+                    var total_pages = this.items.length;
+                    console.log('data page: '+Showtime.store.Profile.currentPage);
+                    console.log('current page: '+current_page);
+                    console.log('total pages: '+total_pages);
 
-
+                    //if near end of carousel, load new data
+                    console.log('endreached?'+Showtime.store.Profile.endReached)
+                    if ( current_page >= total_pages && !Showtime.stores.onlineProfiles.endReached) {
+                        loading.show();
+                        Showtime.store.onlineProfile.nextPage();
                     }
+
+
                 }
-            });
-
-            this.add(this.carousel);
-            this.carousel.show('fade');
-        } else {
-            var current_page = this.carousel.getActiveIndex()+1;
-
-            this.carousel.add(cards);
-            if (current_page > 2) {
-                //destroy first cards up to current - 2
-                //this.trimCards(current_page-2);
             }
-            this.carousel.doLayout();
-            //console.log(this.carousel.items.length);
-        }
-        //TODO check if still needed:
-        //this.doLayout();
+        });
+
+        this.add(this.carousel);
+        this.carousel.show('fade');
     },
 
     /*

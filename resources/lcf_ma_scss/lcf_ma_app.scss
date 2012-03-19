@@ -34,7 +34,7 @@ $global-row-height: 2.6em !default;
 @include sencha-layout;
 @include sencha-form;
 @include sencha-msgbox;
-//@include sencha-loading-spinner;
+@include sencha-loading-spinner;
 
 /* Include required icons */
 @include pictos-iconmask('action');

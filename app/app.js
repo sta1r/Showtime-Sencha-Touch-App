@@ -11,15 +11,11 @@ Ext.application({
     phoneStartupScreen: 'phone_startup.png',
     icon: 'http://showtime.arts.ac.uk/img/touch/icon.png',
     glossOnIcon: true,
-
-    //defaultTarget: "Showtime.view.Main",
-    //defaultUrl   : 'Profiles/index',
-
     appFolder: 'js/touch/app',
-    controllers: ['Courses', 'Profiles'],
+    controllers: ['Explore', 'Courses', 'Profiles'],
     models: ['Course', 'Profile', 'Student'],
     stores: ['Course', 'OfflineCourse', 'Profile',  'OfflineProfile', 'Student', 'OfflineStudent'],
-    views: ['Main', 'explore.ExplorePanel', 'profile.ProfilePanel'],
+    views: ['Viewport', 'explore.ExplorePanel', 'profile.ProfilePanel'],
 
     launch: function() {
         this.launched = true;
@@ -29,8 +25,9 @@ Ext.application({
         //uncomment the line below for phonegap
         //if (!device || !this.launched) {return;}
 
-        //this.viewport = Ext.create('Showtime.view.Viewport');
-        Showtime.view.Main = Ext.create('Showtime.view.Main');
+        this.viewport = Ext.create('Showtime.view.Viewport');
+
+        //what happens next is the exploreItems controller launch function will load the view..
     },
     profiles: {
         tabletPortrait: function() {
