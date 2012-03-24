@@ -135,7 +135,7 @@ span.course { color: #666; margin-top: 2px;}
 }
 
 /* Toolbars and Tabbars */
-#profile-panel .x-toolbar .x-title {
+.x-toolbar .x-title {
 	font-size: 16px;
 	text-transform: uppercase;
 	margin-top: 4px;
@@ -245,7 +245,7 @@ span.course { color: #666; margin-top: 2px;}
 	background-color: #e11d2b !important;
 }
 
-#likeModal .x-panel-body {
+#likeModal .x-inner {
 	padding-top: 22px;
 	text-align: center;
 }

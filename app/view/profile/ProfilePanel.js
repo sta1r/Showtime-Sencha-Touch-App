@@ -123,19 +123,12 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
 
                         parentElement = Ext.get(target).parent();
                         if (Ext.get(target).parent().dom.className.indexOf('vimeo') != -1) {
-                            //Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="js/touch/app/view/blank.html" frameborder="0"></iframe>');
-                            //Ext.get('player').down('iframe').set({src: 'http://player.vimeo.com/video/'+target.target.parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff'})
-                            //console.log(this.player);
                             this.player.setHtml('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe>');
                         }
                         else {
-                            //Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="js/touch/app/view/blank.html" frameborder="0"></iframe>');
-                            //Ext.get('player').down('iframe').set({src: 'http://www.youtube.com/embed/'+target.target.parentElement.id.substr(3)})
                             this.player.setHtml('<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+parentElement.id.substr(3)+'" frameborder="0"></iframe>');
                         }
                     } else {
-                        //console.log('not video');
-                        //console.log(target);
                         var toolbar = Ext.ComponentQuery.query('#profile-toolbar')[0];
                         var bottomToolbar = Ext.ComponentQuery.query('#bottom-toolbar')[0];
                         if (toolbar.isHidden()){
@@ -152,6 +145,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                     var bottomToolbar = Ext.ComponentQuery.query('#bottom-toolbar')[0];
                     if (bottomToolbar) {
                         bottomToolbar.setTitle(mediaData.title);
+                        bottomToolbar.data = mediaData;
                     }
                 },
                 deactivate: function () {

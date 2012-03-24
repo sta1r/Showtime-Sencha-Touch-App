@@ -41,7 +41,7 @@ Ext.define("Showtime.controller.Profiles", {
         Ext.data.JsonP.request({
             url: 'http://showtime.arts.ac.uk/'+data.profileData.profileName+'.json',
             callbackKey: 'callback',
-            timeout: 2000,
+            timeout: 4000,
             callback: function(success, response) {
                 if (success) {
                     if (response.data.Student) {
@@ -125,8 +125,8 @@ Ext.define("Showtime.controller.Profiles", {
 
         this.control({
             '#actionButton': {
-                tap: function() {
-                    this.bookmark();
+                tap: function(button) {
+                    this.bookmark(button);
                 }
             }
         });
@@ -137,10 +137,17 @@ Ext.define("Showtime.controller.Profiles", {
                 }
             }
         });
+        this.control({
+            '#likeButton': {
+                tap: function(button) {
+                    this.sendLike(button);
+                }
+            }
+        });
     },
 
 
-    bookmark: function(options) {
+    bookmark: function(button) {
     	if (!this.bookmarkForm) {
     		this.bookmarkForm = new Showtime.view.BookmarkFormPanel();
     		this.bookmarkForm.on({
@@ -171,11 +178,69 @@ Ext.define("Showtime.controller.Profiles", {
     		//populate the form's hidden fields with the model instance profilepanel.student
     		this.bookmarkForm.load(profilepanel.student);
     	}
-        this.bookmarkForm.show();
+        this.bookmarkForm.showBy(button);
     },
 
     displayDescription: function(button) {
     	this.profilePanel.showDesc(button);
+    },
+
+    sendLike: function(button) {
+        var bottomToolbar = Ext.ComponentQuery.query('#bottom-toolbar')[0];
+
+        this.profilePanel.mask({
+            xtype: 'loadmask',
+            message: 'Liking'
+        });
+
+        Ext.Ajax.request({
+            url:'http://showtime.arts.ac.uk/media/like/' + bottomToolbar.data.id,
+            timeout: 3000,
+            scope: this,
+            success: function(response) {
+                console.log('liked media id=' + bottomToolbar.data.id);
+                var obj = Ext.decode(response.responseText);
+                if (obj.success == true) {
+                    // like saved successfully
+                    var likeTerm = obj.likes == 1 ? 'like' : 'likes';
+                    // modal to display like count to user
+                    this.likeModal = Ext.create('Ext.Panel', {
+                        id:'likeModal',
+                        centered: true,
+                        hidden: true,
+                        modal: true,
+                        hideOnMaskTap: true,
+                        height:80,
+                        width:180,
+                        html: obj.likes + ' ' + likeTerm + '!'
+                    });
+                    likeModal = this.likeModal;
+                    likeModal.on('hide', function () {
+                        likeModal.destroy();
+                    });
+                    this.profilePanel.add(likeModal);
+                    likeModal.show('pop');
+                } else {
+                    //failed to like
+                    console.log('like failed');
+                }
+                this.profilePanel.unmask();
+            },
+            failure: function(response){
+                //failure
+                console.log('server-side failure with status code ' + response.status);
+                var loader = Ext.ComponentQuery.query('loadmask')[0];
+                if (loader) {
+                    loader.setIndicator(false);
+                    loader.setMessage('Unable to like');
+                    console.log('error liking media');
+                }
+                //wait two seconds then unmask:
+                setTimeout(function () {
+                    Ext.ComponentQuery.query('#profile-panel')[0].unmask();
+                }, 1200);
+            }
+        });
     }
 
 });
