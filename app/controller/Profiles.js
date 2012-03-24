@@ -5,18 +5,8 @@
  */
 Ext.define("Showtime.controller.Profiles", {
     extend: 'Ext.app.Controller',
-    requires: ['Showtime.view.PopupStudentList'],
+    requires: ['Showtime.view.popup.CourseList', 'Showtime.view.popup.StudentList'],
     config: {
-        refs: {
-            exploreItem: '.explore-card'
-        },
-        control: {
-            exploreItem: {
-                fetchProfile: function() {
-                    this.fetchProfile;
-                }
-            }
-        },
         masked: {
             xtype: 'loadmask',
             message: 'Loading'
@@ -33,17 +23,17 @@ Ext.define("Showtime.controller.Profiles", {
 
     fetchProfile: function(data) {
         var date1 = new Date();
-        console.log('fetchprofile: 0');
+//        console.log('fetchprofile: 0');
 
         //setup explorePanel
         this.setupProfilePanel();
         this.attachListeners();
 
         var date2 = new Date();
-        console.log('fetchprofile: '+(date2.getTime() - date1.getTime())+' ms (+'+(date2.getTime() - date1.getTime())+'ms)');
+//        console.log('fetchprofile: '+(date2.getTime() - date1.getTime())+' ms (+'+(date2.getTime() - date1.getTime())+'ms)');
 
         var date3 = new Date();
-        console.log('fetchprofile: '+(date3.getTime() - date2.getTime())+' ms (+'+(date3.getTime() - date1.getTime())+'ms)');
+ //       console.log('fetchprofile: '+(date3.getTime() - date2.getTime())+' ms (+'+(date3.getTime() - date1.getTime())+'ms)');
         //put a mask on while loading
         //this.profilePanel.setMasked(true);
 
@@ -72,6 +62,15 @@ Ext.define("Showtime.controller.Profiles", {
     },
 
     setupProfilePanel: function() {
+
+        viewport = this.getApplication().viewport;
+        if (this.profilePanel) {
+            console.log('recreating - destroying shit');
+            viewport.remove(this.profilePanel);
+            this.profilePanel.removeAll(true);
+            this.profilePanel.destroy();
+        }
+        //always happens even if wasn't properly destroyed
         this.profilePanel = Ext.create('Showtime.view.profile.ProfilePanel', {
             xtype: 'profile-panel',
             listeners: {
@@ -116,14 +115,26 @@ Ext.define("Showtime.controller.Profiles", {
             }
         });
 
-        //slide to the profile
-        viewport = this.getApplication().viewport;
-        /*viewport.getLayout().setAnimation({
-            type: 'slide',
-            direction: 'left'
-        });*/
+        //Explicitly attach the listeners for the buttons as they are lost when profile panel is destroyed
+        Ext.ComponentQuery.query('#profileStudentsButton')[0].on({
+            tap: function(button) {
+                this.getApplication().fireEvent('profileStudentsButtonTap', button);
+            },
+            scope: this
+        });
+        Ext.ComponentQuery.query('#profileCoursesButton')[0].on({
+            tap: function(button) {
+                this.getApplication().fireEvent('profileCoursesButtonTap', button);
+            },
+            scope: this
+        });
+ //       console.log('created profile panel');
+        //open the profile in the viewport
+
+        this.profilePanel.hide();
         viewport.add(this.profilePanel);
         viewport.setActiveItem(1);
+        this.profilePanel.show();
     },
 
     attachListeners: function(){
@@ -133,28 +144,11 @@ Ext.define("Showtime.controller.Profiles", {
         this.control({
             '#profileBackButton': {
                 tap: function() {
-                    /*this.getApplication().viewport.getLayout().setAnimation({
-                        type: 'slide',
-                        direction: 'right'
-                    });*/
                     this.getApplication().viewport.setActiveItem(0);
                 }
             }
         });
-        this.control({
-            '#studentsButton': {
-                tap: function() {
-                    this.studentsList(this);
-                }
-            }
-        });
-        this.control({
-            '#coursesButton': {
-                tap: function() {
-                    this.coursesList(this);
-                }
-            }
-        });
+
         this.control({
             '#actionButton': {
                 tap: function() {
@@ -171,50 +165,6 @@ Ext.define("Showtime.controller.Profiles", {
         });
     },
 
-    view: function(options) {
-
-    },
-
-    studentsList: function(button) {
-    	if (!this.studentsListPopup) {
-    		this.studentsListPopup = Ext.create('Showtime.view.PopupStudentList');
-
-    		//add listeners for taps on list items
-    		/*Ext.ComponentQuery.query('#StudentList')[0].on({
-    			itemTap: function(selected, index, item, e) {
-	                this.view({profileData: selected.store.data.items[index].data});
-					//hide the studentsListPopup
-					this.studentsListPopup.hide();
-				},
-				scope: this
-    		});*/
-		}
-        offlineStore = Ext.getStore('offlineProfile');
-        offlineStore.clearFilter(true);
-        offlineStore.sort('firstName', 'ASC');
-		this.studentsListPopup.showBy(button, 'fade');
-    },
-
-    coursesList: function(button) {
-    	if (!this.coursesListPopup) {
-    		this.coursesListPopup = new Showtime.view.CoursesListPopup();
-
-    		//add listeners for taps on list items
-    		Ext.ComponentQuery.query('#CourseList')[0].on({
-    			itemTap: function(selected, index, item, e) {
-	    			this.index({courseData: selected.store.data.items[index].data})
-					//hide the coursesListPopup
-					this.coursesListPopup.hide();
-					this.exploreBackButton.show();
-				},
-				scope: this
-    		});
-		}
-
-		Showtime.stores.offlineProfiles.clearFilter(true);
-		Showtime.stores.offlineProfiles.sort('firstName', 'ASC');
-		this.coursesListPopup.showBy(button, 'fade');
-    },
 
     bookmark: function(options) {
     	if (!this.bookmarkForm) {

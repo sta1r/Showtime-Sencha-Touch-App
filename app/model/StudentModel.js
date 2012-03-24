@@ -3,7 +3,7 @@
  * @extends Ext.data.Model
  * Model for an individual student profile (used in form)
  */
-Ext.define('Showtime.model.Student', {
+Ext.define('Showtime.model.StudentModel', {
     extend: 'Ext.data.Model',
     config: {
         fields: [

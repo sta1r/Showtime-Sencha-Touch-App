@@ -5,13 +5,16 @@
  */
 Ext.define("Showtime.controller.Explore", {
     extend: 'Ext.app.Controller',
-    requires: ['Showtime.view.PopupStudentList'],
+    requires: ['Showtime.view.explore.ExplorePanel', 'Showtime.view.popup.CourseList', 'Showtime.view.popup.StudentList', 'Showtime.store.CourseProfileStore'],
     config: {
         refs: {
             exploreItem: '.explore-card',
             backButton: '#backButton',
             studentsButton: '#studentsButton',
-            coursesButton: '#coursesButton'
+            coursesButton: '#coursesButton',
+            infoButton: '#infoButton',
+            profileStudentsButton: '#profileStudentsButton',
+            profileCoursesButton: '#profileCoursesButton'
         },
         control: {
             exploreItem: {
@@ -31,23 +34,38 @@ Ext.define("Showtime.controller.Explore", {
                 }
             },
             backButton: {
-                tap: function() {
-                    //this.hide();
+                tap: function(button) {
+                    button.hide();
                     this.index({home: true});
                 }
             },
             studentsButton: {
-                tap: function(e) {
-                    console.log('tap tap');
-                    //create the students list popup panel
-                    this.studentsList(this);
+                tap: function(button, event, eOpts) {
+                    //show/hide the students list popup panel
+                    this.studentsList(button);
                 }
             },
             coursesButton: {
-                tap: function(e) {
-                    console.log('tap tap');
+                tap: function(button, event, eOpts) {
                     //create the courses list popup panel
-                    this.coursesList(this);
+                    this.coursesList(button);
+                }
+            },
+            infoButton: {
+                tap: function(button) {
+                    this.displayInfo(button);
+                }
+            },
+            profileStudentsButton: {
+                tap: function(button, event, eOpts) {
+                    //create the courses list popup panel
+                    this.studentsList(button);
+                }
+            },
+            profileCoursesButton: {
+                tap: function(button, event, eOpts) {
+                    //create the courses list popup panel
+                    this.coursesList(button);
                 }
             }
         },
@@ -56,195 +74,151 @@ Ext.define("Showtime.controller.Explore", {
             message: 'Loading'
         }
     },
+    init: function() {
+        //listen for the global button tap events from the profile toolbar
+        this.getApplication().on({
+            profileStudentsButtonTap: this.studentsList,
+            scope: this
+        });
+        this.getApplication().on({
+            profileCoursesButtonTap: this.coursesList,
+            scope: this
+        });
+    },
 
     launch: function() {
         this.index();
     },
 
     index: function(options) {
+
         //if explore panel not setup yet, create it:
         if (!this.explorePanel) {
             //create the panel
-
             this.explorePanel = Ext.create('Showtime.view.explore.ExplorePanel');
 
             //load the profile list
-            console.log('trying loading profiles');
             this.loadProfiles();
-
-            //load the complete student list for the A-Z
-            Ext.getStore('onlineStudent').load();
 
             viewport = this.getApplication().viewport;
             viewport.add(this.explorePanel);
             viewport.setActiveItem(0);
         }
         else {
+            viewport = this.getApplication().viewport;
+            viewport.setActiveItem(0);
             if (options && options.courseData) {
-                //load profiles using course json
-                var onlineProfileStore = Ext.getStore('onlineProfile');
-                onlineProfileStore.proxy.url = 'http://showtime.arts.ac.uk/lcf/2012/'+options.courseData.slug+'.json';
-                onlineProfileStore.urlChanged = true;
-                onlineProfileStore.data.removeAll();
-                onlineProfileStore.oldPage = onlineProfileStore.currentPage;
-                onlineProfileStore.currentPage = 1;
-                onlineProfileStore.endReached = false;
-
                 //load the profile list
-                this.loadProfiles(options.courseData, true);
+                this.loadProfiles(options.courseData);
 
             } else if (options && options.home) {
-                var offlineProfileStore = Ext.getStore('offlineProfile');
-                offlineProfileStore.clearFilter(true);
-                offlineProfileStore.sort('updated', 'DESC');
-                onlineProfileStore.proxy.url = 'http://showtime.arts.ac.uk/lcf/ma/2012.json';
-                onlineProfileStore.endReached = false;
-                onlineProfileStore.currentPage = onlineProfileStore.oldPage;
-                this.explorePanel.loadProfiles(offlineProfileStore.data.items, false, true);
+                this.loadProfiles();
             }
-
-            Showtime.view.Main.setActiveItem(this.explorePanel, {
-                type: 'slide',
-                direction: 'right'
-            });
         }
     },
 
-    //load the profile list using the store (see models/profiles.js)
-    loadProfiles: function(courses, init) {
-        console.log('controller:ExploreItems:loadProfiles: Loading profiles');
-        var offlineStore;
+    //TODO - check this works - destroying cached store..
+    loadProfiles: function(courses) {
+        var profileStore;
         if (courses) {
-            offlineStore = Ext.getStore('offlineCourseProfile');
-            offlineStore.clearListeners();
+            profileStore = Ext.getStore('courseProfiles');
+            if (profileStore) {
+                profileStore.removeAll(true); //clear out the existing data
+                profileStore.destroy();       //kill the current store
+            }
+            profileStore = Ext.create('Showtime.store.CourseProfileStore', {
+                proxy: {
+                    url: 'http://showtime.arts.ac.uk/lcf/2012/'+courses.slug+'.json'
+                }
+            });
         } else {
-            offlineStore = Ext.getStore('offlineProfile');
+            profileStore = Ext.getStore('onlineProfile');
         }
 
-        var profile_controller = this;
+        var explore_controller = this;
 
-        //listen for the refresh (load) method on the offline store:
-        offlineStore.addListener('refresh', function (store, data, eOpts) {
-            console.log('controller:Profiles > store:Profile:offline: Loading from offline store');
-            //send records to view (see view/ExplorePanel.js):
-            if (!this.recordcount) {	this.recordcount = 0;	}
-
-            if (this.recordcount == data.items.length) {
-                Ext.getStore('onlineProfile').endReached = true;
-            }
-            console.log('controller:Profiles > store:Profile:offline: recordcount:'+this.recordcount);
-            console.log('controller:Profiles > store:Profile:offline: data:'+data.items.length);
-            var reload, therecordData;
-
-            recordData = data.items.slice(this.recordcount, data.items.length);
-            if (courses) {
-                if (init) {
-                    console.log('controller:Profiles > store:Profiles:offline: Clearing filter to:'+courses.name);
-                    this.clearFilter(true);
-                    this.filter('course', courses.name);
-                    this.sort('updated', 'DESC');
-                    init = false;
-                    reload = true;
-                    console.log('controller:Profiles > store:Profiles:offline: Current store items:');
-                    recordData = data.items;
-                } else {
-                    recordData = data.items.slice(this.recordcount, data.items.length);
-                }
-            }
-            console.log('controller:Profiles:loadProfiles: Applying profile data to the explore Panel');
-            profile_controller.explorePanel.loadProfiles(recordData, courses, reload);
-            reload = false;
-
-            //remove un-needed cards:
-            //profile_controller.explorePanel.trimCards();
-
-            profile_controller.explorePanel.setMasked(false);
-            console.log('done loading profiles');
+        profileStore.addListener('load', function (store, records, success, operation, eOpts) {
+            recordData = records.slice(this.recordcount, records.length);
+            explore_controller.explorePanel.loadProfiles(recordData, courses);
+            Ext.ComponentQuery.query('#explore-carousel')[0].show();
+            explore_controller.explorePanel.unmask();   //finished loading
         });
 
-        //tell the store to load using its proxy
-        this.explorePanel.setMasked(true);
-        Ext.getStore('onlineProfile').load();
+        Ext.ComponentQuery.query('#explore-panel')[0].mask({
+            xtype: 'loadmask',
+            message: 'Loading profiles'
+        });
+        exploreCarousel = Ext.ComponentQuery.query('#explore-carousel')[0];
+        if (exploreCarousel) {exploreCarousel.hide();}
 
+        profileStore.load();
     },
 
     studentsList: function(button) {
         if (!this.studentsListPopup) {
-            this.studentsListPopup = Ext.create('Showtime.view.PopupStudentList');
+            this.studentsListPopup = Ext.create('Showtime.view.popup.StudentList');
 
             //add listeners for taps on list items
-            /*Ext.ComponentQuery.query('#StudentList')[0].on({
-             itemTap: function(selected, index, item, e) {
-             this.view({profileData: selected.store.data.items[index].data});
-             //hide the studentsListPopup
-             this.studentsListPopup.hide();
-             },
-             scope: this
-             });*/
+            Ext.ComponentQuery.query('#studentList')[0].on({
+                itemtap: function(list, index, target, record, e) {
+                    //fire custom event to be picked up by profile controller...
+                    this.getApplication().fireEvent('fetchProfile', {profileData: record.data});
+                    //hide the studentsListPopup
+                    this.studentsListPopup.hide();
+
+                },
+            scope: this
+            });
         }
-        offlineStore = Ext.getStore('offlineProfile');
-        offlineStore.clearFilter(true);
-        offlineStore.sort('firstName', 'ASC');
-        this.studentsListPopup.showBy(button, 'fade');
+        this.studentsListPopup.showBy(button);
     },
 
     coursesList: function(button) {
         if (!this.coursesListPopup) {
-            this.coursesListPopup = new Showtime.view.CoursesListPopup();
+            this.coursesListPopup = Ext.create('Showtime.view.popup.CourseList');
 
             //add listeners for taps on list items
-            Ext.ComponentQuery.query('#CourseList')[0].on({
-                itemTap: function(selected, index, item, e) {
-                    this.index({courseData: selected.store.data.items[index].data})
+            Ext.ComponentQuery.query('#courseList')[0].on({
+                itemtap: function(list, index, target, record, e) {
+                    //fire custom event to be picked up by profile controller...
+                    this.index({courseData: record.data})
                     //hide the coursesListPopup
                     this.coursesListPopup.hide();
-                    this.exploreBackButton.show();
                 },
                 scope: this
             });
         }
-
-        Showtime.stores.offlineProfiles.clearFilter(true);
-        Showtime.stores.offlineProfiles.sort('firstName', 'ASC');
-        this.coursesListPopup.showBy(button, 'fade');
+        //Showtime.stores.offlineProfiles.clearFilter(true);
+        //Showtime.stores.offlineProfiles.sort('firstName', 'ASC');
+        this.coursesListPopup.showBy(button);
     },
 
-    bookmark: function(options) {
-        if (!this.bookmarkForm) {
-            this.bookmarkForm = new Showtime.view.BookmarkFormPanel();
-            this.bookmarkForm.on({
-                beforesubmit : function(form, values, options){
-                    options.waitMsg = {message:'Submitting', cls : 'loading'};
-                },
-                submit : function(form, result){
-                    console.log(form, result);
-                    form.hide('fade');
-                    form.reset();
-                    Ext.Msg.alert('Share this profile by email', 'An email with a link to this profile has been sent');
-                }
-            });
-
-            this.bookmarkForm.query('#submitButton')[0].on({
-                tap: function(){
-                    this.bookmarkForm.submit();
-                },
-                scope: this
-            });
-            this.bookmarkForm.query('#resetButton')[0].on({
-                tap: function(){
-                    this.bookmarkForm.reset();
-                },
-                scope: this
-            });
-
-            //populate the form's hidden fields with the model instance profilepanel.student
-            this.bookmarkForm.load(profilepanel.student);
+    displayInfo: function(button) {
+        if (this.infoPanel) {
+            this.infoPanel.destroy();
         }
-        this.bookmarkForm.show();
-    },
-
-    user: function(options) {
-        this.profilePanel.showDesc();
+        //panel to display generic about message & credit
+        this.infoPanel = Ext.create('Ext.Panel', {
+            id: 'info',
+            html: '<div id="description">'
+                + '<h4>Welcome to London College of Fashion MA_12.</h4>'
+                + '<p>We are delighted to present a digital showcase of the most creative and innovative new work from the MA Graduate Season 2012.</p>'
+                + '<p>Please show your appreciation for these future fashion stars by <strong>liking</strong> individual images and <strong>sharing</strong> your favourite student profiles. Bookmark links will be emailed to you for later browsing.</p>'
+                + '<p>Designed to be an interactive, portable companion to the physical exhibitions, this app was created from Showtime, a web-based portfolio platform offered to all graduating students at University of the Arts London.</p>'
+                + '<hr>'
+                + '<p>iPad app design and development by Chris Toppon and Alastair Mucklow.</p>'
+                + '</div>',
+            centered: true,
+            modal: true,
+            hidden: true,
+            hideOnMaskTap: true,
+            height: 450,
+            width: 500,
+            styleHtmlContent: true,
+            scroll: 'vertical'
+        });
+        this.infoPanel.showBy(button);
     }
+
 
 });

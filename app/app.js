@@ -12,9 +12,9 @@ Ext.application({
     icon: 'http://showtime.arts.ac.uk/img/touch/icon.png',
     glossOnIcon: true,
     appFolder: 'js/touch/app',
-    controllers: ['Explore', 'Courses', 'Profiles'],
-    models: ['Course', 'Profile', 'Student'],
-    stores: ['Course', 'OfflineCourse', 'Profile',  'OfflineProfile', 'Student', 'OfflineStudent'],
+    controllers: ['Explore', 'Profiles'],
+    models: ['CourseModel', 'ProfileModel', 'StudentModel'],
+    stores: ['CourseStore', 'ProfileStore', 'StudentStore'],
     views: ['Viewport', 'explore.ExplorePanel', 'profile.ProfilePanel'],
 
     launch: function() {

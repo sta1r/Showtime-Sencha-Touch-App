@@ -48,12 +48,5 @@ Ext.define('Showtime.view.profile.Toolbar', {
                 iconCls: 'user_list'
             }
         ]
-    },
-    initialize: function() {
-        this.callParent();
-        //grab the toolbar object into the variable 'self' so it can be referenced within other objects
-        var self = this;
-
-
     }
 });

@@ -3,7 +3,7 @@
  * @extends Ext.data.Model
  * The Course model
  */
-Ext.define("Showtime.model.Course", {
+Ext.define("Showtime.model.CourseModel", {
     extend: 'Ext.data.Model',
     config: {
         fields: [

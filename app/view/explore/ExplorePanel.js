@@ -47,22 +47,23 @@ templates.profileListPortrait = new Ext.XTemplate(
 Ext.define('Showtime.view.explore.ExplorePanel', {
     extend: 'Ext.Panel',
     requires: ['Showtime.view.explore.Toolbar'],
+    id: 'explore-panel',
+    masked: {
+        xtype: 'loadmask',
+        message: 'Loading profiles'
+    },
     config: {
         alias: 'explore-panel',
         tpl: templates.profileListLandscape,
         layout: 'fit',
         masked: {
             xtype: 'loadmask',
-            message: 'Loading profiles',
-            indicator: false
+            message: 'Loading profiles'
         }
     },
     initialize: function() {
         this.callParent();
 
-        thepanel = this;
-
-        //use custom toolbar
         this.tbar = Ext.create('Showtime.view.explore.Toolbar', {
             title: 'LCF MA_12',
             config: {
@@ -70,49 +71,35 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
             }
         });
 
-        //add the toolbar to the panel's docked items
+        //add the toolbar (will be docked)
         this.add(this.tbar);
     },
     /*
      * Load (or reload) profiles into the main carousel
      */
-    loadProfiles: function(records, courseData, reload) {
-        console.log("view:explorePanel:loadProfiles");
-        console.log(courseData, reload);
-        if (reload) {
-            Showtime.stores.onlineProfiles.endReached = false;
-            if (this.carousel) {
-                this.carousel.hide();
-                this.removeAll(true);
-                this.carousel = undefined;	//destroy existing carousel component
-            }
-        }
-
-        if (courseData) { 	//we are viewing a course
+    loadProfiles: function(records, courseData) {
+        //remove the existing carousel to rebuild it
+        this.removeAll(true);
+        this.setMasked(true);
+        if (courseData) {
             this.tbar.setTitle(courseData.name);
-            this.tbar.backButton.show();
-        } else {			//viewing all profiles
+            Ext.ComponentQuery.query('#backButton')[0].show();
+        } else {
             this.tbar.setTitle('LCF MA_12');
         }
 
         //generate card components for main carousel
         var cards = this.createCards(records);
 
-
         //create a new carousel and populate with cards
         this.carousel = Ext.create('Ext.Carousel', {
-            //fullscreen: true,
             hidden: true,
             layout: 'fit',
-            //flex: 1,
             items: cards,
-            id: 'car',
+            id: 'explore-carousel',
             itemId: 'carousel',
             listeners: {
-                show: function () {
-                    console.log('showing carousel supposedly');
-                },
-                cardswitch: function(container, newCard, oldCard, index){
+                /*: function(container, newCard, oldCard, index){
                     var current_page = this.getActiveIndex()+1;
                     var total_pages = this.items.length;
                     console.log('data page: '+Showtime.store.Profile.currentPage);
@@ -125,8 +112,9 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
                         loading.show();
                         Showtime.store.onlineProfile.nextPage();
                     }
-
-
+                },*/
+                deactivate: function(){
+                    this.removeAll(true);
                 }
             }
         });
@@ -158,15 +146,6 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
             xtype: 'explore-card',
             config: {
                 profileData: []
-                //setProfile is fired when component's orientation changes:
-                //TODO re-attach tap events as they are lost on orientation change
-                /*setProfile: function(app_profile) {
-                    //var tpl = app_profile == "tabletPortrait" ? templates.profileListPortrait : templates.profileListLandscape;
-                    var tpl = templates.profileListLandscape;
-                    //redraw card
-                    tpl.overwrite(component.el, profileData);
-                    component.el.repaint();
-                }*/
             },
             // have to fire the event as they are not bubbled up from components:
             initialize: function () {
@@ -186,7 +165,6 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
                 profileData: cardData
             });
             var renderData = function() {
-                console.log('rendering item: '+component.xtype);
                 //detect current profile
                 //var tpl = Showtime.getProfile() == "tabletPortrait" ? templates.profileListPortrait : templates.profileListLandscape;
                 var tpl = templates.profileListLandscape;
@@ -197,18 +175,16 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
             };
 
             if (component.rendered) {
-                console.log('rendering item data'+component.xtype);
                 renderData();
-            }
-            else {
-                component.on('painted', renderData, thepanel, {single: true});
+            } else {
+                component.on('painted', renderData, this, {single: true});
             }
 
             cards.push(component);
         });
 
         return cards;
-    },
+    }/*,
     trimCards: function(startcard, endcard) {
         //remove all cards of index not within the range of startcard and endcard
         for (var i=1; i<=startcard; i++){
@@ -216,6 +192,5 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
             console.log(this.carousel.items.items[i-1]);
             this.carousel.remove(this.carousel.items.items[i-1]);
         }
-    }
+    }*/
 });
-//Ext.reg('explore-panel', Showtime.view.ExplorePanel);

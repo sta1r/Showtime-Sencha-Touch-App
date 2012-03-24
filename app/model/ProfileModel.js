@@ -3,7 +3,7 @@
  * @extends Ext.data.Model
  * The Profiles model used in the main carousel listing and A-Z popup
  */
-Ext.define("Showtime.model.Profile", {
+Ext.define("Showtime.model.ProfileModel", {
     extend: 'Ext.data.Model',
     config: {
         fields: [

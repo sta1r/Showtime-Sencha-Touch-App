@@ -21,13 +21,15 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
         profilepanel = this;
 
         //Toolbars:
-        console.log('creating toolbars');
-        this.tbar = Ext.create('Showtime.view.profile.Toolbar', {
-            title: 'LCF MA_12',
-            config: {
-                docked: 'top'
-            }
-        });
+        if (!this.tbar) {
+            console.log('creating toolbars');
+            this.tbar = Ext.create('Showtime.view.profile.Toolbar', {
+                title: 'LCF MA_12',
+                config: {
+                    docked: 'top'
+                }
+            });
+        }
         //add the toolbar to the panel's docked items
         this.add(this.tbar);
 
@@ -36,7 +38,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
         this.add(this.bottomToolbar);
 
 
-
+  //      console.log('creating player');
         this.player = Ext.create('Ext.Panel', {
             id:'player'
         });
@@ -59,18 +61,29 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
             }
         });
 
+        profilepanel.on('remove', function (profilepanel) {
+            if (profilepanel.player) {
+                profilepanel.player.destroy()
+            }
+            if (profilepanel.overlay) {
+                profilepanel.overlay.destroy()
+            }
+        });
         profilepanel.on('deactivate', function (profilepanel) {
             //destroy the carousel
-            if (profilepanel.items.items[0]) {
-                profilepanel.items.items[0].destroy();
+            if (profilepanel.profileCarousel) {
+                profilepanel.profileCarousel.removeAll(true, true);
+                profilepanel.profileCarousel.destroy();
             }
             if (profilepanel.descriptionPanel) {
                 profilepanel.descriptionPanel.destroy();
             }
             if (profilepanel.player) {
+                profilepanel.player.removeAll(true, true);
                 profilepanel.player.destroy()
             }
             if (profilepanel.overlay) {
+                profilepanel.overlay.removeAll(true, true);
                 profilepanel.overlay.destroy()
             }
             if (profilepanel.tbar) {
@@ -85,48 +98,28 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
     //load a profile
     loadProfile:function (result, listData) {
         this.tbar.setTitle(result.Student.firstName + ' ' + result.Student.lastName);
-        //toolbar.getComponent('edit').record = record;
-
         this.bottomToolbar.setTitle('temp title');
 
         var media_cards = this.createCards(result);
 
+        if (this.profileCarousel) {
+            profilepanel.profileCarousel.removeAll(true, true);
+            this.profileCarousel.destroy();
+        }
         this.profileCarousel = Ext.create('Ext.Carousel', {
             layout: 'fit',
-            id:'profilecar',
+            id:'profile-carousel',
             itemId:'carousel',
             listeners:{
                 scope: this.profileCarousel,
-                add:function (container, card, index) {
-                    if (index == 1) {
-                        console.log(container, card, index);
-                        //console.log(this);
-                        //this.bottomToolbar.setTitle('testing');
-                        //this.bottomToolbar.update(card.mediaData);
-
+                activeitemchange:function (container, newCard, oldCard, opts) {
+                    mediaData = Ext.ComponentQuery.query('#'+newCard.getId())[0].getData();
+                    bottomToolbar = Ext.ComponentQuery.query('#bottomToolbar')[0];
+                    if (bottomToolbar) {
+                        bottomToolbar.setTitle(mediaData.title);
                     }
-                },
-                //activeitemchange:function (container, newCard, oldCard, opts) {
-                    //bottomToolbar = Ext.ComponentQuery.query('bottomToolbar')[0];
-                    //console.log(bottomToolbar);
-                    //bottomToolbar.update(newCard.mediaData);
-                //}
-            }
-        });
-
-        this.profileCarousel.on({
-            'add': function(container, card, index) {
-                if (index == 1) {
-                    console.log(container, card, index);
-                    //this.bottomToolbar.setTitle('arse');
-                    //this.bottomToolbar.update(card.mediaData);
                 }
-            },
-            activeitemchange: function (container, newCard, oldCard, opts) {
-                console.log(container, newCard, oldCard, this);
-                //this.bottomToolbar.setTitle(newCard.mediaData.title);
-            },
-            //scope: this
+            }
         });
 
         //using add rather than setting items so we can fire event for each card
@@ -169,7 +162,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
             if (media.video || media.touch || media.profile) {
 
                 //create component to hold media
-                var mediaCmp = new Ext.Component({
+                var mediaCmp = Ext.create('Ext.Component', {
                     tpl:new Ext.XTemplate(
                         '{[this.renderMedia(values)]}',
                         {
@@ -210,9 +203,10 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                 });
 
                 //the carousel card that holds the media/sheet
-                var card = new Ext.Panel({
-                    mediaData:media,
-                    items:mediaCmp,
+                var card = Ext.create('Ext.Panel', {
+                    data: media,
+                    id: 'mediaCard_'+i,
+                    items: mediaCmp,
                     layout:'fit'
                 });
 
@@ -268,7 +262,6 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                 }
             });
         }
-        ;
         this.descriptionPanel.show();
     }
  });
