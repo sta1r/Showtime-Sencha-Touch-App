@@ -6,6 +6,7 @@
 /*global Ext,Showtime*/
 Ext.define('Showtime.view.profile.ProfilePanel', {
     extend: 'Ext.Panel',
+    id: 'profile-panel',
     requires:['Showtime.view.profile.Toolbar', 'Showtime.view.profile.BottomToolbar'],
     config:{
         alias:'profile-panel',
@@ -37,29 +38,6 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
         //add the toolbar to the panel's docked items
         this.add(this.bottomToolbar);
 
-
-  //      console.log('creating player');
-        this.player = Ext.create('Ext.Panel', {
-            id:'player'
-        });
-
-        // Create the player overlay wrapper
-        this.overlay = Ext.create('Ext.Panel', {
-            id:'vidOverlay',
-            floating:true,
-            modal:true,
-            centered:true,
-            width:650,
-            height:395,
-            items:[this.player],
-            listeners:{
-                beforehide:{
-                    fn:function (evt) {
-                        Ext.get('player').update('');
-                    }
-                }
-            }
-        });
 
         this.on('remove', function (profilepanel) {
             if (profilepanel.player) {
@@ -110,14 +88,82 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
             id:'profile-carousel',
             itemId:'carousel',
             listeners:{
-                scope: this.profileCarousel,
+                tap: function (target) {
+                    //if tapping on the video image, then play in an overlay
+                    if (Ext.get(target).parent().dom.className.indexOf('video') != -1) { //seems to be necessary to search the actual dom classname, using ext.element.is only works first time round :(
+                        if (!this.player) {
+                            this.player = Ext.create('Ext.Panel', {
+                                id:'player'
+                            });
+                        }
+
+                        // Create the player overlay wrapper
+                        if (!this.overlay) {
+                            this.overlay = Ext.create('Ext.Panel', {
+                                id:'vidOverlay',
+                                //floating:true,
+                                modal:true,
+                                hideOnMaskTap: true,
+                                centered:true,
+                                width:650,
+                                height:395,
+                                listeners:{
+                                    beforehide:{
+                                        fn:function (evt) {
+                                            this.player.setHtml('');
+                                        }
+                                    }
+                                }
+                            });
+                            this.overlay.add(this.player);
+                            this.add(this.overlay);
+                        }
+
+                        this.overlay.show();
+
+                        parentElement = Ext.get(target).parent();
+                        if (Ext.get(target).parent().dom.className.indexOf('vimeo') != -1) {
+                            //Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="js/touch/app/view/blank.html" frameborder="0"></iframe>');
+                            //Ext.get('player').down('iframe').set({src: 'http://player.vimeo.com/video/'+target.target.parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff'})
+                            //console.log(this.player);
+                            this.player.setHtml('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe>');
+                        }
+                        else {
+                            //Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="js/touch/app/view/blank.html" frameborder="0"></iframe>');
+                            //Ext.get('player').down('iframe').set({src: 'http://www.youtube.com/embed/'+target.target.parentElement.id.substr(3)})
+                            this.player.setHtml('<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+parentElement.id.substr(3)+'" frameborder="0"></iframe>');
+                        }
+                    } else {
+                        //console.log('not video');
+                        //console.log(target);
+                        var toolbar = Ext.ComponentQuery.query('#profile-toolbar')[0];
+                        var bottomToolbar = Ext.ComponentQuery.query('#bottom-toolbar')[0];
+                        if (toolbar.isHidden()){
+                            toolbar.show();
+                            bottomToolbar.show();
+                        } else {
+                            toolbar.hide();
+                            bottomToolbar.hide();
+                        }
+                    }
+                },
                 activeitemchange:function (container, newCard, oldCard, opts) {
-                    mediaData = Ext.ComponentQuery.query('#'+newCard.getId())[0].getData();
-                    bottomToolbar = Ext.ComponentQuery.query('#bottomToolbar')[0];
+                    var mediaData = Ext.ComponentQuery.query('#'+newCard.getId())[0].getData();
+                    var bottomToolbar = Ext.ComponentQuery.query('#bottom-toolbar')[0];
                     if (bottomToolbar) {
                         bottomToolbar.setTitle(mediaData.title);
                     }
+                },
+                deactivate: function () {
+                    this.removeAll(true);
                 }
+            }
+        });
+
+        var me = this.profileCarousel;
+        me.element.on ({
+            tap: function (event, target) {
+                me.fireEvent ('tap', target);
             }
         });
 
@@ -162,6 +208,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
 
                 //create component to hold media
                 var mediaCmp = Ext.create('Ext.Component', {
+                    cls: 'profile-media-component',
                     tpl:new Ext.XTemplate(
                         '{[this.renderMedia(values)]}',
                         {
@@ -250,7 +297,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
 
         //add br's back in
         replacedText = replacedText.replace(/\n/g, '<br />');
-        console.log(replacedText);
+
         return replacedText
     },
 

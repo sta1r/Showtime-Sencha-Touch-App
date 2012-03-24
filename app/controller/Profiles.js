@@ -74,35 +74,8 @@ Ext.define("Showtime.controller.Profiles", {
         this.profilePanel = Ext.create('Showtime.view.profile.ProfilePanel', {
             xtype: 'profile-panel',
             listeners: {
-                body: {
-                    tap: function(target) {
-                        console.log('tapped');
-                        if (Ext.get(target.target).is('.video img')) {
-                            this.profilePanel.overlay.setCentered(true);
-                            this.profilePanel.overlay.show();
-                            if (target.target.parentElement.id.substr(0, 3) == 'vm_') {
-                                //Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="js/touch/app/view/blank.html" frameborder="0"></iframe>');
-                                //Ext.get('player').down('iframe').set({src: 'http://player.vimeo.com/video/'+target.target.parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff'})
-                                Ext.get('player').update('<iframe class="vimeo-player" type="text/html" width="640" height="385" src="http://player.vimeo.com/video/'+target.target.parentElement.id.substr(3)+'?byline=0&amp;portrait=0&amp;color=ffffff" frameborder="0"></iframe>');
-                            }
-                            else {
-                                //Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="js/touch/app/view/blank.html" frameborder="0"></iframe>');
-                                //Ext.get('player').down('iframe').set({src: 'http://www.youtube.com/embed/'+target.target.parentElement.id.substr(3)})
-                                Ext.get('player').update('<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+target.target.parentElement.id.substr(3)+'" frameborder="0"></iframe>');
-                            }
-                        } else {
-                            if (this.profilePanel.tbar.isVisible()){
-                                this.profilePanel.tbar.hide();
-                                this.profilePanel.bottomSheet.hide();
-                                this.profilePanel.doLayout();
-                            } else {
-                                this.profilePanel.tbar.show();
-                                this.profilePanel.bottomSheet.show();
-                                this.profilePanel.doLayout();
-                            }
-                        }
-                    },
-                    scope: this
+                tap: function(target) {
+
                 },
                 //destroy this panel when we go back to the main view to save memory:
                 deactivate: function(profile) {
@@ -111,7 +84,8 @@ Ext.define("Showtime.controller.Profiles", {
                     Ext.destroy(Ext.get('player'));
                     Ext.destroy(Ext.get('vidOverlay'));
                 },
-                scope: this
+                scope: this,
+                delegate: 'profile-carousel'
             }
         });
 

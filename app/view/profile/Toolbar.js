@@ -5,10 +5,12 @@
  */
 Ext.define('Showtime.view.profile.Toolbar', {
     extend: 'Ext.Toolbar',
-    alias: 'profile-toolbar',
+    id: 'profile-toolbar',
     config: {
         docked: 'top',
-        overlay: true,
+        top: 0,
+        left: 0,
+        width: '100%',
         items: [
             {
                 xtype: 'button',

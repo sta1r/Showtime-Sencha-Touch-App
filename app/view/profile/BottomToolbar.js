@@ -2,10 +2,12 @@
 Ext.define('Showtime.view.profile.BottomToolbar', {
     extend: 'Ext.Toolbar',
     config: {
-        id: 'bottomToolbar',
+        id: 'bottom-toolbar',
         cls:'bottom',
         docked:'bottom',
-        overlay:true,
+        bottom: 0,
+        left: 0,
+        width: '100%',
         items:[
             { xtype:'spacer'},
             {

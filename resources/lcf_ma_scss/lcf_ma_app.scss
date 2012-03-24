@@ -135,7 +135,7 @@ span.course { color: #666; margin-top: 2px;}
 }
 
 /* Toolbars and Tabbars */
-#profile .x-toolbar-title {
+#profile-panel .x-toolbar .x-title {
 	font-size: 16px;
 	text-transform: uppercase;
 	margin-top: 4px;
@@ -145,8 +145,10 @@ span.course { color: #666; margin-top: 2px;}
 	border-color: #ddd;
 }
 
-.x-toolbar.x-docked-bottom {
+#bottom-toolbar {
 	background: none;
+    background-image: none;
+    background-color: $base-color;
 	border: none;
 }
 
@@ -165,7 +167,7 @@ span.course { color: #666; margin-top: 2px;}
 }
 
 /* PROFILE PANEL */
-#profile.x-landscape .profileimage {
+#profile-panel.x-landscape .profileimage {
 	text-align: center;
 }
 
