@@ -61,7 +61,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
             }
         });
 
-        profilepanel.on('remove', function (profilepanel) {
+        this.on('remove', function (profilepanel) {
             if (profilepanel.player) {
                 profilepanel.player.destroy()
             }
@@ -69,7 +69,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                 profilepanel.overlay.destroy()
             }
         });
-        profilepanel.on('deactivate', function (profilepanel) {
+        this.on('deactivate', function (profilepanel) {
             //destroy the carousel
             if (profilepanel.profileCarousel) {
                 profilepanel.profileCarousel.removeAll(true, true);
@@ -100,12 +100,11 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
         this.tbar.setTitle(result.Student.firstName + ' ' + result.Student.lastName);
         this.bottomToolbar.setTitle('temp title');
 
-        var media_cards = this.createCards(result);
-
         if (this.profileCarousel) {
-            profilepanel.profileCarousel.removeAll(true, true);
+            this.profileCarousel.removeAll(true, true);
             this.profileCarousel.destroy();
         }
+        var media_cards = this.createCards(result);
         this.profileCarousel = Ext.create('Ext.Carousel', {
             layout: 'fit',
             id:'profile-carousel',
@@ -224,21 +223,50 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
         return media_cards;
     },
 
-    showDesc:function () {
+    /*
+     *
+     * http://stackoverflow.com/a/3890175/617986
+     * http://www.codinghorror.com/blog/2008/10/the-problem-with-urls.html
+     * http://www.regular-expressions.info/email.html
+     */
+    linkify: function (inputText) {
+        var replacedText, replacePattern1, replacePattern2, replacePattern3;
+
+        //remove br's
+        replacedText = inputText.replace(/<br[^>]*>/gm, '');
+
+        //URLs starting with http:// or https://
+        replacePattern1 = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+        replacedText = replacedText.replace(replacePattern1, '<a href="$1">$1</a>');
+
+        //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+        replacePattern2 =  /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+        replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2">$2</a>');
+
+        //Change email addresses to mailto:: links.
+        //replacePattern3 = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
+        replacePattern3 = /(\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})\b/gim;
+        replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+
+        //add br's back in
+        replacedText = replacedText.replace(/\n/g, '<br />');
+        console.log(replacedText);
+        return replacedText
+    },
+
+    showDesc:function (button) {
         if (!this.descriptionPanel) {
             //turn urls into links:
-            var exp = '\(?\bhttp://[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]';
-            profilepanel.studentdata.description.replace(exp, "<a href='$1'>$1</a>");
-            //console.log(profilepanel.studentdata.description);
+            linkifiedDescription = this.linkify(this.studentdata.description);
+
             //setup description panel
             this.descriptionPanel = new Ext.Panel({
                 id:'description',
-                tpl:new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5>{course}</h5><p>{[profilepanel.studentdata.description]}</p></div>'), //sencha strips the html :(
-                data:profilepanel.studentdata,
-                floating:true,
-                centered:true,
+                tpl:new Ext.XTemplate('<div id="description"><h4>{firstName} {lastName}</h4><h5>{course}</h5><p>{[linkifiedDescription]}</p></div>'),
+                data:this.studentdata,
+                centered: true,
                 modal:true,
-                hidden:false,
+                hideOnMaskTap: true,
                 height:450,
                 width:420,
                 /*dockedItems: [{
@@ -247,7 +275,9 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                  title: 'About'
                  }],*/
                 styleHtmlContent:true,
-                scroll:'vertical',
+                scrollable: {
+                    direction: 'vertical'
+                },
                 listeners:{
                     /*body: {
                      click: function(e) {
@@ -262,6 +292,6 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                 }
             });
         }
-        this.descriptionPanel.show();
+        this.descriptionPanel.showBy(button);
     }
  });

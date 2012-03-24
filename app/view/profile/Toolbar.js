@@ -42,7 +42,7 @@ Ext.define('Showtime.view.profile.Toolbar', {
             },
             {
                 xtype: 'button',
-                id: 'userButton',
+                id: 'descButton',
                 iconMask: true,
                 ui: 'plain',
                 iconCls: 'user_list'

@@ -157,9 +157,9 @@ Ext.define("Showtime.controller.Profiles", {
             }
         });
         this.control({
-            '#userButton': {
-                tap: function() {
-                    this.user();
+            '#descButton': {
+                tap: function(button) {
+                    this.displayDescription(button);
                 }
             }
         });
@@ -200,8 +200,8 @@ Ext.define("Showtime.controller.Profiles", {
         this.bookmarkForm.show();
     },
 
-    user: function(options) {
-    	this.profilePanel.showDesc();
+    displayDescription: function(button) {
+    	this.profilePanel.showDesc(button);
     }
 
 });

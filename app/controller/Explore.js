@@ -210,7 +210,6 @@ Ext.define("Showtime.controller.Explore", {
                 + '</div>',
             centered: true,
             modal: true,
-            hidden: true,
             hideOnMaskTap: true,
             height: 450,
             width: 500,
