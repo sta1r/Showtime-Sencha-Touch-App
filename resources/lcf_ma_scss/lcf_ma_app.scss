@@ -25,7 +25,6 @@ $global-row-height: 2.6em !default;
 /* Include selected style components - for a full list see sass/sencha-touch.scss */
 @include sencha-panel;
 @include sencha-buttons;
-@include sencha-sheet;
 @include sencha-tabs;
 @include sencha-toolbar;
 @include sencha-carousel;
@@ -146,13 +145,6 @@ span.course { color: #666; margin-top: 2px;}
 	border-color: #ddd;
 }
 
-#bottom-toolbar {
-	background: none;
-    background-image: none;
-    background-color: $base-color;
-	border: none;
-}
-
 /* List popouts */
 .x-floating.x-panel, .x-anchor {
 	background-color: $active-color;
@@ -221,19 +213,25 @@ span.course { color: #666; margin-top: 2px;}
 	border-bottom-left-radius: 0.4em;
 }
 
+.emailForm .x-toolbar {
+    background: transparent;
+    border: none;
+}
+
 #description h4 {
 	font-weight: bold;
 	font-size: 17px;
 	text-shadow: white 0px 1px 1px;
 }
 
-.x-sheet.bottom {
-	background-image: none;
-	background-color: $body-bg-color;
+#bottom-toolbar {
+	background: none;
+    background-image: none;
+    background-color: $base-color;
 	border-color: #ddd;
 }
 
-.x-sheet.bottom .title {
+#bottom-toolbar .x-title {
 	font-size: 11px;
 }
 
