@@ -166,7 +166,6 @@ Ext.define("Showtime.controller.Profiles", {
                 options.waitMsg = {message:'Submitting', cls : 'loading'};
             },
             submit : function(form, result){
-                console.log(form, result);
                 form.hide('fade');
                 form.reset();
                 Ext.Msg.alert('Share this profile by email', 'An email with a link to this profile has been sent');

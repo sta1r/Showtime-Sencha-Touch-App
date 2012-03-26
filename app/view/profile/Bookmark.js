@@ -9,13 +9,12 @@
     /*extend: 'Ext.form.Panel',*/
     id: 'bookmark-panel',
     config: {
-        itemId: 'bookmarkForm',
+        id: 'bookmark-form',
         scroll: 'vertical',
         url   : 'http://showtime.arts.ac.uk/lcf/sendprofile/',
         standardSubmit : false,
+        timeout: 4000,
         cls: 'emailForm',
-        /*autoRender: true,
-        floating: true,*/
         modal: true,
         hideOnMaskTap: true,
         centered: true,
@@ -92,7 +91,7 @@
             },
             exception : function(form, result){
                 console.log('failure', Ext.toArray(arguments), result);
-                this.hideMask();
+                this.setMask(false);
             }
         }
     }
