@@ -169,12 +169,12 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
 
         //create an instance of the student model (used by form)
         //TODO reinstate
-        /*profilepanel.student = new Showtime.models.Student({
+        this.student = Ext.create('Showtime.model.StudentModel', {
             'firstname':result.Student.firstName,
             'lastname':result.Student.lastName,
             'profileurl':result.Student.profileurl,
-            'shorturl':result.Student.shorturl,
-        });*/
+            'shorturl':result.Student.shorturl
+        });
 
         //quick hack - place the course name in the result data - because at present only course id is available in json
         result.Student['course'] = listData.course;

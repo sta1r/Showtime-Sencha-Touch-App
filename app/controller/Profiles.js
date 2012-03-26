@@ -5,7 +5,7 @@
  */
 Ext.define("Showtime.controller.Profiles", {
     extend: 'Ext.app.Controller',
-    requires: ['Showtime.view.popup.CourseList', 'Showtime.view.popup.StudentList'],
+    requires: ['Showtime.view.popup.CourseList', 'Showtime.view.popup.StudentList', 'Showtime.view.profile.Bookmark'],
     config: {
         masked: {
             xtype: 'loadmask',
@@ -131,6 +131,13 @@ Ext.define("Showtime.controller.Profiles", {
             }
         });
         this.control({
+            '#actionButon': {
+                tap: function(button) {
+                    this.bookmark(button);
+                }
+            }
+        });
+        this.control({
             '#descButton': {
                 tap: function(button) {
                     this.displayDescription(button);
@@ -148,36 +155,40 @@ Ext.define("Showtime.controller.Profiles", {
 
 
     bookmark: function(button) {
-    	if (!this.bookmarkForm) {
-    		this.bookmarkForm = new Showtime.view.BookmarkFormPanel();
-    		this.bookmarkForm.on({
-    			beforesubmit : function(form, values, options){
-					options.waitMsg = {message:'Submitting', cls : 'loading'};
-				},
-		        submit : function(form, result){
-					console.log(form, result);
-					form.hide('fade');
-					form.reset();
-					Ext.Msg.alert('Share this profile by email', 'An email with a link to this profile has been sent');
-		        }
-    		});
+    	if (this.bookmarkForm) {
+            this.bookmarkForm.removeAll(true);
+            this.bookmarkForm.destroy();
+        }
+        this.bookmarkForm = Ext.create('Showtime.view.profile.Bookmark');
 
-    		this.bookmarkForm.query('#submitButton')[0].on({
-    			tap: function(){
-    				this.bookmarkForm.submit();
-    			},
-    			scope: this
-    		});
-    		this.bookmarkForm.query('#resetButton')[0].on({
-    			tap: function(){
-    				this.bookmarkForm.reset();
-    			},
-    			scope: this
-    		});
+        this.bookmarkForm.on({
+            beforesubmit : function(form, values, options){
+                options.waitMsg = {message:'Submitting', cls : 'loading'};
+            },
+            submit : function(form, result){
+                console.log(form, result);
+                form.hide('fade');
+                form.reset();
+                Ext.Msg.alert('Share this profile by email', 'An email with a link to this profile has been sent');
+            }
+        });
 
-    		//populate the form's hidden fields with the model instance profilepanel.student
-    		this.bookmarkForm.load(profilepanel.student);
-    	}
+        this.bookmarkForm.query('#submitButton')[0].on({
+            tap: function(){
+                this.bookmarkForm.submit();
+            },
+            scope: this
+        });
+        this.bookmarkForm.query('#resetButton')[0].on({
+            tap: function(){
+                this.bookmarkForm.reset();
+            },
+            scope: this
+        });
+
+        //populate the form's hidden fields with the model instance profilepanel.student
+        this.bookmarkForm.setRecord(Ext.ComponentQuery.query('#profile-panel')[0].student);
+
         this.bookmarkForm.showBy(button);
     },
 
