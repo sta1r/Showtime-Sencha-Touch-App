@@ -42,6 +42,7 @@ $global-row-height: 2.6em !default;
 @include pictos-iconmask('heart');
 @include pictos-iconmask('user_list');
 @include pictos-iconmask('refresh');
+@include pictos-iconmask('play_black1');
 
 /* Custom styling */
 .x-panel {
@@ -250,10 +251,32 @@ span.course { color: #666; margin-top: 2px;}
 	text-align: center;
 }
 
-/* Video viewer */
+/* Video image & overlay */
 .video {
+    position: relative;
 	margin: 10% 0;
 	text-align: center;
+}
+
+.video .play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: rgba(0,0,0,.3) url('../images/play_white1.png') no-repeat center center;
+}
+
+.vimeo .play {
+    width: 640px;
+    height: 360px;
+    margin-top: -182px;
+    margin-left: -320px;
+}
+
+.youtube .play {
+    width: 480px;
+    height: 360px;
+    margin-top: -182px;
+    margin-left: -240px;
 }
 
 .loading {

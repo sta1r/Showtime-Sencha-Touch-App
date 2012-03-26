@@ -222,9 +222,9 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                                                 }
                                             }
                                         });
-                                        return '<div id="vm_' + media.video_id + '" class="video vimeo"></div>';
+                                        return '<div id="vm_' + media.video_id + '" class="video vimeo"><div class="play"></div></div>';
                                     } else {
-                                        return '<div id="yt_' + media.video_id + '" class="video youtube"><img src="http://img.youtube.com/vi/' + media.video_id + '/0.jpg" /></div>';
+                                        return '<div id="yt_' + media.video_id + '" class="video youtube"><div class="play"></div><img class="video-img" src="http://img.youtube.com/vi/' + media.video_id + '/0.jpg" /></div>';
                                     }
                                 } else {
                                     if (media.touch) {
