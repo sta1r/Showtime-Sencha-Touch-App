@@ -8,12 +8,9 @@ Ext.define('Showtime.view.popup.CourseList', {
     //requires: 'Ext.ux.BufferedList',
     config: {
         cls: 'explore-menu',
-        floating: true,
         centered: true,
         modal         : true,
         hideOnMaskTap : true,
-        width: 300,
-        height: 660,
         items: [{
             title: 'Courses',
             itemId: 'courseList',

@@ -2,7 +2,7 @@
  * @class Showtime.Main
  * @extends Ext.Panel
  */
-Ext.define('Showtime.view.Viewport', {
+Ext.define('Showtime.view.Main', {
     extend: 'Ext.Container',
     alias: 'showtime-viewport',
     config: {
