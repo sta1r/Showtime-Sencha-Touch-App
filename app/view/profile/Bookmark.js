@@ -4,16 +4,16 @@
  * 
  */
  Ext.define('Showtime.view.profile.Bookmark', {
-    extend: 'Ext.ux.form.JsonPFormPanel',
-    require: 'Ext.ux.form.JsonPFormPanel',
-    /*extend: 'Ext.form.Panel',*/
+    //extend: 'Ext.ux.form.JsonPFormPanel',
+    //require: 'Ext.ux.form.JsonPFormPanel',
+    extend: 'Ext.form.Panel',
     id: 'bookmark-panel',
     config: {
         id: 'bookmark-form',
         scroll: 'vertical',
         url   : 'http://showtime.arts.ac.uk/lcf/sendprofile/',
         standardSubmit : false,
-        timeout: 4000,
+        //timeout: 4000,
         cls: 'emailForm',
         modal: true,
         hideOnMaskTap: true,
@@ -36,7 +36,7 @@
                         label: 'Email',
                         id: 'bookmarkemail',
                         placeHolder: 'you@domain.com',
-                        useClearIcon: true
+                        clearIcon: true
                     },{
                         xtype: 'hiddenfield',
                         name : 'profileurl',
@@ -58,7 +58,7 @@
             },
             {
                 xtype: 'toolbar',
-                dock: 'bottom',
+                docked: 'bottom',
                 items: [
                     {xtype: 'spacer'},
                     {
