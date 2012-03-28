@@ -5,7 +5,6 @@
  */
 Ext.define('Showtime.view.popup.CourseList', {
     extend: Ext.Panel,
-    //requires: 'Ext.ux.BufferedList',
     config: {
         cls: 'explore-menu',
         centered: true,
@@ -16,7 +15,6 @@ Ext.define('Showtime.view.popup.CourseList', {
             itemId: 'courseList',
             width: 300,
             height: 600,
-            //xtype: 'bufferedList',
             xtype: 'list',
             store: 'courseStore',
             itemTpl: '<div class="course"><strong>{name}</strong></div>',
@@ -27,7 +25,7 @@ Ext.define('Showtime.view.popup.CourseList', {
                 list.deselectAll();
             },
             deactivate: function(){
-                this.removeAll(true);
+                //this.removeAll(true);
             }
         }
     }

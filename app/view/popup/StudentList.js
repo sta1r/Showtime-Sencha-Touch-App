@@ -1,6 +1,3 @@
-//register an xtype for bufferelist component:
-//Ext.reg('bufferedList', Ext.ux.BufferedList);
-
 /**
  * @class Showtime.views.StudentsListPopup
  * @extends Ext.ux.BufferedList
@@ -8,7 +5,6 @@
  */
 Ext.define('Showtime.view.popup.StudentList', {
     extend: Ext.Panel,
-    //requires: 'Ext.ux.BufferedList',
     config: {
         cls: 'explore-menu',
         centered: true,
@@ -19,15 +15,11 @@ Ext.define('Showtime.view.popup.StudentList', {
             id: 'studentList',
             width: 300,
             height: 600,
-            //xtype: 'bufferedList',
             xtype: 'list',
             store: 'studentAZStore',
             itemTpl: '<div class="student"><strong>{firstName}</strong> {lastName}</div>',
             grouped: true,
             indexBar: true,
-            //multiSelect: false,
-            //singleSelect: true,
-            //allowDeselect: true,
             itemSelector: 'div.x-list-item'
         }],
         listeners: {
@@ -36,7 +28,7 @@ Ext.define('Showtime.view.popup.StudentList', {
                 list.deselectAll();
             },
             deactivate: function(){
-                this.removeAll(true);
+                //this.removeAll(true);
             }
         }
     }

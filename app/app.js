@@ -46,3 +46,16 @@ Ext.application({
         this.stores.offlineProfiles.sync();
     }
 });
+Ext.define('Ext.dataview.Override', {
+    override: 'Ext.DataView',
+    deselectAll: function(supress) {
+        var me = this,
+            selections = me.getStore().getRange();
+
+        me.deselect(selections, supress);
+
+        me.selected.clear();
+        me.setLastSelected(null);
+        me.setLastFocused(null);
+    }
+});

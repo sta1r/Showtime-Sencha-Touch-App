@@ -4,6 +4,7 @@
  */
 Ext.define('Showtime.view.Main', {
     extend: 'Ext.Container',
+    requires: ['Ext.Container'],
     alias: 'showtime-viewport',
     config: {
         id: 'Main',
