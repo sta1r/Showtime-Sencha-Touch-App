@@ -1,0 +1,3 @@
+#!/bin/sh
+DIR=$(dirname $(which $0))
+jsdb -path $DIR $DIR/sencha.js $*
