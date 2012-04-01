@@ -239,7 +239,7 @@ Ext.define("Showtime.controller.Profiles", {
                         likeModal.destroy();
                     });
                     this.profilePanel.add(likeModal);
-
+                    //hide the loading mask
                     Ext.ComponentQuery.query('#profile-panel')[0].unmask();
                     likeModal.show('pop');
                     //hide modal after a second
@@ -258,16 +258,17 @@ Ext.define("Showtime.controller.Profiles", {
 
     likeFailure: function(response) {
         if (response && response.status) { console.log('server-side failure with status code ' + response.status); }
+        //grab the loading mask
         var loader = Ext.ComponentQuery.query('loadmask')[0];
         if (loader) {
             loader.setIndicator(false);
             loader.setMessage('Unable to like');
             console.log('error liking media');
+            //wait two seconds then hide loading mask:
+            setTimeout(function () {
+                Ext.ComponentQuery.query('#profile-panel')[0].unmask();
+            }, 1200);
         }
-        //wait two seconds then hide modal:
-        setTimeout(function () {
-            Ext.ComponentQuery.query('#profile-panel')[0].unmask();
-        }, 1200);
     }
 
 });
