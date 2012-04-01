@@ -251,8 +251,10 @@ span.course { color: #666; margin-top: 2px;}
 
 /* Video image & overlay */
 .video {
-    position: relative;
-	margin: 10% 0;
+    position: absolute;
+	top: 102px;
+    height: 360px;
+    width: 100%;
 	text-align: center;
 }
 
@@ -266,14 +268,14 @@ span.course { color: #666; margin-top: 2px;}
 .vimeo .play {
     width: 640px;
     height: 360px;
-    margin-top: -182px;
+    margin-top: -180px;
     margin-left: -320px;
 }
 
 .youtube .play {
     width: 480px;
     height: 360px;
-    margin-top: -182px;
+    margin-top: -180px;
     margin-left: -240px;
 }
 

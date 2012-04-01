@@ -239,7 +239,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                             }
                         }
                     ),
-                    data:media,
+                    data:media
                 });
 
                 //the carousel card that holds the media/sheet
