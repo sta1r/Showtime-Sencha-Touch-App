@@ -41,12 +41,14 @@ Ext.define("Showtime.controller.Explore", {
             },
             studentsButton: {
                 tap: function(button, event, eOpts) {
+                    console.log('students button tap');
                     //show/hide the students list popup panel
                     this.studentsList(button);
                 }
             },
             coursesButton: {
                 tap: function(button, event, eOpts) {
+                    console.log('courses button tap');
                     //create the courses list popup panel
                     this.coursesList(button);
                 }
@@ -156,11 +158,16 @@ Ext.define("Showtime.controller.Explore", {
 
     studentsList: function(button) {
         if (!this.studentsListPopup) {
+            console.log('creating popup');
             this.studentsListPopup = Ext.create('Showtime.view.popup.StudentList');
 
             //add listeners for taps on list items
             Ext.ComponentQuery.query('#studentList')[0].on({
+                tap: function(){
+                    console.log('tap event received');
+                },
                 itemtap: function(list, index, target, record, e) {
+                    console.log('itemtap event received');
                     //fire custom event to be picked up by profile controller...
                     this.getApplication().fireEvent('fetchProfile', {profileData: record.data});
                     //hide the studentsListPopup
@@ -170,16 +177,22 @@ Ext.define("Showtime.controller.Explore", {
             scope: this
             });
         }
+        console.log('showing popup');
         this.studentsListPopup.showBy(button);
     },
 
     coursesList: function(button) {
         if (!this.coursesListPopup) {
+            console.log('creating popup');
             this.coursesListPopup = Ext.create('Showtime.view.popup.CourseList');
 
             //add listeners for taps on list items
             Ext.ComponentQuery.query('#courseList')[0].on({
+                tap: function(){
+                    console.log('tap event received');
+                },
                 itemtap: function(list, index, target, record, e) {
+                    console.log('itemtap event received');
                     //fire custom event to be picked up by profile controller...
                     this.index({courseData: record.data})
                     //hide the coursesListPopup
@@ -188,8 +201,7 @@ Ext.define("Showtime.controller.Explore", {
                 scope: this
             });
         }
-        //Showtime.stores.offlineProfiles.clearFilter(true);
-        //Showtime.stores.offlineProfiles.sort('firstName', 'ASC');
+        console.log('showing popup');
         this.coursesListPopup.showBy(button);
     },
 

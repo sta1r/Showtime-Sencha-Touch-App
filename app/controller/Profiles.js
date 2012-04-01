@@ -209,8 +209,18 @@ Ext.define("Showtime.controller.Profiles", {
             scope: this,
             success: function(response) {
                 console.log('liked media id=' + bottomToolbar.data.id);
-                var obj = Ext.decode(response.responseText);
-                if (obj.success == true) {
+                try {
+                    var obj = Ext.decode(response.responseText);
+                } catch (ex){
+                    if (ex.message && ex.name) {
+                        console.log("sendLike caught an exception of type "  + ex.name + ": ", ex.message);
+                        //console.log(ex);
+                    } else {
+                        console.log("sendLike caught a poorly-typed exception: " + ex);
+                    }
+                    console.log(ex.stack);
+                }
+                if (obj && obj.success == true) {
                     // like saved successfully
                     var likeTerm = obj.likes == 1 ? 'like' : 'likes';
                     // modal to display like count to user
@@ -229,28 +239,35 @@ Ext.define("Showtime.controller.Profiles", {
                         likeModal.destroy();
                     });
                     this.profilePanel.add(likeModal);
+
+                    Ext.ComponentQuery.query('#profile-panel')[0].unmask();
                     likeModal.show('pop');
+                    //hide modal after a second
+                    setTimeout(function () {
+                        likeModal.hide();
+                    }, 1000);
                 } else {
                     //failed to like
                     console.log('like failed');
+                    this.likeFailure();
                 }
-                this.profilePanel.unmask();
             },
-            failure: function(response){
-                //failure
-                console.log('server-side failure with status code ' + response.status);
-                var loader = Ext.ComponentQuery.query('loadmask')[0];
-                if (loader) {
-                    loader.setIndicator(false);
-                    loader.setMessage('Unable to like');
-                    console.log('error liking media');
-                }
-                //wait two seconds then unmask:
-                setTimeout(function () {
-                    Ext.ComponentQuery.query('#profile-panel')[0].unmask();
-                }, 1200);
-            }
+            failure: this.likeFailure
         });
+    },
+
+    likeFailure: function(response) {
+        if (response && response.status) { console.log('server-side failure with status code ' + response.status); }
+        var loader = Ext.ComponentQuery.query('loadmask')[0];
+        if (loader) {
+            loader.setIndicator(false);
+            loader.setMessage('Unable to like');
+            console.log('error liking media');
+        }
+        //wait two seconds then hide modal:
+        setTimeout(function () {
+            Ext.ComponentQuery.query('#profile-panel')[0].unmask();
+        }, 1200);
     }
 
 });
