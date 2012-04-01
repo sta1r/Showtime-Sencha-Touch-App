@@ -30,6 +30,11 @@ Ext.define('Showtime.view.explore.Toolbar', {
                 text: 'Courses'
             },
             {
+                id: 'toolbarLoad',
+                ui: 'plain',
+                iconCls: 'toolbarLoader'
+            },
+            {
                 xtype: 'spacer',
                 flex: 1
             },
@@ -49,6 +54,7 @@ Ext.define('Showtime.view.explore.Toolbar', {
     },
     initialize: function(){
         this.callParent();
+        Ext.ComponentQuery.query('#toolbarLoad')[0].hide();
 
         //grab the toolbar object into the variable 'self' so it can be referenced within other objects
         var self = this;

@@ -280,19 +280,23 @@ span.course { color: #666; margin-top: 2px;}
 }
 
 .loading {
-  background: rgba(0,0,0,.3) url(../../../img/touch/loading.gif) center center no-repeat;
-  display: block;
-  width: 10em;
-  height: 10em;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -5em;
-  margin-top: -5em;  
-  -webkit-border-radius: .5em;
-  color: #fff;
-  text-shadow: #000 0 1px 1px;
-  text-align: center;
-  padding-top: 8em;
-  font-weight: bold;
+    background: rgba(0,0,0,.3) url(../../../img/touch/loading.gif) center center no-repeat;
+    display: block;
+    width: 10em;
+    height: 10em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -5em;
+    margin-top: -5em;
+    -webkit-border-radius: .5em;
+    color: #fff;
+    text-shadow: #000 0 1px 1px;
+    text-align: center;
+    padding-top: 8em;
+    font-weight: bold;
+}
+
+.toolbarLoader {
+    background: url(../images/toolbarLoadernew.gif) center center no-repeat;
 }

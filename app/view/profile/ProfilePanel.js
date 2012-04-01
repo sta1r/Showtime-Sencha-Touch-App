@@ -23,7 +23,6 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
 
         //Toolbars:
         if (!this.tbar) {
-            console.log('creating toolbars');
             this.tbar = Ext.create('Showtime.view.profile.Toolbar', {
                 title: 'LCF MA_12',
                 config: {

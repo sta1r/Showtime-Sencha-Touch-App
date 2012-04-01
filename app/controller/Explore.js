@@ -41,16 +41,26 @@ Ext.define("Showtime.controller.Explore", {
             },
             studentsButton: {
                 tap: function(button, event, eOpts) {
-                    console.log('students button tap');
-                    //show/hide the students list popup panel
-                    this.studentsList(button);
+                    Ext.ComponentQuery.query('#toolbarLoad')[0].show();
+                    var controller = this;
+                    //about setTimeout - i wanted to display a loading gif while the popups are being rendered however
+                    //they would not be shown until the full method call has completed including rendering the list.
+                    //putting the popup function in a timeout seems to allow the view to render before executing
+                    //the popup render or execute it in a separate call
+                    setTimeout(function () {
+                        controller.studentsList(button);
+                        Ext.ComponentQuery.query('#toolbarLoad')[0].hide();
+                    }, 250);
                 }
             },
             coursesButton: {
                 tap: function(button, event, eOpts) {
-                    console.log('courses button tap');
-                    //create the courses list popup panel
-                    this.coursesList(button);
+                    Ext.ComponentQuery.query('#toolbarLoad')[0].show();
+                    var controller = this;
+                    setTimeout(function () {
+                        controller.coursesList(button);
+                        Ext.ComponentQuery.query('#toolbarLoad')[0].hide();
+                    }, 250);
                 }
             },
             infoButton: {
@@ -60,14 +70,22 @@ Ext.define("Showtime.controller.Explore", {
             },
             profileStudentsButton: {
                 tap: function(button, event, eOpts) {
-                    //create the courses list popup panel
-                    this.studentsList(button);
+                    Ext.ComponentQuery.query('#profileToolbarLoad')[0].show();
+                    var controller = this;
+                    setTimeout(function () {
+                        controller.studentsList(button);
+                        Ext.ComponentQuery.query('#profileToolbarLoad')[0].hide();
+                    }, 250);
                 }
             },
             profileCoursesButton: {
                 tap: function(button, event, eOpts) {
-                    //create the courses list popup panel
-                    this.coursesList(button);
+                    Ext.ComponentQuery.query('#profileToolbarLoad')[0].show();
+                    var controller = this;
+                    setTimeout(function () {
+                        controller.coursesList(button);
+                        Ext.ComponentQuery.query('#profileToolbarLoad')[0].hide();
+                    }, 250);
                 }
             }
         },
@@ -158,16 +176,11 @@ Ext.define("Showtime.controller.Explore", {
 
     studentsList: function(button) {
         if (!this.studentsListPopup) {
-            console.log('creating popup');
             this.studentsListPopup = Ext.create('Showtime.view.popup.StudentList');
 
             //add listeners for taps on list items
             Ext.ComponentQuery.query('#studentList')[0].on({
-                tap: function(){
-                    console.log('tap event received');
-                },
                 itemtap: function(list, index, target, record, e) {
-                    console.log('itemtap event received');
                     //fire custom event to be picked up by profile controller...
                     this.getApplication().fireEvent('fetchProfile', {profileData: record.data});
                     //hide the studentsListPopup
@@ -177,22 +190,16 @@ Ext.define("Showtime.controller.Explore", {
             scope: this
             });
         }
-        console.log('showing popup');
         this.studentsListPopup.showBy(button);
     },
 
     coursesList: function(button) {
         if (!this.coursesListPopup) {
-            console.log('creating popup');
             this.coursesListPopup = Ext.create('Showtime.view.popup.CourseList');
 
             //add listeners for taps on list items
             Ext.ComponentQuery.query('#courseList')[0].on({
-                tap: function(){
-                    console.log('tap event received');
-                },
                 itemtap: function(list, index, target, record, e) {
-                    console.log('itemtap event received');
                     //fire custom event to be picked up by profile controller...
                     this.index({courseData: record.data})
                     //hide the coursesListPopup
@@ -201,7 +208,6 @@ Ext.define("Showtime.controller.Explore", {
                 scope: this
             });
         }
-        console.log('showing popup');
         this.coursesListPopup.showBy(button);
     },
 

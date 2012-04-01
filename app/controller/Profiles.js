@@ -65,7 +65,7 @@ Ext.define("Showtime.controller.Profiles", {
 
         viewport = this.getApplication().viewport;
         if (this.profilePanel) {
-            console.log('recreating - destroying shit');
+            console.log('recreating - destroying profile panel');
             viewport.remove(this.profilePanel);
             this.profilePanel.removeAll(true);
             this.profilePanel.destroy();

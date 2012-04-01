@@ -32,6 +32,11 @@ Ext.define('Showtime.view.profile.Toolbar', {
                 text: 'Courses'
             },
             {
+                id: 'profileToolbarLoad',
+                ui: 'plain',
+                iconCls: 'toolbarLoader'
+            },
+            {
                 xtype: 'spacer',
                 flex: 1
             },
@@ -50,5 +55,9 @@ Ext.define('Showtime.view.profile.Toolbar', {
                 iconCls: 'user_list'
             }
         ]
+    },
+    initialize: function(){
+        this.callParent();
+        Ext.ComponentQuery.query('#profileToolbarLoad')[0].hide();
     }
 });
