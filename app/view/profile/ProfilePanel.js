@@ -277,16 +277,16 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
 
         //URLs starting with http:// or https://
         replacePattern1 = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-        replacedText = replacedText.replace(replacePattern1, '<a href="$1">$1</a>');
+        replacedText = replacedText.replace(replacePattern1, '<a href="$1" rel="external">$1</a>');
 
         //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
         replacePattern2 =  /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-        replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2">$2</a>');
+        replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" rel="external">$2</a>');
 
         //Change email addresses to mailto:: links.
         //replacePattern3 = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
         replacePattern3 = /(\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})\b/gim;
-        replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+        replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1" rel="external">$1</a>');
 
         //add br's back in
         replacedText = replacedText.replace(/\n/g, '<br />');
@@ -332,6 +332,21 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                 }
             });
         }
+
+        //add childbrowser links (phonegap app only)
+        if (typeof ChildBrowser !== "undefined") {
+            var childBrowser = ChildBrowser.install();
+            console.log('using childbrowser');
+
+            Ext.get('description').on({
+                delegate: 'a',
+                click: function(e, t) {
+                    e.stopEvent(true);
+                    window.plugins.childBrowser.showWebPage(t.getAttribute('href'));
+                }
+            });
+        }
+
         this.descriptionPanel.showBy(button);
     }
  });
