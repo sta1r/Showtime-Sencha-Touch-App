@@ -161,17 +161,6 @@ Ext.define("Showtime.controller.Profiles", {
         }
         this.bookmarkForm = Ext.create('Showtime.view.profile.Bookmark');
 
-        this.bookmarkForm.on({
-            beforesubmit : function(form, values, options){
-                options.waitMsg = {message:'Submitting', cls : 'loading'};
-            },
-            submit : function(form, result){
-                form.hide('fade');
-                form.reset();
-                Ext.Msg.alert('Share this profile by email', 'An email with a link to this profile has been sent');
-            }
-        });
-
         this.bookmarkForm.query('#submitButton')[0].on({
             tap: function(){
                 this.bookmarkForm.submit();

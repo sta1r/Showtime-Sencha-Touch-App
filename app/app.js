@@ -7,6 +7,7 @@
 //Ext.Loader.setConfig({enabled: true});
 //Ext.Loader.setPath('Ext', 'js/touch/lib/touch2/src');
 Ext.Loader.setPath('Ext.ux', 'js/touch/app/ux');
+Ext.require('Ext.device.*');
 Ext.application({
     name: 'Showtime',
 

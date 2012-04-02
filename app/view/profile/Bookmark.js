@@ -3,10 +3,10 @@
  * @extends Ext.Panel
  * 
  */
- Ext.define('Showtime.view.profile.Bookmark', {
-    //extend: 'Ext.ux.form.JsonPFormPanel',
-    //require: 'Ext.ux.form.JsonPFormPanel',
-    extend: 'Ext.form.Panel',
+Ext.define('Showtime.view.profile.Bookmark', {
+    extend: 'Ext.ux.form.JsonPFormPanel',
+    requires: 'Ext.ux.form.JsonPFormPanel',
+    //extend: 'Ext.form.Panel',
     id: 'bookmark-panel',
     config: {
         id: 'bookmark-form',
@@ -74,19 +74,25 @@
             }
         ],
         listeners : {
-            beforehide : function(cmp){
-                emailfield = Ext.getCmp('bookmarkemail');
-                //make sure keyboard gets hidden
-                emailfield.fieldEl.dom.blur();
+            show: function(bookmarkForm) {
+                var emailField = Ext.ComponentQuery.query('#bookmarkemail')[0];
+                emailField.on('keyup', function(field, e){
+                    //what's all this about? at the time of writing, pressing the Go button on the ipad keyboard has no
+                    //effect - it won't submit the form. So a listener is needed to detect the return key (13)
+                    //then submit manually...
+                    if (e.browserEvent.keyCode == 13) {
+                        console.log('submitting form');
+                        bookmarkForm.submit();
+                    }
+                });
             },
-            deactivate : function(cmp){
-                this.destroy();
-                console.log('deactivate', cmp);
-            },
-            beforesubmit : function(form, values){
-                if (Ext.util.Format.trim(values.email) == '') {
-                        console.log('email empty');
+            submit: function(options) {
+                if (Ext.util.Format.trim(this.getValues().email) == '') {
+                    console.log('email empty');
                     return false;
+                } else {
+                    this.hide();
+                    Ext.Msg.alert('Share this profile by email', 'An email with a link to this profile has been sent to '+this.getValues().email);
                 }
             },
             exception : function(form, result){
