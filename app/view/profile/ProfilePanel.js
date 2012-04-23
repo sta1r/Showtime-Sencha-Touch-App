@@ -24,7 +24,7 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
         //Toolbars:
         if (!this.tbar) {
             this.tbar = Ext.create('Showtime.view.profile.Toolbar', {
-                title: 'LCF MA_12',
+                title: 'LCF Showtime',
                 config: {
                     docked: 'top'
                 }

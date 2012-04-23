@@ -219,7 +219,7 @@ Ext.define("Showtime.controller.Explore", {
         this.infoPanel = Ext.create('Ext.Panel', {
             id: 'info',
             html: '<div id="description">'
-                + '<h4>Welcome to London College of Fashion MA_12.</h4>'
+                + '<h4>Welcome to London College of Fashion Showtime.</h4>'
                 + '<p>We are delighted to present a digital showcase of the most creative and innovative new work from the MA Graduate Season 2012.</p>'
                 + '<p>Please show your appreciation for these future fashion stars by <strong>liking</strong> individual images and <strong>sharing</strong> your favourite student profiles. Bookmark links will be emailed to you for later browsing.</p>'
                 + '<p>Designed to be an interactive, portable companion to the physical exhibitions, this app was created from Showtime, a web-based portfolio platform offered to all graduating students at University of the Arts London.</p>'

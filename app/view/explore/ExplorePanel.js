@@ -65,7 +65,7 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
         this.callParent();
 
         this.tbar = Ext.create('Showtime.view.explore.Toolbar', {
-            title: 'LCF MA_12',
+            title: 'LCF Showtime',
             config: {
                 docked: 'top'
             }
@@ -85,7 +85,7 @@ Ext.define('Showtime.view.explore.ExplorePanel', {
             this.tbar.setTitle(courseData.name);
             Ext.ComponentQuery.query('#backButton')[0].show();
         } else {
-            this.tbar.setTitle('LCF MA_12');
+            this.tbar.setTitle('LCF Showtime');
         }
 
         //generate card components for main carousel
