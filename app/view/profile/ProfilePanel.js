@@ -334,15 +334,16 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
         }
 
         //add childbrowser links (phonegap app only)
-        if (typeof ChildBrowser !== "undefined") {
-            var childBrowser = ChildBrowser.install();
-            console.log('using childbrowser');
-
+        if (typeof window.plugins.childBrowser !== "undefined") {
             Ext.get('description').on({
                 delegate: 'a',
                 click: function(e, t) {
-                    e.stopEvent(true);
-                    window.plugins.childBrowser.showWebPage(t.getAttribute('href'));
+                    //bypass childbrowser for email links
+                    if (t.getAttribute('href').indexOf("mailto") == -1) {
+                        e.stopEvent(true);
+                        console.log('using childbrowser');
+                        window.plugins.childBrowser.showWebPage(t.getAttribute('href'));
+                    }
                 }
             });
         }
