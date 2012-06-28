@@ -7,7 +7,7 @@ Ext.define('Showtime.store.ProfileStore', {
         proxy: {
             type: 'jsonpcache',
             cacheKey: 'ProfileCache',
-            url : 'http://showtime.arts.ac.uk/lcf/ma/2012.json',
+            url : 'http://showtime.arts.ac.uk/lcf/ug/2012.json',
             reader:{
                 type: 'json',
                 rootProperty: 'data.Profiles'
