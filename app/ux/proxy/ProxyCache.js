@@ -90,24 +90,26 @@ Ext.define('Ext.ux.proxy.ProxyCache', {
 	 * @param {Ext.data.Response} response Response returned from the server
 	 */
 	addToCache: function(request, response) {
-		if (!response._cached && request.getAction() === "read") {
-			this.getCache();
-			var requestKey = this.getUrl() + Ext.encode(request.getParams());
-			if (this.cache[requestKey] === undefined) {
-				this.cache[requestKey] = {};
-			}
-			this.cache[requestKey].expires = Date.now() + (this.getCacheTimeout() * 1000);
-			this.cache[requestKey].type = 'json';
-			if (response.responseText) {
-				this.cache[requestKey].data = {responseText: response.responseText};
-			} else {
-				this.cache[requestKey].data = response;
-			}
-			if (response.responseXML) {
-				this.cache[requestKey].type = 'xml';
-			}
-			window.localStorage.setItem(this.getCacheKey(), Ext.encode(this.cache));
-		}
+        if (response){
+            if (!response._cached && request.getAction() === "read") {
+                this.getCache();
+                var requestKey = this.getUrl() + Ext.encode(request.getParams());
+                if (this.cache[requestKey] === undefined) {
+                    this.cache[requestKey] = {};
+                }
+                this.cache[requestKey].expires = Date.now() + (this.getCacheTimeout() * 1000);
+                this.cache[requestKey].type = 'json';
+                if (response.responseText) {
+                    this.cache[requestKey].data = {responseText: response.responseText};
+                } else {
+                    this.cache[requestKey].data = response;
+                }
+                if (response.responseXML) {
+                    this.cache[requestKey].type = 'xml';
+                }
+                window.localStorage.setItem(this.getCacheKey(), Ext.encode(this.cache));
+            }
+        }
 	},
 
 	/**
