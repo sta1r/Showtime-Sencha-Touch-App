@@ -23,17 +23,17 @@ Ext.define("Showtime.controller.Profiles", {
 
     fetchProfile: function(data) {
         //profiling
-        var date1 = new Date();
+//        var date1 = new Date();
 //        console.log('fetchprofile: 0');
 
         //setup explorePanel
         this.setupProfilePanel();
         this.attachListeners();
 
-        var date2 = new Date();
+//        var date2 = new Date();
 //        console.log('fetchprofile: '+(date2.getTime() - date1.getTime())+' ms (+'+(date2.getTime() - date1.getTime())+'ms)');
 
-        var date3 = new Date();
+ //       var date3 = new Date();
  //       console.log('fetchprofile: '+(date3.getTime() - date2.getTime())+' ms (+'+(date3.getTime() - date1.getTime())+'ms)');
         //put a mask on while loading
         //this.profilePanel.setMasked(true);
@@ -94,8 +94,7 @@ Ext.define("Showtime.controller.Profiles", {
                         }
                     }
                 }
-                //remove the loading indicator
-                //this.profilePanel.setMasked(false);
+
             },
             scope: this
         });
