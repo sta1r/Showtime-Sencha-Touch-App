@@ -17,9 +17,19 @@ Ext.define('Showtime.store.CourseStore', {
             },
             timeout: 2000,
             listeners: {
-                exception:function () {
-                    //we are offline so use the previously loaded data
-                    console.log('store:Course:online: timeout - using old course list');
+                exception:function (proxy, response, operation, eOpts) {
+                    console.log('exception loading courses');
+
+                    //Ext.ComponentQuery.query('#explore-panel')[0].unmask();
+
+                    if (!navigator.onLine) {
+                        //not online
+                        //
+                    } else {
+                        //online so some other error
+                        //timeout?
+                        //can't connect to showtime server?
+                    }
                 }
             }
         }

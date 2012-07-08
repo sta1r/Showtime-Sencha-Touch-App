@@ -157,12 +157,36 @@ Ext.define("Showtime.controller.Explore", {
 
         var explore_controller = this;
 
-        profileStore.addListener('load', function (store, records, success, operation, eOpts) {
-            recordData = records.slice(this.recordcount, records.length);
-            explore_controller.explorePanel.loadProfiles(recordData, courses);
-            Ext.ComponentQuery.query('#explore-carousel')[0].show();
-            explore_controller.explorePanel.unmask();   //finished loading
-        });
+        if (!profileStore.hasListener('load')) {
+            profileStore.addListener('load', function (store, records, success, operation, eOpts) {
+
+                if (!navigator.onLine) {
+                    console.log('no internet connection');
+
+                    if (navigator.notification) {
+                        navigator.notification.alert(
+                            'Could not connect to the internet',    // message
+                            null,
+                            'No connection',        // title
+                            'Dismiss'               // buttonName
+                        );
+                    } else {
+                        alert('No internet connection');
+                    }
+
+                    if (!success) {
+                        console.log('no cache');
+                    } else {
+                        console.log('cached');
+                    }
+                }
+
+                recordData = records.slice(this.recordcount, records.length);
+                explore_controller.explorePanel.loadProfiles(recordData, courses);
+                Ext.ComponentQuery.query('#explore-carousel')[0].show();
+                explore_controller.explorePanel.unmask();   //finished loading
+            });
+        }
 
         Ext.ComponentQuery.query('#explore-panel')[0].mask({
             xtype: 'loadmask',
@@ -179,16 +203,18 @@ Ext.define("Showtime.controller.Explore", {
             this.studentsListPopup = Ext.create('Showtime.view.popup.StudentList');
 
             //add listeners for taps on list items
-            Ext.ComponentQuery.query('#studentList')[0].on({
-                itemtap: function(list, index, target, record, e) {
-                    //fire custom event to be picked up by profile controller...
-                    this.getApplication().fireEvent('fetchProfile', {profileData: record.data});
-                    //hide the studentsListPopup
-                    this.studentsListPopup.hide();
+            if (!Ext.ComponentQuery.query('#studentList')[0].hasListener('on')) {
+                Ext.ComponentQuery.query('#studentList')[0].on({
+                    itemtap: function(list, index, target, record, e) {
+                        //fire custom event to be picked up by profile controller...
+                        this.getApplication().fireEvent('fetchProfile', {profileData: record.data});
+                        //hide the studentsListPopup
+                        this.studentsListPopup.hide();
 
-                },
-            scope: this
-            });
+                    },
+                scope: this
+                });
+            }
         }
         this.studentsListPopup.showBy(button);
     },
@@ -198,15 +224,17 @@ Ext.define("Showtime.controller.Explore", {
             this.coursesListPopup = Ext.create('Showtime.view.popup.CourseList');
 
             //add listeners for taps on list items
-            Ext.ComponentQuery.query('#courseList')[0].on({
-                itemtap: function(list, index, target, record, e) {
-                    //fire custom event to be picked up by profile controller...
-                    this.index({courseData: record.data})
-                    //hide the coursesListPopup
-                    this.coursesListPopup.hide();
-                },
-                scope: this
-            });
+            if (!Ext.ComponentQuery.query('#courseList')[0].hasListener('on')) {
+                Ext.ComponentQuery.query('#courseList')[0].on({
+                    itemtap: function(list, index, target, record, e) {
+                        //fire custom event to be picked up by profile controller...
+                        this.index({courseData: record.data})
+                        //hide the coursesListPopup
+                        this.coursesListPopup.hide();
+                    },
+                    scope: this
+                });
+            }
         }
         this.coursesListPopup.showBy(button);
     },

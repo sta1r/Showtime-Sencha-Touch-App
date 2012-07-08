@@ -296,8 +296,12 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
 
     showDesc:function (button) {
         if (!this.descriptionPanel) {
-            //turn urls into links:
-            linkifiedDescription = this.linkify(this.studentdata.description);
+            //turn urls into links (phonegap only - webapp is for exhibition use so we dont want people to leave the app):
+            if (typeof window.plugins !== "undefined" && window.plugins.childBrowser !== "undefined") {
+                linkifiedDescription = this.linkify(this.studentdata.description);
+            } else {
+                linkifiedDescription = this.studentdata.description;
+            }
 
             //setup description panel
             this.descriptionPanel = new Ext.Panel({
@@ -309,32 +313,15 @@ Ext.define('Showtime.view.profile.ProfilePanel', {
                 hideOnMaskTap: true,
                 height:450,
                 width:420,
-                /*dockedItems: [{
-                 dock: 'top',
-                 xtype: 'container',
-                 title: 'About'
-                 }],*/
                 styleHtmlContent:true,
                 scrollable: {
                     direction: 'vertical'
-                },
-                listeners:{
-                    /*body: {
-                     click: function(e) {
-                     //prevent links in the profile description opening safari
-                     e.stopEvent(true);
-                     },
-                     delegate: 'a'
-                     },*/
-                    deactivate:{
-                        //this.destroy();
-                    }
                 }
             });
         }
 
         //add childbrowser links (phonegap app only)
-        if (typeof window.plugins.childBrowser !== "undefined") {
+        if (typeof window.plugins !== "undefined" && window.plugins.childBrowser !== "undefined") {
             Ext.get('description').on({
                 delegate: 'a',
                 click: function(e, t) {

@@ -22,6 +22,7 @@ Ext.define("Showtime.controller.Profiles", {
     },
 
     fetchProfile: function(data) {
+        //profiling
         var date1 = new Date();
 //        console.log('fetchprofile: 0');
 
@@ -37,7 +38,7 @@ Ext.define("Showtime.controller.Profiles", {
         //put a mask on while loading
         //this.profilePanel.setMasked(true);
 
-        //it is not possible in sencha to use a store / model proxy to read a single json record so:
+        //at the time of writing; it is not possible in sencha to use a store / model proxy to read a single json record so:
         Ext.data.JsonP.request({
             url: 'http://showtime.arts.ac.uk/'+data.profileData.profileName+'.json',
             callbackKey: 'callback',
@@ -46,13 +47,52 @@ Ext.define("Showtime.controller.Profiles", {
                 if (success) {
                     if (response.data.Student) {
                         this.profilePanel.loadProfile(response.data.Student, data.profileData);
+                    } else {
+                        //no student data in json
                     }
                 } else {
-                    console.log('error loading profile');
-                    console.log('did not receive a response in time');
-                    //profiles.index({home: true});
-                    //need to go back to the explore view...
-                    this.getApplication().viewport.setActiveItem(0);
+
+                    if (!navigator.onLine) {
+                        console.log('no internet connection');
+
+                        if (navigator.notification) {
+                            navigator.notification.alert(
+                                'Could not connect to the internet',    // message
+                                null,
+                                'No connection',        // title
+                                'Dismiss'               // buttonName
+                            );
+                        } else {
+                            alert('No internet connection');
+                        }
+
+                        //go back to the main explore view...
+                        this.getApplication().viewport.setActiveItem(0);
+                    } else {
+                        //online but couldn't load
+                        if (navigator.notification) {
+                            var me = this;
+                            navigator.notification.confirm(
+                                'Sorry there was an error loading the profile. Try again?',    // message
+                                function(buttonIndex, me, data) {
+                                    if (buttonIndex == 1) {
+                                        //retry
+                                        me.fetchProfile(data);
+                                    } else {
+                                        //cancel
+                                        //go back to the main explore view...
+                                        me.getApplication().viewport.setActiveItem(0);
+                                    }
+                                },
+                                'Error loading profile',          // title
+                                'Retry', 'Cancel'                 // buttonName
+                            );
+                        } else {
+                            alert('Error loading profile');
+                            //go back to the main explore view...
+                            this.getApplication().viewport.setActiveItem(0);
+                        }
+                    }
                 }
                 //remove the loading indicator
                 //this.profilePanel.setMasked(false);

@@ -14,16 +14,20 @@ Ext.define('Showtime.store.ProfileStore', {
             },
             timeout: 7000,
             listeners: {
-                exception:function () {
-                    console.log("store:Profile:online: Timed out so now offline");
-                    loading.hide();
+                exception:function (proxy, response, operation, eOpts) {
+                    console.log('exception loading profiles');
 
-                    Showtime.stores.offlineProfiles.load();
-                    if(typeof networkState != 'undefined' && networkState == 'unknown') {
-                        Ext.Msg.alert('Offline', 'Could not connect - internet connection required');
+                    Ext.ComponentQuery.query('#explore-panel')[0].unmask();
+
+                    if (!navigator.onLine) {
+                        //not online
+
                     } else {
-                        Ext.Msg.alert('Connection timed out', 'Sorry, could not reach the Showtime server, please try later');
+                        //online so some other error
+                        //timeout?
+                        //can't connect to showtime server?
                     }
+
                 }
             }
         },
