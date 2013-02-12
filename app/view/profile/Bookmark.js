@@ -4,8 +4,8 @@
  * 
  */
 Ext.define('Showtime.view.profile.Bookmark', {
-    extend: 'Ext.ux.form.JsonPFormPanel',
-    requires: 'Ext.ux.form.JsonPFormPanel',
+    extend: 'Ext.ux.form.JSONPFormPanel',
+    requires: 'Ext.ux.form.JSONPFormPanel',
     //extend: 'Ext.form.Panel',
     id: 'bookmark-panel',
     config: {
