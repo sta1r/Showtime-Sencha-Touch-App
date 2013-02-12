@@ -15,7 +15,7 @@ Ext.define('Showtime.store.StudentStore', {
         proxy: {
             type: 'jsonpcache',
             cacheKey: 'StudentAZCache',
-            url : 'http://showtime.arts.ac.uk/lcf/ma/2012/students.json',
+            url : 'http://showtime.arts.ac.uk/lcf/ma/2013/students.json',
             reader: {
                 type: 'json',
                 rootProperty: 'data.Students'
